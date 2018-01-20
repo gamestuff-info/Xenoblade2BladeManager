@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  */
-class BladeSuperclass
+abstract class BladeSuperclass
 {
 
     /**
@@ -408,7 +408,7 @@ class BladeSuperclass
     /**
      * @return bool
      */
-    public function isCanBeReleased(): bool
+    public function canBeReleased(): bool
     {
         return $this->canBeReleased;
     }

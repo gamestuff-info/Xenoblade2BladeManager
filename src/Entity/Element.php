@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ElementRepository")
  */
-class Element implements InitializableInterface
+class Element
 {
 
     use NameableTrait;
@@ -25,32 +25,6 @@ class Element implements InitializableInterface
      * @Groups({"api"})
      */
     private $id;
-
-    /**
-     * Get initial elements
-     *
-     * @return Collection|self[]
-     */
-    public static function init(): Collection
-    {
-        $elements = new ArrayCollection();
-
-        $elementNames = [
-          'Fire',
-          'Water',
-          'Ice',
-          'Wind',
-          'Earth',
-          'Electric',
-          'Light',
-          'Dark',
-        ];
-        foreach ($elementNames as $elementName) {
-            $elements->add((new self())->setName($elementName));
-        }
-
-        return $elements;
-    }
 
     /**
      * @return int

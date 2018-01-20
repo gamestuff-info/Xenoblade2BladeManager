@@ -46,7 +46,7 @@ class BladeTemplate extends BladeSuperclass
     /**
      * Convert this template to a full Blade.
      *
-     * @return \App\Entity\Blade
+     * @return Blade
      */
     public function toBlade(): Blade
     {

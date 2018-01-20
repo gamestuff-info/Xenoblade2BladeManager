@@ -28,8 +28,11 @@
         "symfony/yaml": "^4.0"
     },
     "require-dev": {
+        "doctrine/data-fixtures": "^1.3",
+        "fzaninotto/faker": "^1.7",
         "laravel/homestead": "^7.0",
         "symfony/dotenv": "^4.0",
+        "symfony/phpunit-bridge": "^4.0",
         "symfony/profiler-pack": "^1.0"
     },
     "config": {
@@ -72,7 +75,7 @@
     "extra": {
         "symfony": {
             "id": "01C33XAX3B1WS18SXPGK4781E9",
-            "allow-contrib": false
+            "allow-contrib": "true"
         }
     }
 }

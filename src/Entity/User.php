@@ -415,6 +415,11 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->created;
     }
 
+    /**
+     * Generate a new activation code for this user.
+     *
+     * @return string
+     */
     public function newActivateCode(): string
     {
         $this->isActive = false;

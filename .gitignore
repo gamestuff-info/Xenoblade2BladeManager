@@ -129,3 +129,8 @@ typings/
 
 # next.js build output
 .next
+
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###

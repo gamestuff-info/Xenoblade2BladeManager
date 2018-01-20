@@ -10,7 +10,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BattleRoleRepository")
  */
-class BattleRole implements InitializableInterface
+class BattleRole
 {
 
     use NameableTrait;
@@ -23,27 +23,6 @@ class BattleRole implements InitializableInterface
      * @Groups({"api"})
      */
     private $id;
-
-    /**
-     * Get initial battle roles
-     *
-     * @return Collection|self[]
-     */
-    public static function init(): Collection
-    {
-        $battleRoles = new ArrayCollection();
-
-        $battleRoleNames = [
-          'ATK',
-          'TNK',
-          'HLR',
-        ];
-        foreach ($battleRoleNames as $battleRoleName) {
-            $battleRoles->add((new self())->setName($battleRoleName));
-        }
-
-        return $battleRoles;
-    }
 
     /**
      * @return mixed
