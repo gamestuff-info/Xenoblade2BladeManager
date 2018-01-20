@@ -1,0 +1,15 @@
+@import "~bootstrap/scss/bootstrap";
+
+.fa-user {
+    .user-login > &,
+    .user-logout > & {
+        margin-right: 0.5rem;
+    }
+
+    .user-logout > & {
+        color: $red;
+    }
+    .user-login > & {
+        color: $green;
+    }
+}

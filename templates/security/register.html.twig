@@ -1,0 +1,14 @@
+{% extends "_base.html.twig" %}
+
+{% block content %}
+    {% include "security/_nav.html.twig" %}
+
+    {{ form_start(form) }}
+    {{ form_row(form.username) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.plainPassword.first) }}
+    {{ form_row(form.plainPassword.second) }}
+
+    <button class="btn btn-primary" type="submit">Register!</button>
+    {{ form_end(form) }}
+{% endblock %}

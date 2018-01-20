@@ -1,0 +1,13 @@
+An account has been created for you on Xeno2:
+
+Username: {{ user.username }}
+E-Mail: {{ user.email }}
+
+*You must activate your account before continuing*
+
+Activation code:
+{{ user.activateCode }}
+
+Go to {{ url('user_activate', {'user': user.username, 'key': user.activateCode}) }} to activate your account.
+
+If you believe you have received this email in error, it can be safely ignored.

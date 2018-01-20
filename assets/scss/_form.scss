@@ -1,0 +1,5 @@
+fieldset.form-group > .form-inline {
+    &, & ~ * {
+        display: inline-flex;
+    }
+}

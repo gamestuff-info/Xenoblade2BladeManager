@@ -1,0 +1,116 @@
+{% extends '_base.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('dist/js/bladeForm.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    {% if templates is defined %}
+        <p>
+            <button type="button" class="btn btn-secondary" data-toggle="collapse" data-target="#bladeTemplates" aria-expanded="false" aria-controls="bladeTemplates">
+                Bond Rare Blade
+            </button>
+        </p>
+        <div class="collapse" id="bladeTemplates">
+            <div class="card card-body">
+                <ul class="list-inline">
+                    {% for template in templates %}
+                        <li class="list-inline-item my-1">
+                            {%- if currentDriver is null -%}
+                                {%- set driverSlug = 'all' -%}
+                            {%- else -%}
+                                {%- set driverSlug = currentDriver.slug -%}
+                            {%- endif -%}
+                            <a class="btn btn-outline-secondary{% if app.request.get('template') == template.slug %} active{% endif %}" href="{{ path('blade_new', {'driverSlug': driverSlug, 'template': template.slug}) }}">
+                                {{ template.name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
+    {% form_theme form _self 'vendor/jquery.collection.html.twig' %}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <div class="form-row">
+        <div class="col-sm-6">
+            {{ form_row(form.driver) }}
+        </div>
+        <div class="col-sm-6">
+            {{ form_row(form.name) }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-sm-4">
+            {{ form_row(form.gender) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_row(form.battleRole) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_row(form.weaponClass) }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-sm-4">
+            {{ form_row(form.element) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_row(form.strength) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_row(form.rarity) }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-sm-4">
+            <div class="form-group">
+                {{ form_label(form.affinity) }}
+                <div class="d-flex align-items-baseline">
+                    <div>
+                        {{ form_errors(form.affinity) }}
+                        {{ form_widget(form.affinity) }}
+                    </div>
+                    <div>/</div>
+                    <div>
+                        {{ form_errors(form.affinityTotal) }}
+                        {{ form_widget(form.affinityTotal) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            {{ form_row(form.trust) }}
+        </div>
+    </div>
+    <div class="form-row align-items-end">
+        <div class="col-sm-6">
+            <div class="form-group">
+                {{ form_label(form.mercTeamName) }}
+                {{ form_errors(form.mercTeamName) }}
+                {{ form_widget(form.mercTeamName) }}
+                <small class="form-text text-muted">
+                    Leave this blank for common blades to use the default "Team [name]" format.
+                </small>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                {{ form_label(form.isMerc) }}
+                {{ form_errors(form.isMerc) }}
+                {{ form_widget(form.isMerc) }}
+                <small class="form-text text-muted">
+                    Not all Blades can be sent on Merc Missions. Uncheck this box if this Blade cannot be sent out
+                    (usually
+                    for story reasons).
+                </small>
+            </div>
+        </div>
+    </div>
+    {{ form_row(form.affinityNodes) }}
+
+    {{ form_end(form) }}
+{% endblock %}

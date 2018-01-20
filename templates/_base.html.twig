@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title|default('Welcome!') }}</title>
+    <link href="{{ asset('dist/css/main.css') }}" rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
+    <script defer src="https://use.fontawesome.com/releases/v5.0.2/js/all.js"></script>
+</head>
+<body>
+{% block body %}
+    {% block navbar %}
+        {% include '_navbar.html.twig' %}
+    {% endblock %}
+
+    <main role="main" class="container">
+        {% block messages %}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endblock %}
+
+        {% block title %}
+            <h1>{{ title|default('') }}</h1>
+        {% endblock %}
+
+        {% block content %}
+            Error: no content defined!
+        {% endblock %}
+    </main>
+{% endblock %}
+<script src="{{ asset('dist/js/main.js') }}"></script>
+{% block javascripts %}{% endblock %}
+</body>
+</html>

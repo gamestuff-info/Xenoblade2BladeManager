@@ -1,0 +1,19 @@
+@import "~bootstrap/scss/bootstrap";
+@import "~tablesorter/dist/css/theme.bootstrap_4.min";
+@import "form";
+@import "tablesorter";
+@import "navbar";
+@import "blade";
+@import "merc_mission";
+@import "element";
+
+.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+
+    > .col,
+    > [class*="col-"] {
+        padding-right: 0;
+        padding-left: 0;
+    }
+}

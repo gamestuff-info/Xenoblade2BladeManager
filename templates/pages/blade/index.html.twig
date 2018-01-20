@@ -1,0 +1,118 @@
+{% extends '_base.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('dist/js/bladeIndex.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    {% import '_utils.html.twig' as utils %}
+    {%- if currentDriver is null -%}
+        {%- set driverSlug = 'all' -%}
+    {%- else -%}
+        {%- set driverSlug = currentDriver.slug -%}
+    {%- endif -%}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link{% if currentDriver is null %} active{% endif %}" href="{{ path('blade_index') }}">
+                All
+            </a>
+        </li>
+        {% for driver in drivers %}
+            <li class="nav-item">
+                <a class="nav-link{% if driver == currentDriver %} active{% endif %}" href="{{ path('blade_index', {'driverSlug': driver.slug}) }}">
+                    {{ driver.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <ul class="xeno2--actions list-inline">
+        <li class="list-inline-item">
+            <a class="btn btn-primary" href="{{ path('blade_new', {'driverSlug': driverSlug}) }}">
+                Bond Blade
+            </a>
+        </li>
+    </ul>
+
+    {% if blades is not empty %}
+        {{ utils.tablesorterHelp(true) }}
+        <table id="blade-list" class="xeno2--blade--list table tablesorter" data-sortlist="{{ [[0,0]]|json_encode|e('html_attr') }}">
+            <thead>
+            <tr>
+                <th class="xeno2--blade--list--name">Name</th>
+                <th class="xeno2--blade--list--element filter-select">Element</th>
+                <th class="xeno2--blade--list--role filter-select">Role</th>
+                <th class="xeno2--blade--list--weapon filter-select">Weapon</th>
+                <th class="xeno2--blade--list--strength">Strength</th>
+                <th class="xeno2--blade--list--affinity" data-sorter="percent">Affinity</th>
+                <th class="xeno2--blade--list--trust filter-select">Trust</th>
+                <th class="xeno2--blade--list--rarity">Rarity</th>
+                <th class="xeno2--blade--list--merc-mission filter-select" data-empty="zero">Merc Mission</th>
+                <th class="xeno2--blade--list--action filter-false">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for blade in blades %}
+                <tr>
+                    <td class="xeno2--blade--list--name">{{ blade.name }}</td>
+                    <td class="xeno2--blade--list--element">
+                        <i class="fas fa-circle xeno2--element--{{ blade.element.slug }}"></i>&nbsp;{{ blade.element.name }}
+                    </td>
+                    <td class="xeno2--blade--list--role">{{ blade.battleRole.name }}</td>
+                    <td class="xeno2--blade--list--weapon">{{ blade.weaponClass.name }}</td>
+                    <td class="xeno2--blade--list--strength">{{ blade.strength }}</td>
+                    <td class="xeno2--blade--list--affinity" data-text="{{ blade.affinityPercent }}">
+                        {{ blade.affinity }}
+                        / {{ blade.affinityTotal }}
+                        ({{ blade.affinityPercent }}%)
+                    </td>
+                    <td class="xeno2--blade--list--trust" data-text="{{ blade.trust.sort }}">{{ blade.trust.name }}</td>
+                    <td class="xeno2--blade--list--rarity" data-text="{{ blade.rarity }}">
+                        {% spaceless %}
+                            <span class="sr-only">{{ blade.rarity }}</span>
+                            <span role="presentation" aria-hidden="true">
+                                {% for i in 1..(blade.rarity) %}
+                                    <i class="fas fa-star xeno2--icon"></i>
+                                {% endfor %}
+                            </span>
+                        {% endspaceless %}
+                    </td>
+                    <td class="xeno2--blade--list--merc-mission">{{ blade.mercMission.name|default('') }}</td>
+                    <td class="xeno2--blade--list--action">
+                        <a class="btn btn-outline-info" href="{{ path('blade_edit', {'blade': blade.id, 'driverSlug': driverSlug}) }}"><i class="fas fa-edit"></i></a>
+                        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#delete-blade" data-blade-name="{{ blade.name }}" data-blade-delete-path="{{ path('blade_delete', {'driverSlug': driverSlug, 'blade': blade.id}) }}">
+                            <i class="fas fa-minus-circle"></i>
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="modal fade" id="delete-blade" tabindex="-1" role="dialog" aria-labelledby="delete-blade-label" aria-hidden="true">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="delete-mission-label">Release Blade</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                            <span aria-hidden="true"><i class="far fa-window-close"></i></span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Are you sure you want to release <span class="delete-name"></span>?
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <a class="btn btn-danger delete-link" href="#">Release</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>
+            No blades bonded to this driver.
+        </p>
+    {% endif %}
+{% endblock %}

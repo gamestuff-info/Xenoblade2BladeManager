@@ -1,0 +1,21 @@
+#merc_mission_form_prerequisites,
+#merc_mission_form_field_skills {
+    column-width: 12rem;
+}
+
+.xeno2--mercmission--list--repeatable {
+    text-align: right;
+}
+
+.xeno2--mercmission--repeatable {
+    &--0 {
+        color: #b34b6a;
+    }
+    &--1 {
+        color: #718ac6;
+    }
+}
+
+.xeno2--mercmission--list--action {
+    white-space: nowrap;
+}

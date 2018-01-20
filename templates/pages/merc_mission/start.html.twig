@@ -1,0 +1,96 @@
+{% extends '_base.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('dist/js/mercMissionStart.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    {% import 'pages/merc_mission/start_blade_card.html.twig' as bladeCard %}
+
+    <div class="row">
+        <div class="col-sm-4">
+            <h3>Required</h3>
+            <ul id="mission-requirements-required">
+                {% for requirement in mercMission.requirements %}
+                    <li data-requirement-id="{{ requirement.id }}">
+                        <span class="requirement-count">{{ requirement.count }}</span> @ {{ requirement.name }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-sm-4">
+            <h3>Needed</h3>
+            <ul id="mission-requirements-unmet"></ul>
+            <p id="mission-requirements-met" class="d-none">All requirements have been met.</p>
+        </div>
+        <div class="col-sm-4">
+            <h3>Optional</h3>
+            <ul id="mission-fieldskills">
+                {% for fieldSkill in mercMission.fieldSkills %}
+                    <li data-fieldskill-id="{{ fieldSkill.id }}">
+                        <span class="fieldskill-count">0</span> @ {{ fieldSkill.name }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    {% form_theme form _self %}
+    {{ form_start(form) }}
+    <h2>Blades</h2>
+
+    <div id="blade-next-task" class="alert alert-primary">
+
+    </div>
+
+    <div id="blade-list" class="row no-gutters"></div>
+    {{ form_end(form) }}
+
+    <div id="blade-select-list" role="tablist">
+        {% for key, list in lists %}
+            <div class="card">
+                <div class="card-header" role="tab" id="blade-select-list-heading-{{ key }}">
+                    <h5 class="mb-0">
+                        <a data-toggle="collapse"
+                           href="#blade-select-list-{{ key }}"
+                           aria-expanded="{% if loop.first %}true{% else %}false{% endif %}"
+                           aria-controls="blade-select-list-{{ key }}"
+                           role="button">
+                            {{ list.name }}
+                        </a>
+                        <span class="badge badge-secondary">{{ list.blades|length }}</span>
+                    </h5>
+                </div>
+                <div id="blade-select-list-{{ key }}"
+                     class="collapse{% if loop.first %} show{% endif %}"
+                     aria-labelledby="blade-select-list-heading-{{ key }}"
+                     data-parent="#blade-select-list">
+                    <div class="card-body">
+                        <p class="text-muted">{{ list.help }}</p>
+                        <ul class="list-inline">
+                            {% for bladeInfo in list.blades %}
+                                {%- set blade = bladeInfo.blade -%}
+                                {# /** @var \App\Entity\Blade blade **/ #}
+                                {%- if blade.affinityPercent == 100 -%}
+                                    {%- set buttonClass = 'btn-outline-secondary' -%}
+                                {%- else -%}
+                                    {%- set buttonClass = 'btn-outline-dark' -%}
+                                {%- endif -%}
+                                <li class="list-inline-item">
+                                    <button type="button"
+                                            class="btn {{ buttonClass }} blade-select"
+                                            data-blade-id="{{ blade.id }}"
+                                            data-blade-requirements="{{ bladeInfo.requirements|serialize|e('html_attr') }}"
+                                            data-blade-fieldskills="{{ bladeInfo.fieldSkills|serialize|e('html_attr') }}"
+                                            data-blade-view="{{ bladeCard.bladeCard(blade)|e('html_attr') }}">
+                                        {{ blade.name }} ({{ blade.affinityPercent }}%)
+                                    </button>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,10 @@
+<ul class="nav nav-tabs" id="login-nav" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link{% if app.request.pathInfo == path('user_login') %} active{% endif %}"
+           href="{{ path('user_login') }}" role="tab" aria-selected="true">Login</a>
+    </li>
+    <li>
+        <a class="nav-link{% if app.request.pathInfo == path('user_register') %} active{% endif %}" id="register-tab"
+           href="{{ path('user_register') }}" role="tab">Register</a>
+    </li>
+</ul>

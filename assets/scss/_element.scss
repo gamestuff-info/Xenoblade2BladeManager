@@ -1,0 +1,16 @@
+$elementColors: (
+  'fire': #ff7000,
+  'water': #5075ff,
+  'ice': #42c4c4,
+  'wind': #01da6d,
+  'earth': #bb8024,
+  'electric': #ffe539,
+  'light': #fff9b6,
+  'dark': #693477,
+);
+
+@each $element, $color in $elementColors {
+    .xeno2--element--#{$element} {
+        color: $color,
+    }
+}

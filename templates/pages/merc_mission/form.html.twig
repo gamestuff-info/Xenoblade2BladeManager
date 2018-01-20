@@ -1,0 +1,57 @@
+{% extends '_base.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('dist/js/mercMissionForm.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    {% form_theme form _self 'vendor/jquery.collection.html.twig' %}
+    {% import _self as mercMissionForm %}
+
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.nation) }}
+    {{ form_row(form.prerequisites) }}
+    <fieldset class="form-group">
+        <legend class="col-form-legend">Requirements</legend>
+        <div id="requirements-accordion" role="tablist">
+            {{ mercMissionForm.requirementsSection(form.requirements_blade_class) }}
+            {{ mercMissionForm.requirementsSection(form.requirements_element) }}
+            {{ mercMissionForm.requirementsSection(form.requirements_field_skill) }}
+            {{ mercMissionForm.requirementsSection(form.requirements_gender) }}
+            {{ mercMissionForm.requirementsSection(form.requirements_strength) }}
+            {{ mercMissionForm.requirementsSection(form.requirements_weapon_class) }}
+        </div>
+    </fieldset>
+    {{ form_row(form.field_skills) }}
+    <div class="form-group">
+        {{ form_label(form.duration) }}
+        {{ form_errors(form.duration) }}
+        {{ form_widget(form.duration) }}
+        <small class="form-text text-muted">
+            hours:minutes
+        </small>
+    </div>
+    {{ form_row(form.repeatable) }}
+    {{ form_row(form.save) }}
+    {{ form_end(form) }}
+{% endblock %}
+
+{% macro requirementsSection(form) %}
+    <div class="card">
+        <div class="card-header" role="tab" id="requirements-accordian-{{ form.vars.name }}">
+            <h5 class="mb-0">
+                <a class="collapsed" id="requirements-accordion-label-{{ form.vars.name }}" data-toggle="collapse" href="#requirements-{{ form.vars.name }}" role="button" aria-expanded="false" aria-controls="requirements-{{ form.vars.name }}">
+                    {{ form.vars.label }}
+                </a>
+                <span id="{{ form.vars.id }}-count" class="badge badge-secondary">{{ form.children|length }}</span>
+            </h5>
+        </div>
+        <div id="requirements-{{ form.vars.name }}" class="collapse" role="tabpanel" aria-labelledby="requirements-accordion-{{ form.vars.name }}" data-parent="requirements-accordion">
+            <div class="card-body">
+                {{ form_errors(form) }}
+                {{ form_widget(form) }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}

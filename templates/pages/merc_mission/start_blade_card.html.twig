@@ -1,0 +1,54 @@
+{% autoescape 'html_attr' %}
+    {% import _self as bladeCard %}
+    {{ bladeCard.bladeCard(blade) }}
+{% endautoescape %}
+
+{% macro bladeCard(blade) %}
+    {#- /** @var \App\Entity\Blade blade **/ -#}
+    {%- spaceless -%}
+        <div class="col-sm-2 blade-card" data-blade-id="{{ blade.id }}">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <a href="#blade-info-{{ blade.id }}" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="blade-info-{{ blade.id }}">{{ blade.name }}</a>
+                    </h5>
+                </div>
+                <div id="blade-info-{{ blade.id }}" class="collapse">
+                    <div class="card-body">
+                        <dl>
+                            <dt>Gender</dt>
+                            <dd>{{ blade.gender.name }}</dd>
+                            <dt>Element</dt>
+                            <dd>{{ blade.element.name }}</dd>
+                            <dt>Strength</dt>
+                            <dd>{{ blade.strength }}</dd>
+                            <dt>Weapon</dt>
+                            <dd>{{ blade.weaponClass.name }}</dd>
+                            <dt>Field Skills</dt>
+                            <dd>
+                                <ul class="list-unstyled">
+                                    {%- for fieldSkill in blade.affinityNodes -%}
+                                        <li>{{ fieldSkill.affinityNode.name }} Lv. {{ fieldSkill.level }}</li>
+                                    {%- endfor -%}
+                                </ul>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <fieldset>
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input id="blade-leader-{{ blade.id }}" type="radio" class="form-check-input blade-leader" data-blade-id="{{ blade.id }}">
+                                <label for="blade-leader-{{ blade.id }}" class="form-check-label">Leader</label>
+                            </div>
+                        </div>
+                        <button type="button" class="form-control btn btn-danger blade-remove" data-blade-id="{{ blade.id }}">
+                            Remove
+                        </button>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    {%- endspaceless -%}
+{% endmacro %}

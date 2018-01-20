@@ -1,0 +1,185 @@
+{% macro tablesorterHelp(filters) %}
+    {%- set modalId = random() -%}
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#{{ modalId }}-modal">
+        <i class="fas fa-question-circle"></i> Table Sorting{% if filters|default(false) %} & Filtering{% endif %} Help
+    </button>
+    <div id="{{ modalId }}-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="{{ modalId }}-title" aria-hidden="true">
+        <div class="modal-dialog{% if filters|default(false) %} modal-lg{% endif %}" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="{{ modalId }}-title">Table help</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="far fa-window-close"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Click table headers to change sort direction. Hold <kbd><kbd>Shift</kbd></kbd> to sort by more
+                        than one column.
+                    </p>
+                    {% if filters|default(false) %}
+                        <p>
+                            The filters are quite advanced. Beyond simple search-type filters, special character can be
+                            used to refine the filter. To remove a filter, clear the input box. To search for a blank
+                            value, enter <code>=</code>.
+                        </p>
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Examples</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>
+                                    <code>|</code> or <code>OR</code>
+                                </td>
+                                <td>
+                                    Logical "or" (Vertical bar). Filter the column for content that matches text from
+                                    either
+                                    side of the bar.
+                                </td>
+                                <td>
+                                    <code>box|bat</code> (matches a column cell with either "box" or "bat").
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>&&</code> or <code>AND</code>
+                                </td>
+                                <td>
+                                    Logical "and". Filter the column for content that matches text from either side of
+                                    the operator.
+                                </td>
+                                <td>
+                                    <code>box && bat</code> (matches a column cell that contains both "box" and "bat").
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    RegEx
+                                </td>
+                                <td>
+                                    Add any
+                                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Writing_a_regular_expression_pattern">regular
+                                        expression</a> to the query to use in the query ("m", "i", and/or "g"
+                                    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Advanced_searching_with_flags">flags</a>
+                                    can be included e.g. <code>/\w/mig</code>)
+                                </td>
+                                <td>
+                                    <code>/b[aeiou]g/i</code> (finds "bag", "beg", "BIG", "Bug", etc); <code>/r$/</code>
+                                    (matches text that ends with an "r").
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;=</code>, or <code>&gt;</code>
+                                </td>
+                                <td>
+                                    Find alphabetical or numerical values less than or greater than or equal to the
+                                    filtered query.
+                                </td>
+                                <td>
+                                    <code>&gt;= 10</code> (find values greater than or equal to 10)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>!</code> or <code>!=</code>
+                                </td>
+                                <td>
+                                    Not operator, or not exactly match. Filter the column with content that do not match
+                                    the query. Include an equal (<code>=</code>), single (<code>'</code>) or double
+                                    quote (<code>"</code>) to exactly not match a filter.
+                                </td>
+                                <td>
+                                    <code>!fe</code> (hide rows with "female" in that column, but shows rows with
+                                    "male"); <code>!a</code> (find text that doesn't contain an "a");
+                                    <code>!"Bruce"</code> (find content that does not
+                                    exactly match "Bruce").
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>"</code> or <code>=</code>
+                                </td>
+                                <td>
+                                    To exactly match the search query, add a quote, apostrophe or equal sign to the
+                                    beginning and/or end of the query
+                                </td>
+                                <td>
+                                    <code>abc"</code> or <code>abc=</code> (exactly match "abc").
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code> - </code> or <code> to </code>
+                                </td>
+                                <td>
+                                    Find a range of values. Make sure there is a space before and after the dash (or the
+                                    word "to").
+                                </td>
+                                <td>
+                                    <code>10 - 30</code> or <code>10 to 30</code> (match values between 10 and 30).
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>?</code>
+                                </td>
+                                <td>
+                                    Wildcard for a single, non-space character.
+                                </td>
+                                <td>
+                                    <code>J?n</code> (finds "Jan" and "Jun", but not "Joan").
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>*</code>
+                                </td>
+                                <td>
+                                    Wildcard for zero or more non-space characters.
+                                </td>
+                                <td>
+                                    <code>B*k</code> (matches "Black" and "Book").
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <code>~</code>
+                                </td>
+                                <td>
+                                    Perform a fuzzy search (matches sequential characters) by adding a tilde to the
+                                    beginning of the query.
+                                </td>
+                                <td>
+                                    <code>~bee</code> (matches "Bruce Lee" and "Brenda Dexter"), or <code>~piano</code>
+                                    (matches "Philip Aaron Wong").
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    text
+                                </td>
+                                <td>
+                                    Any text entered in the filter will match text found within the column.
+                                </td>
+                                <td>
+                                    <code>abc</code> (finds "abc", "abcd", "abcde", etc); <code>Aaron</code> (finds
+                                    "Aaron" and "Philip Aaron Wong").
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
