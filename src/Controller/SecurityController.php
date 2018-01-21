@@ -19,14 +19,14 @@ class SecurityController extends Controller
 {
 
     /**
-     * @param Request $request
      * @param AuthenticationUtils $authUtils
+     * @param TranslatorInterface $translator
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route("/user/login", name="user_login")
      */
-    public function loginAction(Request $request, AuthenticationUtils $authUtils, TranslatorInterface $translator)
+    public function loginAction(AuthenticationUtils $authUtils, TranslatorInterface $translator)
     {
         // get the login error if there is one
         $error = $authUtils->getLastAuthenticationError();
@@ -96,6 +96,58 @@ class SecurityController extends Controller
     }
 
     /**
+     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \App\Entity\User $user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/user/activate/{user}", name="user_activate")
+     * @ParamConverter(
+     *     "user",
+     *     class="App\Entity\User",
+     *     options={"mapping":{"user": "id"}}
+     *     )
+     */
+    public function activateAction(Request $request, User $user)
+    {
+        $activationCode = $request->get('key');
+        if (is_null($activationCode)) {
+            throw new NotFoundHttpException();
+        }
+
+        try {
+            $expirationTime = new \DateInterval('PT2H');
+        } catch (\Exception $e) {
+            throw new \LogicException('Interval is not valid', 0, $e);
+        }
+        $codeExpired = new \DateTime() >= $user->getActivateCodeTime()->add(
+            $expirationTime
+          );
+        if ($user->getActivateCode() == $activationCode) {
+            if (!$codeExpired) {
+                $user->activate();
+
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($user);
+                $em->flush();
+
+                $this->addFlash(
+                  'success',
+                  'Your account has been activated.  You may now login.'
+                );
+
+                return $this->redirectToRoute('user_login');
+            } else {
+                $this->addFlash('danger', 'This activation code is expired.');
+            }
+        } else {
+            $this->addFlash('danger', 'This is the wrong activation code.');
+        }
+
+        return $this->redirectToRoute('main');
+    }
+
+    /**
      * @param User $user
      * @param \Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface $passwordEncoder
      *
@@ -144,53 +196,5 @@ class SecurityController extends Controller
             'text/plain'
           );
         $mailer->send($message);
-    }
-
-    /**
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \App\Entity\User $user
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     *
-     * @Route("/user/activate/{user}", name="user_activate")
-     * @ParamConverter(
-     *     "user",
-     *     class="App\Entity\User",
-     *     options={"mapping":{"user": "username"}}
-     *     )
-     */
-    public function activateAction(Request $request, User $user)
-    {
-        $activationCode = $request->get('key');
-        if (is_null($activationCode)) {
-            throw new NotFoundHttpException();
-        }
-
-        $expirationTime = new \DateInterval('PT2H');
-        $codeExpired = new \DateTime() >= $user->getActivateCodeTime()->add(
-            $expirationTime
-          );
-        if ($user->getActivateCode() == $activationCode) {
-            if (!$codeExpired) {
-                $user->activate();
-
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($user);
-                $em->flush();
-
-                $this->addFlash(
-                  'success',
-                  'Your account has been activated.  You may now login.'
-                );
-
-                return $this->redirectToRoute('user_login');
-            } else {
-                $this->addFlash('danger', 'This activation code is expired.');
-            }
-        } else {
-            $this->addFlash('danger', 'This is the wrong activation code.');
-        }
-
-        return $this->redirectToRoute('main');
     }
 }

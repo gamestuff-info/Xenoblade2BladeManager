@@ -21,10 +21,10 @@
         <div class="col-sm-auto">
             <div class="card">
                 <div class="card-body text-sm-center">
-                    <h2 class="card-titler">Activation code</h2>
+                    <h2 class="card-title">Activation code</h2>
                     <p class="card-text text-uppercase" style="font-family: monospace">{{ user.activateCode }}</p>
                     <a class="btn btn-primary"
-                       href="{{ url('user_activate', {'user': user.username, 'key': user.activateCode}) }}">Activate!</a>
+                       href="{{ url('user_activate', {'user': user.id, 'key': user.activateCode}) }}">Activate!</a>
                 </div>
             </div>
         </div>
