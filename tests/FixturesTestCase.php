@@ -87,24 +87,25 @@ abstract class FixturesTestCase extends WebTestCase
      * @see \Fidry\AliceDataFixtures\Loader\PurgerLoader::load()
      *
      * @param array|string $fixtureNames
+     * @param array|string $testFixtures
      * @param array $parameters
      * @param array $objects
      * @param PurgeMode|null $purgeMode
      *
      * @return array
      */
-    protected function loadFixturesFromFile($fixtureNames = [], $parameters = [], $objects = [], PurgeMode $purgeMode = null): array
+    protected function loadFixturesFromFile($fixtureNames = [], $testFixtures = [], $parameters = [], $objects = [], PurgeMode $purgeMode = null): array
     {
         if (!is_array($fixtureNames)) {
             $fixtureNames = [$fixtureNames];
         }
+        if (!is_array($testFixtures)) {
+            $testFixtures = [$testFixtures];
+        }
 
         $fixturesFiles = [];
-        if (empty($fixtureName)) {
-            $finder = new Finder();
-            $finder->in($this->fixturesDir)
-              ->files()
-              ->name('/\.(php|yaml|yml)$/');
+        if (empty($fixtureNames)) {
+            $finder = $this->findFixtureFiles();
             foreach ($finder as $fileInfo) {
                 $fixturesFiles[] = $fileInfo->getRealPath();
             }
@@ -118,6 +119,15 @@ abstract class FixturesTestCase extends WebTestCase
                 );
                 $fixturesFiles[] = $filePath;
             }
+        }
+        foreach ($testFixtures as $testFixture) {
+            $fixturesFiles[] = implode(
+              DIRECTORY_SEPARATOR, [
+                $this->fixturesDir,
+                'tests',
+                $testFixture,
+              ]
+            );
         }
 
         return $this->loader->load($fixturesFiles, $parameters, $objects, $purgeMode);
@@ -139,9 +149,7 @@ abstract class FixturesTestCase extends WebTestCase
             $fixtureNames = [$fixtureNames];
         }
 
-        $finder = new Finder();
-        $finder->files()
-          ->name('/\.(php|yaml|yml)$/');
+        $finder = $this->findFixtureFiles();
         foreach ($fixtureNames as $fixtureName) {
             $finder->notName($fixtureName);
         }
@@ -152,5 +160,21 @@ abstract class FixturesTestCase extends WebTestCase
         }
 
         return $this->loader->load($fixturesFiles, $parameters, $objects, $purgeMode);
+    }
+
+    /**
+     * Use the Finder to find fixture files.
+     *
+     * @return Finder
+     */
+    private function findFixtureFiles(): Finder
+    {
+        $finder = new Finder();
+        $finder->in($this->fixturesDir)
+          ->files()
+          ->depth('== 0')
+          ->name('/\.(php|yaml|yml)$/');
+
+        return $finder;
     }
 }

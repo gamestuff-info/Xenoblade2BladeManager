@@ -223,29 +223,6 @@ class BladeController extends Controller
 
     /**
      * @param Blade $blade
-     * @param string $_format
-     * @param SerializerInterface $serializer
-     *
-     * @return string
-     *
-     * @Route("/blades/{driverSlug}/show/{blade}.{_format}", name="blade_show", defaults={"_format": "html"})
-     * @ParamConverter("blade", options={"mapping": {"blade": "id"}})
-     */
-    public function show(Blade $blade, string $_format, SerializerInterface $serializer)
-    {
-        $this->denyAccessUnlessGranted('VIEW', $blade);
-
-        if ($_format == 'json') {
-            $serializedValue = $serializer->serialize($blade, 'json', ['api']);
-
-            return $serializedValue;
-        }
-
-        throw new NotFoundHttpException();
-    }
-
-    /**
-     * @param Blade $blade
      */
     private function showBladeAddedMessage(Blade $blade)
     {

@@ -56,7 +56,7 @@
                 <tr>
                     <td class="xeno2--blade--list--name">{{ blade.name }}</td>
                     <td class="xeno2--blade--list--element">
-                        <i class="fas fa-circle xeno2--element--{{ blade.element.slug }}"></i>&nbsp;{{ blade.element.name }}
+                        <i class="fas fa-circle xeno2--element--{{ blade.element.slug }}"></i>&nbsp;<span>{{ blade.element.name }}</span>
                     </td>
                     <td class="xeno2--blade--list--role">{{ blade.battleRole.name }}</td>
                     <td class="xeno2--blade--list--weapon">{{ blade.weaponClass.name }}</td>
@@ -79,8 +79,12 @@
                     </td>
                     <td class="xeno2--blade--list--merc-mission">{{ blade.mercMission.name|default('') }}</td>
                     <td class="xeno2--blade--list--action">
-                        <a class="btn btn-outline-info" href="{{ path('blade_edit', {'blade': blade.id, 'driverSlug': driverSlug}) }}"><i class="fas fa-edit"></i></a>
+                        <a class="btn btn-outline-info" href="{{ path('blade_edit', {'blade': blade.id, 'driverSlug': driverSlug}) }}">
+                            <span class="sr-only">Edit</span>
+                            <i class="fas fa-edit"></i>
+                        </a>
                         <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#delete-blade" data-blade-name="{{ blade.name }}" data-blade-delete-path="{{ path('blade_delete', {'driverSlug': driverSlug, 'blade': blade.id}) }}">
+                            <span class="sr-only">Delete</span>
                             <i class="fas fa-minus-circle"></i>
                         </button>
                     </td>

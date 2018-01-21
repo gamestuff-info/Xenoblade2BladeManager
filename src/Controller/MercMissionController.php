@@ -258,6 +258,7 @@ class MercMissionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // TODO: Check to ensure that the Blades belong to the user.
             $em = $this->getDoctrine()->getManager();
             $bladeIds = json_decode($form->getData()['blades']);
             $leaderId = $form->getData()['leader'];
