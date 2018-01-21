@@ -32,6 +32,7 @@ abstract class BladeSuperclass
      * @var Collection|BladeAffinityNode[]
      *
      * @ORM\OneToMany(targetEntity="BladeAffinityNode", mappedBy="blade", cascade={"all"}, orphanRemoval=true)
+     * @Assert\Valid()
      */
     protected $affinityNodes;
 

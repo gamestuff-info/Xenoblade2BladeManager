@@ -76,7 +76,7 @@ class Blade extends BladeSuperclass
     protected $isMercLeader = false;
 
     /**
-     * @return UserInterface
+     * @return User
      */
     public function getUser(): UserInterface
     {
