@@ -11,6 +11,9 @@ use Fidry\AliceDataFixtures\Loader\PurgerLoader;
 use Fidry\AliceDataFixtures\Persistence\PurgeMode;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Finder\Finder;
 
 abstract class FixturesTestCase extends WebTestCase
@@ -41,6 +44,10 @@ abstract class FixturesTestCase extends WebTestCase
      */
     private $client;
 
+    /**
+     * @throws \Exception
+     *   Thrown when the doctrine:schema:update command cannot run.
+     */
     public function setUp()
     {
         parent::setUp();
@@ -58,6 +65,20 @@ abstract class FixturesTestCase extends WebTestCase
             'fixtures',
           ]
         );
+
+        // Initialize the database.  The easiest way to do this is to run
+        // doctrine:schema:update --force programmatically.
+        $kernel = $container->get('kernel');
+        $application = new Application($kernel);
+        $application->setAutoExit(false);
+        $input = new ArrayInput(
+          [
+            'command' => 'doctrine:schema:update',
+            '--force' => true,
+          ]
+        );
+        $output = new NullOutput();
+        $application->run($input, $output);
     }
 
     /**
