@@ -26,4 +26,4 @@ before_script:
 # Run our tests
 test:
   script:
-  - vendor/bin/phpunit --configuration phpunit.xml.dist --coverage-text --colors=never
+  - bin/phpunit --configuration phpunit.xml.dist --coverage-text --colors=never
