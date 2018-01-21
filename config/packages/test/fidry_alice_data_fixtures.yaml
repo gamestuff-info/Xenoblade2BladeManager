@@ -1,0 +1,9 @@
+fidry_alice_data_fixtures:
+    default_purge_mode:   delete
+
+    # The list of enabled drivers.
+    db_drivers:
+        doctrine_orm:         ~
+        doctrine_mongodb_odm: false
+        doctrine_phpcr_odm:   false
+        eloquent_orm:         false
