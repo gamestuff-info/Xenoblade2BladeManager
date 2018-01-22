@@ -26,7 +26,7 @@ class MercMissionStopType extends AbstractType
               'label' => false,
             ],
             'by_reference' => false,
-              'label_attr' => ['class' => 'sr-only']
+            'label_attr' => ['class' => 'sr-only'],
           ]
         )->add(
           'finish',

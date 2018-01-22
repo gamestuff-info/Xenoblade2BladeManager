@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BladeRepository")
  */
-class Blade extends BladeSuperclass
+class Blade extends BladeSuperclass implements OwnedInterface
 {
 
     /**

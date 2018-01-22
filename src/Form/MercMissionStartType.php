@@ -3,22 +3,22 @@
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class MercMissionStartType extends AbstractType
 {
 
     /**
-     * @var \Twig_Environment
+     * @var TokenStorageInterface
      */
-    protected $twig;
+    protected $tokenStorage;
 
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(TokenStorageInterface $tokenStorage)
     {
-        $this->twig = $twig;
+        $this->tokenStorage;
     }
 
     /**
@@ -29,10 +29,20 @@ class MercMissionStartType extends AbstractType
     {
         $builder->add(
           'blades',
-          HiddenType::class
-        )->add(
-          'leader',
-          HiddenType::class
+          CollectionType::class,
+          [
+            'entry_type' => MercMissionBladeType::class,
+            'entry_options' => [
+              'label' => false,
+            ],
+            'allow_add' => true,
+            'allow_delete' => true,
+            'prototype' => true,
+            'label' => false,
+            'attr' => [
+              'class' => 'row no-gutters',
+            ],
+          ]
         )->add(
           'submit',
           SubmitType::class,
@@ -45,10 +55,5 @@ class MercMissionStartType extends AbstractType
             ],
           ]
         );
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([]);
     }
 }

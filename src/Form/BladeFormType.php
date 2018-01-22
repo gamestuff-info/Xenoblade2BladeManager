@@ -109,6 +109,10 @@ class BladeFormType extends AbstractType
               },
             ]
           )->add(
+            'canBeReleased',
+            CheckboxType::class,
+            ['required' => false]
+          )->add(
             'isMerc',
             CheckboxType::class,
             ['required' => false]

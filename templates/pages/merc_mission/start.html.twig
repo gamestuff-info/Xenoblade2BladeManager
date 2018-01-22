@@ -5,8 +5,6 @@
 {% endblock %}
 
 {% block content %}
-    {% import 'pages/merc_mission/start_blade_card.html.twig' as bladeCard %}
-
     <div class="row">
         <div class="col-sm-4">
             <h3>Required</h3>
@@ -39,11 +37,10 @@
     {{ form_start(form) }}
     <h2>Blades</h2>
 
-    <div id="blade-next-task" class="alert alert-primary">
+    <div id="blade-next-task" class="alert alert-primary"></div>
 
-    </div>
-
-    <div id="blade-list" class="row no-gutters"></div>
+    {{ form_row(form.blades) }}
+    {{ form_row(form.submit) }}
     {{ form_end(form) }}
 
     <div id="blade-select-list" role="tablist">
@@ -82,7 +79,7 @@
                                             data-blade-id="{{ blade.id }}"
                                             data-blade-requirements="{{ bladeInfo.requirements|serialize|e('html_attr') }}"
                                             data-blade-fieldskills="{{ bladeInfo.fieldSkills|serialize|e('html_attr') }}"
-                                            data-blade-view="{{ bladeCard.bladeCard(blade)|e('html_attr') }}">
+                                            data-blade-info="{{ bladeInfo.info|serialize|e('html_attr') }}">
                                         {{ blade.name }} ({{ blade.affinityPercent }}%)
                                     </button>
                                 </li>
@@ -92,5 +89,45 @@
                 </div>
             </div>
         {% endfor %}
+    </div>
+{% endblock %}
+
+{% block merc_mission_blade_row %}
+    {# IMPORTANT NOTE: There is no access to the blade entity here.  To insert entity from the blade entity, it must
+       be added in the noted array in MercMissionController::buildBladeMetadata.  The special string "__blade_thing__"
+       is replaced with the value, where "thing" is the key in the metadata array. #}
+    <div class="col-sm-2 blade-card" data-blade-id="__blade_id__">
+        {{ form_row(form.blade) }}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <a href="#blade-info-__blade_id__" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="blade-info-__blade_id__">__blade_name__</a>
+                </h5>
+            </div>
+            <div id="blade-info-__blade_id__" class="collapse">
+                <div class="card-body">
+                    <dl>
+                        <dt>Gender</dt>
+                        <dd>__blade_gender__</dd>
+                        <dt>Element</dt>
+                        <dd>__blade_element__</dd>
+                        <dt>Strength</dt>
+                        <dd>__blade_strength__</dd>
+                        <dt>Weapon</dt>
+                        <dd>__blade_weapon_class__</dd>
+                        <dt>Field Skills</dt>
+                        <dd>
+                            <ul class="list-unstyled">
+                                __blade_field_skills__
+                            </ul>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="card-footer">
+                {{ form_row(form.leader) }}
+                {{ form_row(form.remove) }}
+            </div>
+        </div>
     </div>
 {% endblock %}

@@ -258,19 +258,16 @@ class MercMissionController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // TODO: Check to ensure that the Blades belong to the user.
             $em = $this->getDoctrine()->getManager();
-            $bladeIds = json_decode($form->getData()['blades']);
-            $leaderId = $form->getData()['leader'];
-            $blades = $bladeRepo->findBy(['id' => $bladeIds]);
+            $data = $form->getData()['blades'];
 
-            foreach ($blades as &$blade) {
+            foreach ($data as $bladeData) {
+                /** @var Blade $blade */
+                $blade = $bladeData['blade'];
+                $isLeader = $bladeData['leader'];
+
                 $blade->setMercMission($mercMission);
-                if ($blade->getId() == $leaderId) {
-                    $blade->setIsMercLeader(true);
-                } else {
-                    $blade->setIsMercLeader(false);
-                }
+                $blade->setIsMercLeader($isLeader);
 
                 $em->persist($blade);
             }
@@ -480,8 +477,24 @@ class MercMissionController extends Controller
         $bladeList = [];
 
         foreach ($blades as $blade) {
+            // This is where the various __blade_thing__ replacements in the
+            // frontend come from.
+            $bladeInfo = [
+              'id' => $blade->getId(),
+              'name' => $blade->getName(),
+              'gender' => $blade->getGender()->getName(),
+              'element' => $blade->getElement()->getName(),
+              'strength' => $blade->getStrength(),
+              'weapon_class' => $blade->getWeaponClass()->getName(),
+              'field_skills' => '',
+            ];
+            foreach ($blade->getAffinityNodes() as $bladeAffinityNode) {
+                $bladeInfo['field_skills'] .= '<li>'.$bladeAffinityNode->getAffinityNode()->getName().' Lv. '.$bladeAffinityNode->getLevel().'</li>';
+            }
+
             $bladeList[] = [
               'blade' => $blade,
+              'info' => $bladeInfo,
               'requirements' => $this->getRequirementsMet($blade, $mercMission),
               'fieldSkills' => $this->getFieldSkillsMet($blade, $mercMission),
             ];
