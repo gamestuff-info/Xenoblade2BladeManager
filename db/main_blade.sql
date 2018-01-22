@@ -1,0 +1,15 @@
+CREATE TABLE blade
+(
+    id INTEGER PRIMARY KEY NOT NULL,
+    user_id INTEGER DEFAULT NULL,
+    driver_id INTEGER DEFAULT NULL,
+    trust_id INTEGER DEFAULT NULL,
+    merc_mission_id INTEGER DEFAULT NULL,
+    strength INTEGER NOT NULL,
+    affinity INTEGER NOT NULL,
+    is_merc_leader BOOLEAN NOT NULL
+);
+CREATE INDEX IDX_217C01E8A76ED395 ON blade (user_id);
+CREATE INDEX IDX_217C01E8C3423909 ON blade (driver_id);
+CREATE INDEX IDX_217C01E8AE0FAC85 ON blade (trust_id);
+CREATE INDEX IDX_217C01E852594D7F ON blade (merc_mission_id);

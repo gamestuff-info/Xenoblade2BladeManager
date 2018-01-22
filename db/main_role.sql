@@ -1,0 +1,9 @@
+CREATE TABLE role
+(
+    id INTEGER PRIMARY KEY NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) NOT NULL
+);
+CREATE UNIQUE INDEX UNIQ_57698A6A989D9B62 ON role (slug);
+INSERT INTO role (id, name, slug) VALUES (1, 'ROLE_USER', 'user');
+INSERT INTO role (id, name, slug) VALUES (2, 'ROLE_ADMIN', 'admin');
