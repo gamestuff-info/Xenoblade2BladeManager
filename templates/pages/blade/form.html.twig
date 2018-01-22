@@ -65,7 +65,7 @@
             {{ form_row(form.rarity) }}
         </div>
     </div>
-    <div class="form-row">
+    <div class="form-row align-items-end">
         <div class="col-sm-4">
             <div class="form-group">
                 {{ form_label(form.affinity) }}
@@ -84,6 +84,16 @@
         </div>
         <div class="col-sm-4">
             {{ form_row(form.trust) }}
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                {{ form_label(form.canBeReleased) }}
+                {{ form_errors(form.canBeReleased) }}
+                {{ form_widget(form.canBeReleased) }}
+                <small class="form-text text-muted">
+                    A few specific blades cannot be released.
+                </small>
+            </div>
         </div>
     </div>
     <div class="form-row align-items-end">
@@ -104,8 +114,7 @@
                 {{ form_widget(form.isMerc) }}
                 <small class="form-text text-muted">
                     Not all Blades can be sent on Merc Missions. Uncheck this box if this Blade cannot be sent out
-                    (usually
-                    for story reasons).
+                    (usually for story reasons).
                 </small>
             </div>
         </div>

@@ -166,6 +166,7 @@ class BladeControllerTest extends FixturesTestCase
         self::assertEquals($formValues['blade_form']['affinity'], $blade->getAffinity(), 'Wrong affinity persisted');
         self::assertEquals($formValues['blade_form']['affinityTotal'], $blade->getAffinityTotal(), 'Wrong affinity total persisted');
         self::assertEquals($formValues['blade_form']['trust'], $blade->getTrust()->getId(), 'Wrong trust persisted');
+        self::assertEquals($formValues['blade_form']['canBeReleased'], $blade->canBeReleased(), 'Wrong releasable status persisted');
         self::assertEquals($formValues['blade_form']['mercTeamName'], $blade->getMercTeamName(), 'Wrong merc team name persisted');
         self::assertEquals($formValues['blade_form']['isMerc'], $blade->isMerc(), 'Wrong merc status persisted');
         $bladeAffinityNodeIds = [];
@@ -214,6 +215,7 @@ class BladeControllerTest extends FixturesTestCase
             'affinity' => $faker->numberBetween(0, $affinityTotal),
             'affinityTotal' => $affinityTotal,
             'trust' => $faker->numberBetween(1, 6),
+            'canBeReleased' => $faker->boolean,
             'mercTeamName' => $faker->words(2, true),
             'isMerc' => $faker->boolean,
           ],
@@ -277,6 +279,7 @@ class BladeControllerTest extends FixturesTestCase
           'affinity' => $faker->numberBetween(3, 5),
           'affinityTotal' => 2,
           'trust' => $faker->numberBetween(1, 6),
+          'canBeReleased' => $faker->boolean,
           'mercTeamName' => $faker->words(2, true),
           'isMerc' => $faker->boolean,
         ];
@@ -331,8 +334,9 @@ class BladeControllerTest extends FixturesTestCase
         self::assertEquals($ownedBlade->getAffinity(), $formValues['blade_form']['affinity'], 'Wrong affinity displayed');
         self::assertEquals($ownedBlade->getAffinityTotal(), $formValues['blade_form']['affinityTotal'], 'Wrong affinity total displayed');
         self::assertEquals($ownedBlade->getTrust()->getId(), $formValues['blade_form']['trust'], 'Wrong trust displayed');
+        self::assertEquals($ownedBlade->canBeReleased(), array_key_exists('canBeReleased', $formValues['blade_form']), 'Wrong releasable status displayed');
         self::assertEquals($ownedBlade->getMercTeamName(), $formValues['blade_form']['mercTeamName'], 'Wrong merc team name displayed');
-        self::assertEquals($ownedBlade->isMerc(), $formValues['blade_form']['isMerc'], 'Wrong merc status displayed');
+        self::assertEquals($ownedBlade->isMerc(), array_key_exists('isMerc', $formValues['blade_form']), 'Wrong merc status displayed');
         $bladeAffinityNodeIds = [];
         foreach ($ownedBlade->getAffinityNodes() as $bladeAffinityNode) {
             $bladeAffinityNodeIds[] = $bladeAffinityNode->getAffinityNode()->getId();
