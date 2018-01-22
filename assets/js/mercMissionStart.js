@@ -1,15 +1,12 @@
 const $ = require('jquery');
 
-let bladeIds = [];
 // requirementId: remainingCount
 let requirements = new Map();
 // fieldSkillId: count
 let fieldSkills = new Map();
 
 $(document).ready(function () {
-    const formBladeList = $('#merc_mission_start_blades');
-    const formLeader = $('#merc_mission_start_leader');
-    const bladeList = $('#blade-list');
+    const bladeList = $('#merc_mission_start_blades');
     const allRequirementsList = $('#mission-requirements-required');
     const unmetRequirementsList = $('#mission-requirements-unmet');
     const fieldSkillsList = $('#mission-fieldskills');
@@ -19,44 +16,10 @@ $(document).ready(function () {
 
     $('.blade-select').on('click', function () {
         // Cap the number of Blades at 6.
-        if (bladeIds.length < 6) {
+        if (bladeList.children().length < 6) {
             const addButton = $(this);
             const bladeId = parseInt(addButton.data('blade-id'));
-            const view = $.parseHTML(addButton.data('blade-view'))[0];
-
-            // Enable the remove button and leader selection
-            $(view).ready(function () {
-                $('.blade-remove[data-blade-id="' + bladeId + '"]').on('click', function () {
-                    const removeButton = $(this);
-                    const bladeCard = bladeList.find('.blade-card[data-blade-id="' + bladeId + '"]').first();
-
-                    // Remove the click handler
-                    removeButton.off('click');
-
-                    // Remove the actual view
-                    bladeCard.remove();
-                    setBladeButtonDisabled(bladeId, false);
-
-                    // Remove the blade from the data.
-                    const bladeIdIndex = bladeIds.indexOf(bladeId);
-                    bladeIds.splice(bladeIdIndex, 1);
-                    // If this blade was the leader, reset the leader value to nothing
-                    if (formLeader.attr('value') == bladeId) {
-                        formLeader.attr('value', null);
-                    }
-
-                    updateBladeIds();
-                    updateMissionInfo();
-                });
-                $('.blade-leader[data-blade-id="' + bladeId + '"]').on('click', function () {
-                    // Deselect the other radio buttons
-                    $('.blade-leader[data-blade-id!="' + bladeId + '"]').prop('checked', false);
-
-                    // Save this to the form
-                    formLeader.attr('value', bladeId);
-                    readyToStart();
-                });
-            });
+            const view = buildViewFromPrototype(addButton);
 
             // Add data to the view so it can be tracked
             $(view).data('blade-requirements', addButton.data('blade-requirements'));
@@ -64,15 +27,10 @@ $(document).ready(function () {
 
             bladeList.append(view);
             setBladeButtonDisabled(bladeId, true);
-            bladeIds.push(bladeId);
+            // bladeIds.push(bladeId);
             updateMissionInfo();
-            updateBladeIds();
         }
     });
-
-    function updateBladeIds() {
-        formBladeList.attr('value', JSON.stringify(bladeIds));
-    }
 
     function setBladeButtonDisabled(bladeId, state) {
         bladeButtons.filter('[data-blade-id="' + bladeId + '"]').prop('disabled', state);
@@ -94,7 +52,7 @@ $(document).ready(function () {
         const nextTaskAlert = $('#blade-next-task');
         let readyToStart = true;
         let nextTaskMessage;
-        if (formLeader.attr('value') == undefined) {
+        if (!hasLeader()) {
             readyToStart = false;
             nextTaskMessage = 'Choose a blade to be the leader.';
         }
@@ -157,6 +115,54 @@ $(document).ready(function () {
 
         // Is the mission ready to start?
         readyToStart();
+    }
+
+    let bladeCounter = 0;
+
+    function buildViewFromPrototype(bladeButton) {
+        bladeButton = $(bladeButton);
+        const bladeId = parseInt($(bladeButton).data('blade-id'));
+        const bladeInfo = $(bladeButton).data('blade-info');
+
+        // Create the view from the prototype and fill in the data
+        let view = $('#merc_mission_start_blades').data('prototype').trim();
+        view = view.replace(/__name__/g, bladeCounter);
+        for (let infoKey in bladeInfo) {
+            if (bladeInfo.hasOwnProperty(infoKey)) {
+                view = view.replace(new RegExp('__blade_' + infoKey + '__', 'g'), bladeInfo[infoKey]);
+            }
+        }
+        view = $.parseHTML(view);
+        $(view).find('#merc_mission_start_blades_' + bladeCounter + '_blade').attr('value', bladeId);
+
+        // Enable the remove button and leader selection
+        $(view).find('#merc_mission_start_blades_' + bladeCounter + '_remove').on('click', function () {
+            const removeButton = $(this);
+            const bladeCard = bladeList.find('.blade-card[data-blade-id="' + bladeId + '"]').first();
+
+            // Remove the click handler
+            removeButton.off('click');
+
+            // Remove the actual view
+            bladeCard.remove();
+            setBladeButtonDisabled(bladeId, false);
+
+            updateMissionInfo();
+        });
+        $(view).find('#merc_mission_start_blades_' + bladeCounter + '_leader').on('click', function () {
+            // Deselect the other radio buttons
+            $('.blade-card[data-blade-id!=' + bladeId + '] input.mission-leader').prop('checked', false);
+
+            readyToStart();
+        });
+
+        bladeCounter++;
+
+        return view;
+    }
+
+    function hasLeader() {
+        return bladeList.find('input.mission-leader:checked').length == 1;
     }
 });
 
