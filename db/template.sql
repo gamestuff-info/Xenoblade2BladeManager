@@ -43,7 +43,8 @@ CREATE TABLE `affinity_node` (
 LOCK TABLES `affinity_node` WRITE;
 /*!40000 ALTER TABLE `affinity_node`
   DISABLE KEYS */;
-INSERT INTO `affinity_node` VALUES (1, 1, 'Dark Mastery', 'dark-mastery'), (2, 2, 'Earth Mastery', 'earth-mastery'),
+INSERT INTO `affinity_node` (`id`, `sort`, `name`, `slug`)
+VALUES (1, 1, 'Dark Mastery', 'dark-mastery'), (2, 2, 'Earth Mastery', 'earth-mastery'),
   (3, 3, 'Electric Mastery', 'electric-mastery'), (4, 4, 'Fire Mastery', 'fire-mastery'),
   (5, 6, 'Light Mastery', 'light-mastery'), (6, 5, 'Ice Mastery', 'ice-mastery'),
   (7, 7, 'Water Mastery', 'water-mastery'), (8, 8, 'Wind Mastery', 'wind-mastery'), (9, 9, 'Agronomy', 'agronomy'),
@@ -99,7 +100,7 @@ CREATE TABLE `battle_role` (
 LOCK TABLES `battle_role` WRITE;
 /*!40000 ALTER TABLE `battle_role`
   DISABLE KEYS */;
-INSERT INTO `battle_role` VALUES (1, 'ATK', 'atk'), (2, 'TNK', 'tnk'), (3, 'HLR', 'hlr');
+INSERT INTO `battle_role` (`id`, `name`, `slug`) VALUES (1, 'ATK', 'atk'), (2, 'TNK', 'tnk'), (3, 'HLR', 'hlr');
 /*!40000 ALTER TABLE `battle_role`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -112,20 +113,23 @@ DROP TABLE IF EXISTS `blade`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `blade` (
-  `id`              INT(11)    NOT NULL,
-  `user_id`         INT(11) DEFAULT NULL,
-  `driver_id`       INT(11) DEFAULT NULL,
-  `trust_id`        INT(11) DEFAULT NULL,
-  `merc_mission_id` INT(11) DEFAULT NULL,
-  `strength`        INT(11)    NOT NULL,
-  `affinity`        INT(11)    NOT NULL,
-  `is_merc_leader`  TINYINT(1) NOT NULL,
+  `id`               INT(11)    NOT NULL,
+  `user_id`          INT(11) DEFAULT NULL,
+  `driver_id`        INT(11) DEFAULT NULL,
+  `trust_id`         INT(11) DEFAULT NULL,
+  `merc_mission_id`  INT(11) DEFAULT NULL,
+  `strength`         INT(11)    NOT NULL,
+  `affinity`         INT(11)    NOT NULL,
+  `is_merc_leader`   TINYINT(1) NOT NULL,
+  `from_template_id` INT(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_217C01E8A76ED395` (`user_id`),
   KEY `IDX_217C01E8C3423909` (`driver_id`),
   KEY `IDX_217C01E8AE0FAC85` (`trust_id`),
   KEY `IDX_217C01E852594D7F` (`merc_mission_id`),
+  KEY `IDX_217C01E89B953EDD` (`from_template_id`),
   CONSTRAINT `FK_217C01E852594D7F` FOREIGN KEY (`merc_mission_id`) REFERENCES `merc_mission` (`id`),
+  CONSTRAINT `FK_217C01E89B953EDD` FOREIGN KEY (`from_template_id`) REFERENCES `blade_template` (`id`),
   CONSTRAINT `FK_217C01E8A76ED395` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   CONSTRAINT `FK_217C01E8AE0FAC85` FOREIGN KEY (`trust_id`) REFERENCES `trust_rank` (`id`),
   CONSTRAINT `FK_217C01E8BF396750` FOREIGN KEY (`id`) REFERENCES `blade_superclass` (`id`)
@@ -180,7 +184,7 @@ CREATE TABLE `blade_affinity_node` (
 LOCK TABLES `blade_affinity_node` WRITE;
 /*!40000 ALTER TABLE `blade_affinity_node`
   DISABLE KEYS */;
-INSERT INTO `blade_affinity_node`
+INSERT INTO `blade_affinity_node` (`id`, `blade_id`, `affinity_node_id`, `level`, `max_level`)
 VALUES (1, 1, 4, 0, 3), (2, 1, 17, 0, 3), (3, 1, 30, 0, 3), (4, 2, 5, 0, 3), (5, 2, 17, 0, 3), (6, 2, 19, 0, 3),
   (7, 3, 7, 0, 3), (8, 3, 10, 0, 3), (9, 4, 21, 0, 3), (10, 4, 23, 0, 3), (11, 4, 24, 0, 3), (12, 5, 22, 0, 3),
   (13, 5, 18, 0, 3), (14, 5, 9, 0, 3), (15, 6, 20, 0, 3), (16, 6, 16, 0, 3), (17, 6, 12, 0, 3), (18, 7, 3, 0, 3),
@@ -232,7 +236,7 @@ CREATE TABLE `blade_class` (
 LOCK TABLES `blade_class` WRITE;
 /*!40000 ALTER TABLE `blade_class`
   DISABLE KEYS */;
-INSERT INTO `blade_class` VALUES (1, 'Humanoid', 'humanoid'), (2, 'Animal', 'animal');
+INSERT INTO `blade_class` (`id`, `name`, `slug`) VALUES (1, 'Humanoid', 'humanoid'), (2, 'Animal', 'animal');
 /*!40000 ALTER TABLE `blade_class`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -280,7 +284,8 @@ CREATE TABLE `blade_superclass` (
 LOCK TABLES `blade_superclass` WRITE;
 /*!40000 ALTER TABLE `blade_superclass`
   DISABLE KEYS */;
-INSERT INTO `blade_superclass` VALUES (1, 1, 2, 1, 1, 0, NULL, 5, 44, 0, 'Pyra', 'bladetemplate'),
+INSERT INTO `blade_superclass` (`id`, `element_id`, `gender_id`, `battle_role_id`, `weapon_class_id`, `is_merc`, `merc_team_name`, `rarity`, `affinity_total`, `can_be_released`, `name`, `discr`)
+VALUES (1, 1, 2, 1, 1, 0, NULL, 5, 44, 0, 'Pyra', 'bladetemplate'),
   (2, 7, 2, 1, 1, 0, NULL, 5, 44, 0, 'Mythra', 'bladetemplate'),
   (3, 2, 3, 3, 15, 0, NULL, 5, 44, 0, 'Dromarch', 'bladetemplate'),
   (4, 5, 2, 2, 5, 0, NULL, 5, 44, 0, 'Poppi ɑ', 'bladetemplate'),
@@ -349,7 +354,7 @@ CREATE TABLE `blade_template` (
 LOCK TABLES `blade_template` WRITE;
 /*!40000 ALTER TABLE `blade_template`
   DISABLE KEYS */;
-INSERT INTO `blade_template`
+INSERT INTO `blade_template` (`id`, `slug`)
 VALUES (19, 'adenine'), (10, 'aegaeon'), (33, 'agate'), (15, 'azami'), (24, 'boreas'), (9, 'brighid'), (14, 'dagas'),
   (35, 'dahlia'), (3, 'dromarch'), (17, 'electra'), (11, 'finch'), (13, 'floren'), (28, 'godfrey'), (21, 'gorg'),
   (27, 'herald'), (34, 'kasandra'), (22, 'kora'), (37, 'kos-mos'), (2, 'mythra'), (20, 'newt'), (38, 'nia'),
@@ -387,7 +392,7 @@ CREATE TABLE `driver` (
 LOCK TABLES `driver` WRITE;
 /*!40000 ALTER TABLE `driver`
   DISABLE KEYS */;
-INSERT INTO `driver`
+INSERT INTO `driver` (`id`, `name`, `slug`)
 VALUES (1, 'Rex', 'rex'), (2, 'Nia', 'nia'), (3, 'Tora', 'tora'), (4, 'Mòrag', 'morag'), (5, 'Zeke', 'zeke');
 /*!40000 ALTER TABLE `driver`
   ENABLE KEYS */;
@@ -420,7 +425,7 @@ CREATE TABLE `element` (
 LOCK TABLES `element` WRITE;
 /*!40000 ALTER TABLE `element`
   DISABLE KEYS */;
-INSERT INTO `element`
+INSERT INTO `element` (`id`, `name`, `slug`)
 VALUES (1, 'Fire', 'fire'), (2, 'Water', 'water'), (3, 'Ice', 'ice'), (4, 'Wind', 'wind'), (5, 'Earth', 'earth'),
   (6, 'Electric', 'electric'), (7, 'Light', 'light'), (8, 'Dark', 'dark');
 /*!40000 ALTER TABLE `element`
@@ -458,7 +463,8 @@ CREATE TABLE `gender` (
 LOCK TABLES `gender` WRITE;
 /*!40000 ALTER TABLE `gender`
   DISABLE KEYS */;
-INSERT INTO `gender` VALUES (1, 1, 1, 'Male', 'male'), (2, 1, 2, 'Female', 'female'), (3, 2, 3, 'Animal', 'animal');
+INSERT INTO `gender` (`id`, `class_id`, `sort`, `name`, `slug`)
+VALUES (1, 1, 1, 'Male', 'male'), (2, 1, 2, 'Female', 'female'), (3, 2, 3, 'Animal', 'animal');
 /*!40000 ALTER TABLE `gender`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -616,6 +622,7 @@ CREATE TABLE `merc_mission_prerequisite` (
   UNIQUE KEY `UNIQ_5E819534989D9B62` (`slug`)
 )
   ENGINE = InnoDB
+  AUTO_INCREMENT = 36
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -627,6 +634,28 @@ CREATE TABLE `merc_mission_prerequisite` (
 LOCK TABLES `merc_mission_prerequisite` WRITE;
 /*!40000 ALTER TABLE `merc_mission_prerequisite`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_prerequisite` (`id`, `sort`, `name`, `slug`)
+VALUES (1, 1, 'Argentum Dev Level 1', 'argentum-dev-level-1'), (2, 2, 'Argentum Dev Level 2', 'argentum-dev-level-2'),
+  (3, 3, 'Argentum Dev Level 3', 'argentum-dev-level-3'), (4, 4, 'Argentum Dev Level 4', 'argentum-dev-level-4'),
+  (5, 5, 'Argentum Dev Level 5', 'argentum-dev-level-5'), (6, 6, 'Gormott Dev Level 1', 'gormott-dev-level-1'),
+  (7, 7, 'Gormott Dev Level 2', 'gormott-dev-level-2'), (8, 8, 'Gormott Dev Level 3', 'gormott-dev-level-3'),
+  (9, 9, 'Gormott Dev Level 4', 'gormott-dev-level-4'), (10, 10, 'Gormott Dev Level 5', 'gormott-dev-level-5'),
+  (11, 11, 'Uraya Dev Level 1', 'uraya-dev-level-1'), (12, 12, 'Uraya Dev Level 2', 'uraya-dev-level-2'),
+  (13, 13, 'Uraya Dev Level 3', 'uraya-dev-level-3'), (14, 14, 'Uraya Dev Level 4', 'uraya-dev-level-4'),
+  (15, 15, 'Uraya Dev Level 5', 'uraya-dev-level-5'), (16, 16, 'Mor Ardain Dev Level 1', 'mor-ardain-dev-level-1'),
+  (17, 17, 'Mor Ardain Dev Level 2', 'mor-ardain-dev-level-2'),
+  (18, 18, 'Mor Ardain Dev Level 3', 'mor-ardain-dev-level-3'),
+  (19, 19, 'Mor Ardain Dev Level 4', 'mor-ardain-dev-level-4'),
+  (20, 20, 'Mor Ardain Dev Level 5', 'mor-ardain-dev-level-5'), (21, 21, 'Tantal Dev Level 1', 'tantal-dev-level-1'),
+  (22, 22, 'Tantal Dev Level 2', 'tantal-dev-level-2'), (23, 23, 'Tantal Dev Level 3', 'tantal-dev-level-3'),
+  (24, 24, 'Tantal Dev Level 4', 'tantal-dev-level-4'), (25, 25, 'Tantal Dev Level 5', 'tantal-dev-level-5'),
+  (26, 26, 'Indol Dev Level 1', 'indol-dev-level-1'), (27, 27, 'Indol Dev Level 2', 'indol-dev-level-2'),
+  (28, 28, 'Indol Dev Level 3', 'indol-dev-level-3'), (29, 29, 'Indol Dev Level 4', 'indol-dev-level-4'),
+  (30, 30, 'Indol Dev Level 5', 'indol-dev-level-5'), (31, 31, 'Leftheria Dev Level 1', 'leftheria-dev-level-1'),
+  (32, 32, 'Leftheria Dev Level 2', 'leftheria-dev-level-2'),
+  (33, 33, 'Leftheria Dev Level 3', 'leftheria-dev-level-3'),
+  (34, 34, 'Leftheria Dev Level 4', 'leftheria-dev-level-4'),
+  (35, 35, 'Leftheria Dev Level 5', 'leftheria-dev-level-5');
 /*!40000 ALTER TABLE `merc_mission_prerequisite`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -878,7 +907,7 @@ CREATE TABLE `nation` (
 LOCK TABLES `nation` WRITE;
 /*!40000 ALTER TABLE `nation`
   DISABLE KEYS */;
-INSERT INTO `nation`
+INSERT INTO `nation` (`id`, `name`, `slug`)
 VALUES (1, 'Argentum', 'argentum'), (2, 'Gormott', 'gormott'), (3, 'Uraya', 'uraya'), (4, 'Mor Ardain', 'mor-ardain'),
   (5, 'Leftheria', 'leftheria'), (6, 'Indol', 'indol'), (7, 'Tantal', 'tantal');
 /*!40000 ALTER TABLE `nation`
@@ -912,7 +941,7 @@ CREATE TABLE `role` (
 LOCK TABLES `role` WRITE;
 /*!40000 ALTER TABLE `role`
   DISABLE KEYS */;
-INSERT INTO `role` VALUES (1, 'ROLE_USER', 'user'), (2, 'ROLE_ADMIN', 'admin');
+INSERT INTO `role` (`id`, `name`, `slug`) VALUES (1, 'ROLE_USER', 'user'), (2, 'ROLE_ADMIN', 'admin');
 /*!40000 ALTER TABLE `role`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -945,7 +974,7 @@ CREATE TABLE `trust_rank` (
 LOCK TABLES `trust_rank` WRITE;
 /*!40000 ALTER TABLE `trust_rank`
   DISABLE KEYS */;
-INSERT INTO `trust_rank`
+INSERT INTO `trust_rank` (`id`, `sort`, `name`, `slug`)
 VALUES (1, 6, 'E', 'e'), (2, 5, 'D', 'd'), (3, 4, 'C', 'c'), (4, 3, 'B', 'b'), (5, 2, 'A', 'a'), (6, 1, 'S', 's');
 /*!40000 ALTER TABLE `trust_rank`
   ENABLE KEYS */;
@@ -984,9 +1013,9 @@ CREATE TABLE `user` (
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user`
   DISABLE KEYS */;
-INSERT INTO `user` VALUES
-  (1, 'dk', '$2y$13$E939/rSZ4HI0qvv1OYi0h.VFqVfaaQjymgYTPHajBEKfLNKlna3ci', 'dk@dankeenan.org', 1,
-   '2018-01-12 02:27:38', NULL, NULL);
+INSERT INTO `user` (`id`, `username`, `password`, `email`, `is_active`, `created`, `activate_code`, `activate_code_time`)
+VALUES (1, 'dk', '$2y$13$E939/rSZ4HI0qvv1OYi0h.VFqVfaaQjymgYTPHajBEKfLNKlna3ci', 'dk@dankeenan.org', 1,
+        '2018-01-12 02:27:38', NULL, NULL);
 /*!40000 ALTER TABLE `user`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1021,7 +1050,7 @@ CREATE TABLE `user_role` (
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role`
   DISABLE KEYS */;
-INSERT INTO `user_role` VALUES (1, 1), (1, 2);
+INSERT INTO `user_role` (`user_id`, `role_id`) VALUES (1, 1), (1, 2);
 /*!40000 ALTER TABLE `user_role`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1053,7 +1082,7 @@ CREATE TABLE `weapon_class` (
 LOCK TABLES `weapon_class` WRITE;
 /*!40000 ALTER TABLE `weapon_class`
   DISABLE KEYS */;
-INSERT INTO `weapon_class`
+INSERT INTO `weapon_class` (`id`, `name`, `slug`)
 VALUES (1, 'Aegis Sword', 'aegis-sword'), (2, 'Big Bang Edge', 'big-bang-edge'), (3, 'Bitball', 'bitball'),
   (4, 'Chrome Katana', 'chrome-katana'), (5, 'Drill Shield', 'drill-shield'), (6, 'Dual Blades', 'dual-blades'),
   (7, 'Dual Scythes', 'dual-scythes'), (8, 'Ether Cannon', 'ether-cannon'), (9, 'Greataxe', 'greataxe'),
@@ -1073,4 +1102,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-22 21:33:14
+-- Dump completed on 2018-01-23 11:19:59

@@ -51,7 +51,8 @@ class BladeTemplate extends BladeSuperclass
     public function toBlade(): Blade
     {
         $blade = new Blade();
-        $blade->setName($this->getName())
+        $blade->setFromTemplate($this)
+          ->setName($this->getName())
           ->setIsMerc($this->isMerc)
           ->setMercTeamName($this->mercTeamName)
           ->setElement($this->element)
