@@ -59,7 +59,8 @@ class BladeTemplate extends BladeSuperclass
           ->setBattleRole($this->battleRole)
           ->setWeaponClass($this->weaponClass)
           ->setRarity($this->rarity)
-          ->setAffinityTotal($this->affinityTotal);
+          ->setAffinityTotal($this->affinityTotal)
+          ->setCanBeReleased($this->canBeReleased);
         // Duplicate the affinity node entities for the new "Real" blade.
         foreach ($this->affinityNodes as $affinityNode) {
             $newAffinityNode = clone $affinityNode;

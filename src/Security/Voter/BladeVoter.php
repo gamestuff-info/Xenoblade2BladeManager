@@ -51,9 +51,8 @@ class BladeVoter extends Voter
         switch ($attribute) {
             case 'EDIT':
             case 'DELETE':
-                return $subject->getUser() == $user;
             case 'VIEW':
-                return $this->decisionManager->decide($token, ['ROLE_USER']);
+                return $subject->getUser() == $user;
         }
 
         return false;
