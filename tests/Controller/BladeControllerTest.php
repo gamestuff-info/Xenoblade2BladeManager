@@ -37,7 +37,7 @@ class BladeControllerTest extends FixturesTestCase
         self::isSuccessful($client->getResponse());
         $crawler = $client->click($crawler->filter('#navbarMain a:contains("Blades")')->link());
         self::isSuccessful($client->getResponse());
-        if ($driverSlug !== 'all') {
+        if (isset($driver)) {
             // Navigate to the tab for this driver
             $crawler = $client->click($crawler->filter('.nav-tabs a:contains("'.$driver->getName().'")')->link());
             self::isSuccessful($client->getResponse());
@@ -46,15 +46,15 @@ class BladeControllerTest extends FixturesTestCase
         // Get the list of Blades that should be displayed on the all page and
         // compare it to reality.
         $bladeCriteria = ['user' => $user];
-        if ($driverSlug !== 'all') {
+        if (isset($driver)) {
             $bladeCriteria['driver'] = $driver;
         }
         /** @var Blade[] $blades */
         $blades = $bladeRepo->findBy($bladeCriteria);
         $pageBlades = [];
         $affinityPattern = '`(?P<affinity>\d+)\s*/\s*(?P<affinityTotal>\d+)\s+\((?P<affinityPct>\d+)%\)`';
-        foreach ($crawler->filter('#blade-list tbody tr') as $node) {
-            $nodeCrawler = new Crawler($node);
+        foreach ($crawler->filter('#blade-list tbody tr') as $row) {
+            $nodeCrawler = new Crawler($row);
             $pageBlade = [
               'name' => trim($nodeCrawler->filter('td.xeno2--blade--list--name')->text()),
               'element' => trim($nodeCrawler->filter('td.xeno2--blade--list--element > .fas + span')->text()),
@@ -154,6 +154,7 @@ class BladeControllerTest extends FixturesTestCase
         $bladeRepo = $client->getContainer()->get('doctrine')->getRepository(Blade::class);
         /** @var Blade $blade */
         $blade = $bladeRepo->findOneBy(['name' => $bladeName]);
+        self::assertInstanceOf(Blade::class, $blade, 'Failed to load new blade');
         self::assertEquals($user->getId(), $blade->getUser()->getId());
         self::assertEquals($formValues['blade_form']['name'], $blade->getName(), 'Wrong name persisted');
         self::assertEquals($formValues['blade_form']['driver'], $blade->getDriver()->getId(), 'Wrong driver persisted');

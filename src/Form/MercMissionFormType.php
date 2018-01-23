@@ -14,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MercMissionFormType extends AbstractType
 {
@@ -150,14 +149,5 @@ class MercMissionFormType extends AbstractType
             'save',
             SubmitType::class
           );
-    }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults(
-          [
-              //            'data_class' => MercMission::class,
-          ]
-        );
     }
 }
