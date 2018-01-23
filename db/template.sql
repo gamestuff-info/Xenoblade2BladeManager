@@ -616,6 +616,7 @@ CREATE TABLE `merc_mission_prerequisite` (
   UNIQUE KEY `UNIQ_5E819534989D9B62` (`slug`)
 )
   ENGINE = InnoDB
+  AUTO_INCREMENT = 36
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -627,6 +628,28 @@ CREATE TABLE `merc_mission_prerequisite` (
 LOCK TABLES `merc_mission_prerequisite` WRITE;
 /*!40000 ALTER TABLE `merc_mission_prerequisite`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_prerequisite`
+VALUES (1, 1, 'Argentum Dev Level 1', 'argentum-dev-level-1'), (2, 2, 'Argentum Dev Level 2', 'argentum-dev-level-2'),
+  (3, 3, 'Argentum Dev Level 3', 'argentum-dev-level-3'), (4, 4, 'Argentum Dev Level 4', 'argentum-dev-level-4'),
+  (5, 5, 'Argentum Dev Level 5', 'argentum-dev-level-5'), (6, 6, 'Gormott Dev Level 1', 'gormott-dev-level-1'),
+  (7, 7, 'Gormott Dev Level 2', 'gormott-dev-level-2'), (8, 8, 'Gormott Dev Level 3', 'gormott-dev-level-3'),
+  (9, 9, 'Gormott Dev Level 4', 'gormott-dev-level-4'), (10, 10, 'Gormott Dev Level 5', 'gormott-dev-level-5'),
+  (11, 11, 'Uraya Dev Level 1', 'uraya-dev-level-1'), (12, 12, 'Uraya Dev Level 2', 'uraya-dev-level-2'),
+  (13, 13, 'Uraya Dev Level 3', 'uraya-dev-level-3'), (14, 14, 'Uraya Dev Level 4', 'uraya-dev-level-4'),
+  (15, 15, 'Uraya Dev Level 5', 'uraya-dev-level-5'), (16, 16, 'Mor Ardain Dev Level 1', 'mor-ardain-dev-level-1'),
+  (17, 17, 'Mor Ardain Dev Level 2', 'mor-ardain-dev-level-2'),
+  (18, 18, 'Mor Ardain Dev Level 3', 'mor-ardain-dev-level-3'),
+  (19, 19, 'Mor Ardain Dev Level 4', 'mor-ardain-dev-level-4'),
+  (20, 20, 'Mor Ardain Dev Level 5', 'mor-ardain-dev-level-5'), (21, 21, 'Tantal Dev Level 1', 'tantal-dev-level-1'),
+  (22, 22, 'Tantal Dev Level 2', 'tantal-dev-level-2'), (23, 23, 'Tantal Dev Level 3', 'tantal-dev-level-3'),
+  (24, 24, 'Tantal Dev Level 4', 'tantal-dev-level-4'), (25, 25, 'Tantal Dev Level 5', 'tantal-dev-level-5'),
+  (26, 26, 'Indol Dev Level 1', 'indol-dev-level-1'), (27, 27, 'Indol Dev Level 2', 'indol-dev-level-2'),
+  (28, 28, 'Indol Dev Level 3', 'indol-dev-level-3'), (29, 29, 'Indol Dev Level 4', 'indol-dev-level-4'),
+  (30, 30, 'Indol Dev Level 5', 'indol-dev-level-5'), (31, 31, 'Leftheria Dev Level 1', 'leftheria-dev-level-1'),
+  (32, 32, 'Leftheria Dev Level 2', 'leftheria-dev-level-2'),
+  (33, 33, 'Leftheria Dev Level 3', 'leftheria-dev-level-3'),
+  (34, 34, 'Leftheria Dev Level 4', 'leftheria-dev-level-4'),
+  (35, 35, 'Leftheria Dev Level 5', 'leftheria-dev-level-5');
 /*!40000 ALTER TABLE `merc_mission_prerequisite`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1073,4 +1096,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-22 21:33:14
+-- Dump completed on 2018-01-22 22:12:52
