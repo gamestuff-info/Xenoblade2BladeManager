@@ -76,6 +76,13 @@ class Blade extends BladeSuperclass implements OwnedInterface
     protected $isMercLeader = false;
 
     /**
+     * @var BladeTemplate|null
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\BladeTemplate")
+     */
+    protected $fromTemplate;
+
+    /**
      * @return User
      */
     public function getUser(): UserInterface
@@ -219,6 +226,26 @@ class Blade extends BladeSuperclass implements OwnedInterface
     public function setIsMercLeader(bool $isMercLeader): self
     {
         $this->isMercLeader = $isMercLeader;
+
+        return $this;
+    }
+
+    /**
+     * @return BladeTemplate
+     */
+    public function getFromTemplate(): ?BladeTemplate
+    {
+        return $this->fromTemplate;
+    }
+
+    /**
+     * @param BladeTemplate|null $fromTemplate
+     *
+     * @return self
+     */
+    public function setFromTemplate(?BladeTemplate $fromTemplate): self
+    {
+        $this->fromTemplate = $fromTemplate;
 
         return $this;
     }
