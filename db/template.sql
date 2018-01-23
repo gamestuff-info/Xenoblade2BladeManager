@@ -168,6 +168,7 @@ CREATE TABLE `blade_affinity_node` (
   CONSTRAINT `FK_D7F9A290F810347F` FOREIGN KEY (`affinity_node_id`) REFERENCES `affinity_node` (`id`)
 )
   ENGINE = InnoDB
+  AUTO_INCREMENT = 115
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -179,6 +180,27 @@ CREATE TABLE `blade_affinity_node` (
 LOCK TABLES `blade_affinity_node` WRITE;
 /*!40000 ALTER TABLE `blade_affinity_node`
   DISABLE KEYS */;
+INSERT INTO `blade_affinity_node`
+VALUES (1, 1, 4, 0, 3), (2, 1, 17, 0, 3), (3, 1, 30, 0, 3), (4, 2, 5, 0, 3), (5, 2, 17, 0, 3), (6, 2, 19, 0, 3),
+  (7, 3, 7, 0, 3), (8, 3, 10, 0, 3), (9, 4, 21, 0, 3), (10, 4, 23, 0, 3), (11, 4, 24, 0, 3), (12, 5, 22, 0, 3),
+  (13, 5, 18, 0, 3), (14, 5, 9, 0, 3), (15, 6, 20, 0, 3), (16, 6, 16, 0, 3), (17, 6, 12, 0, 3), (18, 7, 3, 0, 3),
+  (19, 7, 22, 0, 3), (20, 7, 13, 0, 3), (21, 8, 8, 0, 3), (22, 8, 34, 0, 1), (23, 8, 22, 0, 3), (24, 9, 4, 0, 3),
+  (25, 9, 20, 0, 3), (26, 9, 14, 0, 3), (27, 10, 7, 0, 3), (28, 10, 16, 0, 3), (29, 10, 21, 0, 3), (30, 11, 11, 0, 3),
+  (31, 11, 21, 0, 3), (32, 11, 47, 0, 3), (33, 12, 1, 0, 3), (34, 12, 21, 0, 3), (35, 12, 38, 0, 3), (36, 13, 10, 0, 5),
+  (37, 13, 2, 0, 3), (38, 13, 48, 0, 5), (39, 14, 50, 0, 5), (40, 14, 23, 0, 1), (41, 14, 16, 0, 1), (42, 14, 14, 0, 1),
+  (43, 15, 1, 0, 3), (44, 15, 10, 0, 3), (45, 15, 51, 0, 3), (46, 16, 2, 0, 3), (47, 16, 13, 0, 3), (48, 16, 44, 0, 3),
+  (49, 17, 3, 0, 5), (50, 17, 17, 0, 3), (51, 17, 46, 0, 5), (52, 18, 6, 0, 3), (53, 18, 16, 0, 3), (54, 18, 42, 0, 3),
+  (55, 19, 8, 0, 3), (56, 19, 20, 0, 3), (57, 19, 45, 0, 5), (58, 20, 24, 0, 3), (59, 20, 15, 0, 3), (60, 20, 52, 0, 3),
+  (61, 21, 20, 0, 3), (62, 21, 18, 0, 3), (63, 21, 32, 0, 3), (64, 22, 19, 0, 5), (65, 22, 3, 0, 3), (66, 22, 22, 0, 3),
+  (67, 23, 12, 0, 3), (68, 23, 18, 0, 3), (69, 23, 33, 0, 5), (70, 24, 23, 0, 3), (71, 24, 15, 0, 3),
+  (72, 24, 40, 0, 3), (73, 25, 1, 0, 3), (74, 25, 31, 0, 3), (75, 25, 19, 0, 3), (76, 26, 24, 0, 5), (77, 26, 2, 0, 5),
+  (78, 26, 17, 0, 5), (79, 27, 3, 0, 3), (80, 27, 24, 0, 3), (81, 27, 49, 0, 5), (82, 28, 35, 0, 3), (83, 28, 36, 0, 3),
+  (84, 28, 37, 0, 3), (85, 29, 8, 0, 5), (86, 29, 24, 0, 5), (87, 29, 21, 0, 5), (88, 30, 19, 0, 3), (89, 30, 7, 0, 3),
+  (90, 30, 15, 0, 3), (91, 31, 6, 0, 3), (92, 31, 17, 0, 3), (93, 31, 23, 0, 3), (94, 32, 19, 0, 3), (95, 32, 22, 0, 3),
+  (96, 32, 53, 0, 3), (97, 33, 39, 0, 3), (98, 33, 14, 0, 3), (99, 33, 20, 0, 3), (100, 34, 23, 0, 3),
+  (101, 34, 9, 0, 3), (102, 34, 41, 0, 3), (103, 35, 12, 0, 3), (104, 35, 6, 0, 3), (105, 35, 54, 0, 3),
+  (106, 36, 43, 0, 5), (107, 36, 13, 0, 3), (108, 36, 18, 0, 3), (109, 37, 5, 0, 3), (110, 37, 22, 0, 3),
+  (111, 37, 55, 0, 3), (112, 38, 7, 0, 3), (113, 38, 12, 0, 3), (114, 38, 18, 0, 3);
 /*!40000 ALTER TABLE `blade_affinity_node`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -265,34 +287,34 @@ INSERT INTO `blade_superclass` VALUES (1, 1, 2, 1, 1, 0, NULL, 5, 44, 0, 'Pyra',
   (5, 1, 2, 2, 11, 0, NULL, 5, 44, 0, 'Poppi QT', 'bladetemplate'),
   (6, 3, 2, 2, 16, 0, NULL, 5, 44, 0, 'Poppi QTπ', 'bladetemplate'),
   (7, 6, 2, 1, 2, 0, NULL, 5, 44, 0, 'Pandoria', 'bladetemplate'),
-  (8, 4, 1, 1, 7, 1, NULL, 5, 44, 0, 'Roc', 'bladetemplate'),
+  (8, 4, 1, 1, 7, 1, 'Roc & the Roquettes', 5, 44, 0, 'Roc', 'bladetemplate'),
   (9, 1, 2, 2, 17, 0, NULL, 5, 44, 0, 'Brighid', 'bladetemplate'),
-  (10, 2, 1, 2, 4, 1, NULL, 5, 44, 0, 'Aegaeon', 'bladetemplate'),
+  (10, 2, 1, 2, 4, 1, 'Hecatonics', 5, 44, 0, 'Aegaeon', 'bladetemplate'),
   (11, 4, 2, 2, 14, 1, 'Albatrojans', 5, 44, 1, 'Finch', 'bladetemplate'),
-  (12, 8, 1, 2, 4, 1, NULL, 5, 44, 1, 'Perceval', 'bladetemplate'),
+  (12, 8, 1, 2, 4, 1, 'Banners of Flame', 5, 44, 1, 'Perceval', 'bladetemplate'),
   (13, 5, 1, 3, 3, 1, 'Florentrancers', 5, 44, 1, 'Floren', 'bladetemplate'),
   (14, 1, 1, 1, 9, 1, NULL, 5, 44, 1, 'Dagas', 'bladetemplate'),
-  (15, 8, 2, 1, 8, 1, NULL, 5, 44, 1, 'Azami', 'bladetemplate'),
-  (16, 5, 2, 3, 10, 1, NULL, 5, 44, 1, 'Nim', 'bladetemplate'),
+  (15, 8, 2, 1, 8, 1, 'Shadow Puppets', 5, 44, 1, 'Azami', 'bladetemplate'),
+  (16, 5, 2, 3, 10, 1, 'Dandy Lions', 5, 44, 1, 'Nim', 'bladetemplate'),
   (17, 6, 2, 2, 14, 1, NULL, 5, 44, 1, 'Electra', 'bladetemplate'),
-  (18, 3, 2, 1, 12, 1, NULL, 5, 44, 1, 'Perun', 'bladetemplate'),
+  (18, 3, 2, 1, 12, 1, 'Ardent Lancers', 5, 44, 1, 'Perun', 'bladetemplate'),
   (19, 4, 2, 3, 10, 1, NULL, 5, 44, 1, 'Adenine', 'bladetemplate'),
   (20, 1, 2, 2, 4, 1, NULL, 5, 44, 1, 'Newt', 'bladetemplate'),
   (21, 2, 1, 1, 9, 1, 'Flying Merfolk', 5, 44, 1, 'Gorg', 'bladetemplate'),
-  (22, 6, 2, 3, 10, 1, NULL, 5, 44, 1, 'Kora', 'bladetemplate'),
+  (22, 6, 2, 3, 10, 1, 'Breeze Shooters', 5, 44, 1, 'Kora', 'bladetemplate'),
   (23, 6, 2, 3, 3, 1, NULL, 5, 44, 1, 'Vess', 'bladetemplate'),
   (24, 4, 1, 3, 3, 1, NULL, 5, 44, 1, 'Boreas', 'bladetemplate'),
   (25, 8, 2, 1, 1, 1, NULL, 5, 44, 1, 'Vale', 'bladetemplate'),
   (26, 5, 1, 1, 12, 1, 'Gungnir Wardens', 5, 44, 1, 'Wulfric', 'bladetemplate'),
-  (27, 6, 2, 1, 8, 1, NULL, 5, 44, 1, 'Herald', 'bladetemplate'),
+  (27, 6, 2, 1, 8, 1, 'Valkyr Legion', 5, 44, 1, 'Herald', 'bladetemplate'),
   (28, 3, 1, 2, 14, 1, NULL, 5, 44, 1, 'Godfrey', 'bladetemplate'),
   (29, 4, 2, 1, 9, 1, NULL, 5, 44, 1, 'Zenobia', 'bladetemplate'),
-  (30, 2, 2, 1, 12, 1, NULL, 5, 44, 1, 'Praxis', 'bladetemplate'),
+  (30, 2, 2, 1, 12, 1, 'Gutsy Glaives', 5, 44, 1, 'Praxis', 'bladetemplate'),
   (31, 3, 2, 2, 4, 1, NULL, 5, 44, 1, 'Theory', 'bladetemplate'),
-  (32, 2, 2, 1, 8, 1, NULL, 5, 44, 1, 'Sheba', 'bladetemplate'),
+  (32, 2, 2, 1, 8, 1, 'Royal Teas', 5, 44, 1, 'Sheba', 'bladetemplate'),
   (33, 5, 2, 1, 9, 1, NULL, 5, 44, 1, 'Agate', 'bladetemplate'),
-  (34, 8, 2, 2, 14, 1, NULL, 5, 44, 1, 'Kasandra', 'bladetemplate'),
-  (35, 3, 2, 3, 3, 1, 'Perenial Beauties', 5, 44, 1, 'Dahlia', 'bladetemplate'),
+  (34, 8, 2, 2, 14, 1, 'Arrowroot Company', 5, 44, 1, 'Kasandra', 'bladetemplate'),
+  (35, 3, 2, 3, 3, 1, 'Perennial Beauties', 5, 44, 1, 'Dahlia', 'bladetemplate'),
   (36, 3, 2, 3, 10, 1, NULL, 5, 44, 1, 'Ursula', 'bladetemplate'),
   (37, 7, 2, 1, 8, 1, NULL, 5, 44, 1, 'KOS-MOS', 'bladetemplate'),
   (38, 2, 2, 3, 18, 0, NULL, 5, 44, 0, 'Nia', 'bladetemplate');
@@ -1051,4 +1073,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-22 20:32:03
+-- Dump completed on 2018-01-22 21:33:14
