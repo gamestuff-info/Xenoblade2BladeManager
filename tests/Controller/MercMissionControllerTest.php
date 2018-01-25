@@ -148,7 +148,7 @@ class MercMissionControllerTest extends FixturesTestCase
         foreach ($mercMissions as $mercMission) {
             $pageMercMission = $pageMercMissions[$mercMission->getName()];
             self::assertEquals($mercMission->isRepeatable(), $yesNo[$pageMercMission['repeatable']], 'Wrong repeatable status displayed');
-            self::assertEquals($mercMission->getDuration()->format('H:i'), $pageMercMission['duration'], 'Wrong duration displayed');
+            self::assertEquals($mercMission->getDuration()->format('G:i'), $pageMercMission['duration'], 'Wrong duration displayed');
             self::assertContains('Start', $pageMercMission['actions'], 'Start action not displayed');
 
             sort($pageMercMission['prerequisites']);
