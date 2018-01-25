@@ -26,7 +26,7 @@ before_script:
 # Run our tests
 test:
   variables:
-  - PHP_ARGS: '-d memory_limit=512M'
+    PHP_ARGS: '-d memory_limit=512M'
   script:
   - php $PHP_ARGS -i
 # Running the phpunit script without running tests ensures that the proper files
