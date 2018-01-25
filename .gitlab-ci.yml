@@ -27,5 +27,5 @@ before_script:
 test:
   script:
   - php -i
-  - bin/punit --version
+  - bin/phpunit --version
   - bin/phpunit --configuration phpunit.xml.dist --coverage-text --colors=never
