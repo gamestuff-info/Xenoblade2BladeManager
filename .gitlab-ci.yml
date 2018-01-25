@@ -25,7 +25,11 @@ before_script:
 
 # Run our tests
 test:
+  variables:
+  - PHP_ARGS: '-d memory_limit=512M'
   script:
-  - php -i
-  - bin/phpunit --version
-  - bin/phpunit --configuration phpunit.xml.dist --coverage-text --colors=never
+  - php $PHP_ARGS -i
+# Running the phpunit script without running tests ensures that the proper files
+# are downloaded before testing.
+  - bin/phpunit $PHP_ARGS --version
+  - bin/phpunit $PHP_ARGS --configuration phpunit.xml.dist --coverage-text --colors=never
