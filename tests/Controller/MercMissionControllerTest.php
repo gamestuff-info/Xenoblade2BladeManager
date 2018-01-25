@@ -34,8 +34,9 @@ class MercMissionControllerTest extends FixturesTestCase
      *
      * @param string $username
      * @param Constraint $visibilityConstrains
+     * @param int $responseCode
      */
-    public function testIndexSecurity(string $username, Constraint $visibilityConstrains)
+    public function testSecurity(string $username, Constraint $visibilityConstrains, int $responseCode)
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testIndex.php');
         $client = $this->createClient();
@@ -53,6 +54,14 @@ class MercMissionControllerTest extends FixturesTestCase
         self::assertThat($crawler->filter('#mercmission-new')->count(), $visibilityConstrains, 'Normal user can create new missions');
         self::assertThat($crawler->filter('.mercmission-edit')->count(), $visibilityConstrains, 'Normal user can edit missions');
         self::assertThat($crawler->filter('.mercmission-delete')->count(), $visibilityConstrains, 'Normal user can delete missions');
+
+        // Try to access some pages directly
+        $client->request('GET', '/mercmissions/all/new');
+        self::assertEquals($responseCode, $client->getResponse()->getStatusCode(), 'Incorrect response code for new page');
+        /** @var MercMission $mercMission */
+        $mercMission = $em->getRepository(MercMission::class)->find(1);
+        $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/edit/'.$mercMission->getSlug());
+        self::assertEquals($responseCode, $client->getResponse()->getStatusCode(), 'Incorrect response code for edit page');
     }
 
     public function missionSecurityDataProvider()
@@ -61,10 +70,12 @@ class MercMissionControllerTest extends FixturesTestCase
           'Normal User' => [
             'Test User',
             self::equalTo(0),
+            403,
           ],
           'Admin User' => [
             'Test Admin',
             self::greaterThan(0),
+            200,
           ],
         ];
     }
