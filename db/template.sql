@@ -307,7 +307,7 @@ VALUES (1, 1, 2, 1, 1, 0, NULL, 5, 44, 0, 'Pyra', 'bladetemplate'),
   (20, 1, 2, 2, 4, 1, NULL, 5, 44, 1, 'Newt', 'bladetemplate'),
   (21, 2, 1, 1, 9, 1, 'Flying Merfolk', 5, 44, 1, 'Gorg', 'bladetemplate'),
   (22, 6, 2, 3, 10, 1, 'Breeze Shooters', 5, 44, 1, 'Kora', 'bladetemplate'),
-  (23, 6, 2, 3, 3, 1, NULL, 5, 44, 1, 'Vess', 'bladetemplate'),
+  (23, 6, 2, 3, 3, 1, 'Ting-a-Ling Troupe', 5, 44, 1, 'Vess', 'bladetemplate'),
   (24, 4, 1, 3, 3, 1, NULL, 5, 44, 1, 'Boreas', 'bladetemplate'),
   (25, 8, 2, 1, 1, 1, NULL, 5, 44, 1, 'Vale', 'bladetemplate'),
   (26, 5, 1, 1, 12, 1, 'Gungnir Wardens', 5, 44, 1, 'Wulfric', 'bladetemplate'),
@@ -1102,4 +1102,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-23 11:19:59
+-- Dump completed on 2018-01-23 20:36:06
