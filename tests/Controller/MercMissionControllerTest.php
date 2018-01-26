@@ -23,6 +23,7 @@ use Faker\Factory;
 use Faker\Generator;
 use PHPUnit\Framework\Constraint\Constraint;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 
 class MercMissionControllerTest extends FixturesTestCase
 {
@@ -220,6 +221,14 @@ class MercMissionControllerTest extends FixturesTestCase
 
         // Add form data
         $form = $crawler->filter('form[name=merc_mission_form]')->form();
+        // Programmatically check/uncheck the repeatable box
+        /** @var ChoiceFormField $repeatableCheckbox */
+        $repeatableCheckbox = $form['merc_mission_form[repeatable]'];
+        if (isset($formValues['repeatable'])) {
+            $repeatableCheckbox->tick();
+        } else {
+            $repeatableCheckbox->untick();
+        }
         $submitFormValues = $form->getPhpValues()['merc_mission_form'];
         // Merge in the CSRF token
         $submitFormValues = array_merge($submitFormValues, $formValues);
@@ -292,9 +301,13 @@ class MercMissionControllerTest extends FixturesTestCase
               'hour' => $date->format('H'),
               'minute' => $date->format('i'),
             ],
-            'repeatable' => $faker->boolean,
           ],
         ];
+        // Only create the array key if it is true.  This matches the behavior
+        // of the form values returned from the crawler.
+        if ($faker->boolean) {
+            $data['valid']['repeatable'] = true;
+        }
 
         return $data;
     }
