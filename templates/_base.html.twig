@@ -32,6 +32,9 @@
             Error: no content defined!
         {% endblock %}
     </main>
+    {% block footer %}
+        {% include '_footer.html.twig' %}
+    {% endblock %}
 {% endblock %}
 <script src="{{ asset('dist/js/main.js') }}"></script>
 {% block javascripts %}{% endblock %}
