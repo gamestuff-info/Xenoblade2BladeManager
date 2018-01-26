@@ -232,67 +232,7 @@ class MercMissionControllerTest extends FixturesTestCase
         /** @var MercMission $mission */
         $mission = $missionRepo->findOneBy(['name' => $missionName]);
         self::assertInstanceOf(MercMission::class, $mission, 'Failed to load new mission');
-        self::assertEquals($formValues['name'], $mission->getName(), 'Wrong name persisted');
-        self::assertEquals($formValues['nation'], $mission->getNation()->getId(), 'Wrong nation persisted');
-        self::assertEquals($formValues['repeatable'], $mission->isRepeatable(), 'Wrong repeatable status persisted');
-
-        $missionDateTime = [
-          'hour' => $mission->getDuration()->format('H'),
-          'minute' => $mission->getDuration()->format('i'),
-        ];
-        self::assertEquals($formValues['duration'], $missionDateTime, 'Wrong duration persisted');
-
-        sort($formValues['prerequisites']);
-        $missionPrerequisiteIds = [];
-        foreach ($mission->getPrerequisites() as $prerequisite) {
-            $missionPrerequisiteIds[] = $prerequisite->getId();
-        }
-        sort($missionPrerequisiteIds);
-        self::assertEquals($formValues['prerequisites'], $missionPrerequisiteIds, 'Wrong prerequisites persisted');
-
-        $missionRequirementsInfo = [];
-        foreach ($mission->getRequirements() as $mercMissionRequirement) {
-            $missionRequirementInfo = [
-              'count' => $mercMissionRequirement->getCount(),
-            ];
-            if ($mercMissionRequirement instanceof MercMissionRequirementClass) {
-                $missionRequirementInfo['class'] = $mercMissionRequirement->getClass()->getId();
-            } elseif ($mercMissionRequirement instanceof MercMissionRequirementElement) {
-                $missionRequirementInfo['element'] = $mercMissionRequirement->getElement()->getId();
-            } elseif ($mercMissionRequirement instanceof MercMissionRequirementFieldSkill) {
-                $missionRequirementInfo['field_skill'] = $mercMissionRequirement->getFieldSkill()->getId();
-                $missionRequirementInfo['level'] = $mercMissionRequirement->getLevel();
-            } elseif ($mercMissionRequirement instanceof MercMissionRequirementGender) {
-                $missionRequirementInfo['gender'] = $mercMissionRequirement->getGender()->getId();
-            } elseif ($mercMissionRequirement instanceof MercMissionRequirementStrength) {
-                $missionRequirementInfo['strength'] = $mercMissionRequirement->getStrength();
-            } elseif ($mercMissionRequirement instanceof MercMissionRequirementWeaponClass) {
-                $missionRequirementInfo['weapon_class'] = $mercMissionRequirement->getWeaponClass()->getId();
-            } else {
-                throw new \LogicException('Requirement is not a MercMissionRequirement');
-            }
-
-            $missionRequirementsInfo[get_class($mercMissionRequirement)][] = $missionRequirementInfo;
-        }
-        $mercMissionRequirementClasses = [
-          MercMissionRequirementClass::class => 'requirements_blade_class',
-          MercMissionRequirementElement::class => 'requirements_element',
-          MercMissionRequirementFieldSkill::class => 'requirements_field_skill',
-          MercMissionRequirementGender::class => 'requirements_gender',
-          MercMissionRequirementStrength::class => 'requirements_strength',
-          MercMissionRequirementWeaponClass::class => 'requirements_weapon_class',
-        ];
-        foreach ($mercMissionRequirementClasses as $requirementClass => $requirementField) {
-            self::assertEquals($formValues[$requirementField], $missionRequirementsInfo[$requirementClass], sprintf('Wrong %s persisted', $requirementField));
-        }
-
-        sort($formValues['field_skills']);
-        $missionFieldSkillIds = [];
-        foreach ($mission->getFieldSkills() as $fieldSkill) {
-            $missionFieldSkillIds[] = $fieldSkill->getId();
-        }
-        sort($missionFieldSkillIds);
-        self::assertEquals($formValues['field_skills'], $missionFieldSkillIds, 'Wrong field skills persisted');
+        $this->verifyMissionForm($mission, $formValues);
     }
 
     public function missionDataProvider()
@@ -357,6 +297,57 @@ class MercMissionControllerTest extends FixturesTestCase
         ];
 
         return $data;
+    }
+
+    public function testEdit()
+    {
+        $this->loadFixturesFromFile([], 'MercMissionControllerTest/testEdit.php');
+        $client = $this->createClient();
+        $client->followRedirects();
+        $this->login($client, 'Test Admin');
+        $em = $client->getContainer()->get('doctrine')->getManager();
+        $this->addRequirementsToMissions($em, $this->faker);
+        $this->addFieldSkillsToMissions($em, $this->faker);
+        $mercMissionRepo = $em->getRepository(MercMission::class);
+        /** @var MercMission $mercMission */
+        $mercMission = $mercMissionRepo->find(1);
+
+        $crawler = $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/edit/'.$mercMission->getSlug());
+        self::isSuccessful($client->getResponse());
+        $form = $crawler->filter('form[name=merc_mission_form]')->form();
+        $formValues = $form->getPhpValues();
+
+        // Verify the form is already filled out properly.
+        $this->verifyMissionForm($mercMission, $formValues['merc_mission_form']);
+
+        // Make some changes and submit the form.
+        unset($formValues['merc_mission_form']['prerequisites']);
+        unset($formValues['merc_mission_form']['requirements_blade_class']);
+        unset($formValues['merc_mission_form']['requirements_element']);
+        unset($formValues['merc_mission_form']['requirements_field_skill']);
+        unset($formValues['merc_mission_form']['requirements_gender']);
+        unset($formValues['merc_mission_form']['requirements_strength']);
+        unset($formValues['merc_mission_form']['requirements_weapon_class']);
+        unset($formValues['merc_mission_form']['field_skills']);
+        unset($formValues['merc_mission_form']['repeatable']);
+        $client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($client->getResponse());
+
+        // Verify the changes were persisted.
+        $mercMission = $mercMissionRepo->find(1);
+        $em->refresh($mercMission);
+        self::assertEquals($formValues['merc_mission_form']['name'], $mercMission->getName(), 'Name updated incorrectly');
+        self::assertEquals($formValues['merc_mission_form']['nation'], $mercMission->getNation()->getId(), 'Name updated incorrectly');
+        self::assertFalse($mercMission->isRepeatable(), 'Repeatable status updated incorrectly');
+
+        $missionDateTime = [
+          'hour' => $mercMission->getDuration()->format('H'),
+          'minute' => $mercMission->getDuration()->format('i'),
+        ];
+        self::assertEquals($formValues['merc_mission_form']['duration'], $missionDateTime, 'Duration updated incorrectly');
+        self::assertEmpty($mercMission->getPrerequisites(), 'Prerequisites updated incorrectly');
+        self::assertEmpty($mercMission->getRequirements(), 'Requirements updated incorrectly');
+        self::assertEmpty($mercMission->getFieldSkills(), 'Field skills updated incorrectly');
     }
 
     /**
@@ -452,22 +443,94 @@ class MercMissionControllerTest extends FixturesTestCase
         }
         $em->flush();
     }
-    //
-    //    public function testEdit()
-    //    {
-    //
-    //    }
-    //
+
+    /**
+     * @param $mission
+     * @param array $formValues
+     */
+    private function verifyMissionForm(MercMission $mission, array $formValues): void
+    {
+        self::assertEquals($formValues['name'], $mission->getName(), 'Wrong name');
+        self::assertEquals($formValues['nation'], $mission->getNation()->getId(), 'Wrong nation');
+        self::assertEquals(array_key_exists('repeatable', $formValues), $mission->isRepeatable(), 'Wrong repeatable status');
+
+        $missionDateTime = [
+          'hour' => $mission->getDuration()->format('H'),
+          'minute' => $mission->getDuration()->format('i'),
+        ];
+        self::assertEquals($formValues['duration'], $missionDateTime, 'Wrong duration');
+
+        sort($formValues['prerequisites']);
+        $missionPrerequisiteIds = [];
+        foreach ($mission->getPrerequisites() as $prerequisite) {
+            $missionPrerequisiteIds[] = $prerequisite->getId();
+        }
+        sort($missionPrerequisiteIds);
+        self::assertEquals($formValues['prerequisites'], $missionPrerequisiteIds, 'Wrong prerequisites');
+
+        $missionRequirementsInfo = [];
+        foreach ($mission->getRequirements() as $mercMissionRequirement) {
+            $missionRequirementInfo = [
+              'count' => $mercMissionRequirement->getCount(),
+            ];
+            if ($mercMissionRequirement instanceof MercMissionRequirementClass) {
+                $missionRequirementInfo['class'] = $mercMissionRequirement->getClass()->getId();
+            } elseif ($mercMissionRequirement instanceof MercMissionRequirementElement) {
+                $missionRequirementInfo['element'] = $mercMissionRequirement->getElement()->getId();
+            } elseif ($mercMissionRequirement instanceof MercMissionRequirementFieldSkill) {
+                $missionRequirementInfo['field_skill'] = $mercMissionRequirement->getFieldSkill()->getId();
+                $missionRequirementInfo['level'] = $mercMissionRequirement->getLevel();
+            } elseif ($mercMissionRequirement instanceof MercMissionRequirementGender) {
+                $missionRequirementInfo['gender'] = $mercMissionRequirement->getGender()->getId();
+            } elseif ($mercMissionRequirement instanceof MercMissionRequirementStrength) {
+                $missionRequirementInfo['strength'] = $mercMissionRequirement->getStrength();
+            } elseif ($mercMissionRequirement instanceof MercMissionRequirementWeaponClass) {
+                $missionRequirementInfo['weapon_class'] = $mercMissionRequirement->getWeaponClass()->getId();
+            } else {
+                throw new \LogicException('Requirement is not a MercMissionRequirement');
+            }
+
+            $missionRequirementsInfo[get_class($mercMissionRequirement)][] = $missionRequirementInfo;
+        }
+        $mercMissionRequirementClasses = [
+          MercMissionRequirementClass::class => 'requirements_blade_class',
+          MercMissionRequirementElement::class => 'requirements_element',
+          MercMissionRequirementFieldSkill::class => 'requirements_field_skill',
+          MercMissionRequirementGender::class => 'requirements_gender',
+          MercMissionRequirementStrength::class => 'requirements_strength',
+          MercMissionRequirementWeaponClass::class => 'requirements_weapon_class',
+        ];
+
+        foreach ($mercMissionRequirementClasses as $requirementClass => $requirementField) {
+            if (!isset($formValues[$requirementField])) {
+                $formValues[$requirementField] = [];
+            }
+            if (!isset($missionRequirementsInfo[$requirementClass])) {
+                $missionRequirementsInfo[$requirementClass] = [];
+            }
+
+            self::assertEquals($formValues[$requirementField], $missionRequirementsInfo[$requirementClass], sprintf('Wrong %s', $requirementField));
+        }
+
+        sort($formValues['field_skills']);
+        $missionFieldSkillIds = [];
+        foreach ($mission->getFieldSkills() as $fieldSkill) {
+            $missionFieldSkillIds[] = $fieldSkill->getId();
+        }
+        sort($missionFieldSkillIds);
+        self::assertEquals($formValues['field_skills'], $missionFieldSkillIds, 'Wrong field skills');
+    }
+
     //    public function testDelete()
     //    {
     //
     //    }
-    //
+
     //    public function testStart()
     //    {
     //
     //    }
-    //
+
     //    public function testStop()
     //    {
     //
