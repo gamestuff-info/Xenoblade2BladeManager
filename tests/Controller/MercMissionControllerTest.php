@@ -363,6 +363,25 @@ class MercMissionControllerTest extends FixturesTestCase
         self::assertEmpty($mercMission->getFieldSkills(), 'Field skills updated incorrectly');
     }
 
+    public function testDelete()
+    {
+        $this->loadFixturesFromFile([], 'MercMissionControllerTest/testEdit.php');
+        $client = $this->createClient();
+        $client->followRedirects();
+        $this->login($client, 'Test Admin');
+
+        $em = $client->getContainer()->get('doctrine')->getManager();
+        $mercMissionRepo = $em->getRepository(MercMission::class);
+        /** @var MercMission $mercMission */
+        $mercMission = $mercMissionRepo->find(1);
+
+        // Delete a mission
+        $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/delete/'.$mercMission->getSlug());
+        self::isSuccessful($client->getResponse());
+        $mercMission = $mercMissionRepo->find(1);
+        self::assertNull($mercMission, 'Merc Mission not deleted when requested');
+    }
+
     /**
      * Add a random set of requirements to every Merc Mission
      *
@@ -533,11 +552,6 @@ class MercMissionControllerTest extends FixturesTestCase
         sort($missionFieldSkillIds);
         self::assertEquals($formValues['field_skills'], $missionFieldSkillIds, 'Wrong field skills');
     }
-
-    //    public function testDelete()
-    //    {
-    //
-    //    }
 
     //    public function testStart()
     //    {
