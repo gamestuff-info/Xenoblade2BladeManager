@@ -2809,16 +2809,16 @@
         },
         {
             "name": "symfony/flex",
-            "version": "v1.0.65",
+            "version": "v1.0.67",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/flex.git",
-                "reference": "6d98fe5f785e508dc6571f3a1c69d4a11103fee4"
+                "reference": "ac1c6aaafc4a9fddba3626867d786d151d2cc2ac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/flex/zipball/6d98fe5f785e508dc6571f3a1c69d4a11103fee4",
-                "reference": "6d98fe5f785e508dc6571f3a1c69d4a11103fee4",
+                "url": "https://api.github.com/repos/symfony/flex/zipball/ac1c6aaafc4a9fddba3626867d786d151d2cc2ac",
+                "reference": "ac1c6aaafc4a9fddba3626867d786d151d2cc2ac",
                 "shasum": ""
             },
             "require": {
@@ -2851,7 +2851,7 @@
                     "email": "fabien.potencier@gmail.com"
                 }
             ],
-            "time": "2018-01-20T08:19:00+00:00"
+            "time": "2018-01-25T06:46:31+00:00"
         },
         {
             "name": "symfony/form",
@@ -5093,12 +5093,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/liip/LiipFunctionalTestBundle.git",
-                "reference": "06782e5a9193a7b566d6f3b5d0a66c1cca899630"
+                "reference": "eca86d61dedf44c999804156539239456fe66c84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liip/LiipFunctionalTestBundle/zipball/06782e5a9193a7b566d6f3b5d0a66c1cca899630",
-                "reference": "06782e5a9193a7b566d6f3b5d0a66c1cca899630",
+                "url": "https://api.github.com/repos/liip/LiipFunctionalTestBundle/zipball/eca86d61dedf44c999804156539239456fe66c84",
+                "reference": "eca86d61dedf44c999804156539239456fe66c84",
                 "shasum": ""
             },
             "require": {
@@ -5158,7 +5158,7 @@
             "keywords": [
                 "Symfony2"
             ],
-            "time": "2018-01-17T13:23:51+00:00"
+            "time": "2018-01-23T10:35:49+00:00"
         },
         {
             "name": "myclabs/deep-copy",
