@@ -14,8 +14,7 @@ return [
     ],
   ],
   \App\Entity\Blade::class => [
-    'blade_entity_{1..6}' => [
-      'user' => '@user_entity_normal',
+    'blade (template)' => [
       'name (unique)' => '<word()>',
       'isMerc' => '90%? true : false',
       'mercTeamName' => '10%? <words(2, true)>',
@@ -30,6 +29,12 @@ return [
       'strength' => '<numberBetween(10,35)>',
       'driver' => '@driver_entity_*',
       'canBeReleased' => '<boolean()>',
+    ],
+    'blade_owned_entity_{1..6} (extends blade)' => [
+      'user' => '@user_entity_normal',
+    ],
+    'blade_unowned_entity_{1..6} (extends blade)' => [
+      'user' => '@user_entity_admin',
     ],
   ],
 ];
