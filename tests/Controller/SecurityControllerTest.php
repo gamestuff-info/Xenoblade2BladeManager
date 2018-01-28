@@ -3,14 +3,18 @@
 namespace App\Tests\Controller;
 
 
+use App\Entity\Blade;
 use App\Entity\User;
 use App\Tests\FixturesTestCase;
+use App\Tests\NeedsLoginTrait;
 use Symfony\Bundle\SecurityBundle\DataCollector\SecurityDataCollector;
 use Symfony\Bundle\SwiftmailerBundle\DataCollector\MessageDataCollector;
 use Symfony\Component\DomCrawler\Crawler;
 
 class SecurityControllerTest extends FixturesTestCase
 {
+
+    use NeedsLoginTrait;
 
     /**
      * @return User
@@ -149,5 +153,75 @@ class SecurityControllerTest extends FixturesTestCase
         $profile = $client->getProfile();
         $securityCollector = $profile->getCollector('security');
         self::assertEquals($user->getUsername(), $securityCollector->getUser(), 'Not logged in using e-mail');
+    }
+
+    public function testShowAction()
+    {
+        $this->loadFixturesFromFile([], 'SecurityControllerTest/testShowAction.php');
+        $client = $this->createClient();
+        $user = $this->login($client, 'Test New Admin');
+
+        $crawler = $client->request('GET', '/');
+        $crawler = $client->click($crawler->filter('.dropdown-menu a:contains(Profile)')->link());
+        self::isSuccessful($client->getResponse());
+
+        $bladeRepo = $this->getContainer()->get('doctrine')->getRepository(Blade::class);
+        $blades = $bladeRepo->findBy(['user' => $user]);
+
+        // Verify profile information shown
+        self::assertEquals($user->getCreated()->format('F d, Y'), $crawler->filter('dt:contains(User since) + dd')->text(), 'Wrong date displayed');
+        self::assertEquals($user->getEmail(), $crawler->filter('dt:contains(E-Mail) + dd')->text(), 'Wrong email displayed');
+        self::assertEquals(implode(', ', $user->getRoles()), $crawler->filter('dt:contains(Roles) + dd')->text(), 'Wrong roles displayed');
+        self::assertEquals(count($blades), $crawler->filter('dt:contains(Blades) + dd')->text(), 'Wrong blade count displayed');
+
+        // Verify roles not shown if only one.
+        $this->login($client, 'Test User');
+        $crawler = $client->request('GET', '/user/profile');
+        self::assertEquals(0, $crawler->filter('dt:contains(Roles) + dd')->count());
+    }
+
+    public function testEditAction()
+    {
+        $this->loadFixturesFromFile([], 'SecurityControllerTest/testShowAction.php');
+        $client = $this->createClient();
+        $client->followRedirects();
+        $this->login($client, 'Test New Admin');
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $userRepo = $em->getRepository(User::class);
+
+        $crawler = $client->request('GET', '/user/profile');
+        self::isSuccessful($client->getResponse());
+        $form = $crawler->filter('form[name=user_edit]')->form();
+        $newEmail = $this->faker->email;
+        $form['user_edit[email]'] = $newEmail;
+        $form['user_edit[oldPassword]'] = 'Wrong password';
+        $crawler = $client->request($form->getMethod(), $form->getUri(), $form->getPhpValues());
+        self::isSuccessful($client->getResponse());
+
+        self::assertContains('is-invalid', explode(' ', $crawler->filter('#user_edit_oldPassword')->attr('class')), 'Invalid text not displayed');
+        $form = $crawler->filter('form[name=user_edit]')->form();
+        $form['user_edit[email]'] = $newEmail;
+        $form['user_edit[oldPassword]'] = 'password_old';
+        $crawler = $client->request($form->getMethod(), $form->getUri(), $form->getPhpValues());
+        self::isSuccessful($client->getResponse());
+
+        /** @var User $user */
+        $user = $userRepo->findOneBy(['username' => 'Test New Admin']);
+        // Make sure this comes from the database.
+        $em->refresh($user);
+        self::assertEquals($newEmail, $user->getEmail(), 'E-mail change not persisted');
+
+        $form = $crawler->filter('form[name=user_edit]')->form();
+        $formValues = $form->getPhpValues();
+        $formValues['user_edit']['oldPassword'] = 'password_old';
+        $formValues['user_edit']['changePassword'] = '1';
+        $newPassword = $this->faker->password;
+        $formValues['user_edit']['plainPassword']['newPassword'] = $newPassword;
+        $formValues['user_edit']['plainPassword']['repeatPassword'] = $newPassword;
+        $client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($client->getResponse());
+
+        $em->refresh($user);
+        self::assertTrue(password_verify($newPassword, $user->getPassword()), 'Password change not persisted');
     }
 }

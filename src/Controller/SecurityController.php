@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Blade;
 use App\Entity\Role;
 use App\Entity\User;
+use App\Form\UserEditType;
 use App\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -145,6 +147,57 @@ class SecurityController extends Controller
         }
 
         return $this->redirectToRoute('main');
+    }
+
+    /**
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/user/profile", name="user_show")
+     */
+    public function showAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $bladeRepo = $this->getDoctrine()->getRepository(Blade::class);
+        $blades = $bladeRepo->findBy(['user' => $user]);
+
+        $form = $this->createForm(
+          UserEditType::class, $user
+        );
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $form->getData();
+
+            if ($form->get('changePassword')->getData()) {
+                $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
+                $user->setPassword($password);
+                $this->addFlash('success', 'Your password has been changed.');
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'Your profile has been changed.');
+
+            return $this->redirectToRoute('user_show', ['_fragment' => 'profile']);
+        }
+
+        return $this->render(
+          'pages/user/show.html.twig', [
+            'title' => $user->getUsername(),
+            'user' => $user,
+            'blades' => $blades,
+            'form' => $form->createView(),
+            'formErrors' => $form->getErrors(true),
+          ]
+        );
     }
 
     /**
