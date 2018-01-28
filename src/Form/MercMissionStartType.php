@@ -50,7 +50,7 @@ class MercMissionStartType extends AbstractType
             'label' => 'Start',
             'attr' => [
                 // The start button starts disabled because there are no Blades
-                // assigned.  It will later rbe enabled on the client-side.
+                // assigned.  It will later re enabled on the client-side.
               'disabled' => true,
             ],
           ]
