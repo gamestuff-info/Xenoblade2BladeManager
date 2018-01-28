@@ -2,21 +2,22 @@
 
 .navbar {
     margin-bottom: $spacer;
-    .fa-user {
-        .user-login > &,
-        .user-logout > & {
-            margin-right: 0.5rem;
-        }
 
-        .user-logout > & {
-            color: $red;
-        }
-        .user-login > & {
-            color: $green;
-        }
-    }
     .navbar-brand img {
         max-width: 10rem;
+    }
+}
 
+.fa-user {
+    .user-login > &,
+    .user-logout > & {
+        margin-right: 0.5rem;
+    }
+
+    .user-logout > & {
+        color: $red;
+    }
+    .user-login > & {
+        color: $green;
     }
 }
