@@ -222,17 +222,17 @@ class BladeControllerTest extends FixturesTestCase
           ],
           [
             [
-              'affinityNode' => $faker->numberBetween(1, 55),
+              'affinityNode' => $faker->numberBetween(1, 18),
               'level' => $faker->numberBetween(0, $affinityNodeLevelMaxValues[0]),
               'maxLevel' => $affinityNodeLevelMaxValues[0],
             ],
             [
-              'affinityNode' => $faker->numberBetween(1, 55),
+              'affinityNode' => $faker->numberBetween(19, 36),
               'level' => $faker->numberBetween(0, $affinityNodeLevelMaxValues[1]),
               'maxLevel' => $affinityNodeLevelMaxValues[1],
             ],
             [
-              'affinityNode' => $faker->numberBetween(1, 55),
+              'affinityNode' => $faker->numberBetween(37, 55),
               'level' => $faker->numberBetween(0, $affinityNodeLevelMaxValues[2]),
               'maxLevel' => $affinityNodeLevelMaxValues[2],
             ],
