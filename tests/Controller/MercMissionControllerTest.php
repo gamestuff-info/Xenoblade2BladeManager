@@ -522,6 +522,61 @@ class MercMissionControllerTest extends FixturesTestCase
         }
     }
 
+    public function testStop()
+    {
+        $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
+        $client = $this->createClient();
+        $client->followRedirects();
+        $user = $this->login($client, 'Test User');
+
+        $em = $client->getContainer()->get('doctrine')->getManager();
+        $mercMissionRepo = $em->getRepository(MercMission::class);
+        $bladeRepo = $em->getRepository(Blade::class);
+
+        // Assign the blades to a merc mission
+        /** @var MercMission $mercMission */
+        $mercMission = $mercMissionRepo->find(1);
+        /** @var Blade[] $blades */
+        $blades = $bladeRepo->findBy(['user' => $user]);
+        $hasLeader = false;
+        foreach ($blades as $blade) {
+            $blade->setMercMission($mercMission);
+            if (!$hasLeader) {
+                $blade->setIsMercLeader(true);
+                $hasLeader = true;
+            }
+            $em->persist($blade);
+        }
+        $em->flush();
+
+        $crawler = $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug());
+        self::isSuccessful($client->getResponse());
+        $crawler = $client->click($crawler->filter('a.mercmission-stop')->link());
+        self::isSuccessful($client->getResponse());
+        $form = $crawler->filter('form[name=merc_mission_stop]')->form();
+        $formValues = $form->getPhpValues();
+
+        // Max out all affinity and affinity nodes
+        foreach ($formValues['merc_mission_stop']['blades'] as &$mercMissionStopBlade) {
+            $mercMissionStopBlade['affinity'] = $mercMissionStopBlade['affinityTotal'];
+            foreach ($mercMissionStopBlade['affinityNodes'] as &$affinityNode) {
+                $affinityNode['level'] = $affinityNode['maxLevel'];
+            }
+        }
+        $client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($client->getResponse());
+
+        // Verify the changes were persisted
+        $blades = $bladeRepo->findBy(['user' => $user]);
+        foreach ($blades as $blade) {
+            $em->refresh($blade);
+            self::assertEquals($blade->getAffinity(), $blade->getAffinityTotal(), 'Affinity change not persisted');
+            foreach ($blade->getAffinityNodes() as $bladeAffinityNode) {
+                self::assertEquals($bladeAffinityNode->getLevel(), $bladeAffinityNode->getMaxLevel(), 'Affinity node level change not persisted');
+            }
+        }
+    }
+
     /**
      * Add a random set of requirements to every Merc Mission
      *
@@ -695,9 +750,4 @@ class MercMissionControllerTest extends FixturesTestCase
         sort($missionFieldSkillIds);
         self::assertEquals($formValues['field_skills'], $missionFieldSkillIds, 'Wrong field skills');
     }
-
-    //    public function testStop()
-    //    {
-    //
-    //    }
 }

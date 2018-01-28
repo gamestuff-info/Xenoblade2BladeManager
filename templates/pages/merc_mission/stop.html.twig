@@ -10,26 +10,28 @@
 {% block blade_returned_from_mission_row %}
     {%- set blade = form.vars.data -%}
     {# /** @var \App\Entity\Blade blade #}
-    <h2>{{ blade.name }}</h2>
-    <div class="row">
-        <div class="col-sm-auto">
-            <div class="form-group">
-                {{ form_label(form.affinity) }}
-                <div class="d-flex align-items-baseline">
-                    <div>
-                        {{ form_errors(form.affinity) }}
-                        {{ form_widget(form.affinity) }}
-                    </div>
-                    <div>/</div>
-                    <div>
-                        {{ form_errors(form.affinityTotal) }}
-                        {{ form_widget(form.affinityTotal) }}
+    <fieldset class="xeno2--mercmission--stop--blade" data-blade-id="{{ blade.id }}">
+        <legend class="h2">{{ blade.name }}</legend>
+        <div class="row">
+            <div class="col-sm-auto">
+                <div class="form-group">
+                    {{ form_label(form.affinity) }}
+                    <div class="d-flex align-items-baseline">
+                        <div>
+                            {{ form_errors(form.affinity) }}
+                            {{ form_widget(form.affinity) }}
+                        </div>
+                        <div>/</div>
+                        <div>
+                            {{ form_errors(form.affinityTotal) }}
+                            {{ form_widget(form.affinityTotal) }}
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-sm-auto">{{ form_row(form.trust) }}</div>
         </div>
-        <div class="col-sm-auto">{{ form_row(form.trust) }}</div>
-    </div>
-    {{ form_row(form.affinityNodes) }}
-    {{ form_rest(form) }}
+        {{ form_row(form.affinityNodes) }}
+        {{ form_rest(form) }}
+    </fieldset>
 {% endblock %}

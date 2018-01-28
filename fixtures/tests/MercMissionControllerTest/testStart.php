@@ -16,7 +16,7 @@ return [
   \App\Entity\Blade::class => [
     'blade (template)' => [
       'name (unique)' => '<word()>',
-      'isMerc' => '90%? true : false',
+      'isMerc' => 'true',
       'mercTeamName' => '10%? <words(2, true)>',
       'element' => '@element_entity_*',
       'gender' => '@gender_entity_*',
@@ -24,11 +24,34 @@ return [
       'weaponClass' => '@weapon_class_entity_*',
       'rarity' => '<numberBetween(1, 5)>',
       'affinity' => '<numberBetween(5, 20)>',
-      'affinityTotal' => '<numberBetween(20, 45)>',
-      'trust' => '@trust_rank_*',
+      'affinityTotal' => '<numberBetween(21, 45)>',
+      'trust' => '@trust_rank_entity_1',
       'strength' => '<numberBetween(10,35)>',
       'driver' => '@driver_entity_*',
       'canBeReleased' => '<boolean()>',
+      '__calls' => [
+        [
+          'setAffinityNode' => [
+            '@affinity_node_entity_*',
+            '<numberBetween(0, 2)>',
+            '<numberBetween(3, 5)>',
+          ],
+        ],
+        [
+          'setAffinityNode' => [
+            '@affinity_node_entity_*',
+            '<numberBetween(0, 2)>',
+            '<numberBetween(3, 5)>',
+          ],
+        ],
+        [
+          'setAffinityNode' => [
+            '@affinity_node_entity_*',
+            '<numberBetween(0, 2)>',
+            '<numberBetween(3, 5)>',
+          ],
+        ],
+      ],
     ],
     'blade_owned_entity_{1..6} (extends blade)' => [
       'user' => '@user_entity_normal',
