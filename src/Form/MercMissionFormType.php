@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
@@ -139,6 +140,24 @@ class MercMissionFormType extends AbstractType
               'widget' => 'text',
               'with_minutes' => true,
               'with_seconds' => false,
+            ]
+          )->add(
+            'merc_points',
+            IntegerType::class,
+            [
+              'required' => false,
+            ]
+          )->add(
+            'experience',
+            IntegerType::class,
+            [
+              'required' => false,
+            ]
+          )->add(
+            'gold',
+            IntegerType::class,
+            [
+              'required' => false,
             ]
           )->add(
             'repeatable',

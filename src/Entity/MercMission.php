@@ -70,6 +70,24 @@ class MercMission
     protected $repeatable = true;
 
     /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $mercPoints;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $experience;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $gold;
+
+    /**
      * @var Collection|Blade[]
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Blade", mappedBy="mercMission")
@@ -274,6 +292,66 @@ class MercMission
     public function setRepeatable(bool $repeatable): self
     {
         $this->repeatable = $repeatable;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMercPoints(): ?int
+    {
+        return $this->mercPoints;
+    }
+
+    /**
+     * @param int $mercPoints
+     *
+     * @return self
+     */
+    public function setMercPoints(?int $mercPoints): self
+    {
+        $this->mercPoints = $mercPoints;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getExperience(): ?int
+    {
+        return $this->experience;
+    }
+
+    /**
+     * @param int $experience
+     *
+     * @return self
+     */
+    public function setExperience(?int $experience): self
+    {
+        $this->experience = $experience;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGold(): ?int
+    {
+        return $this->gold;
+    }
+
+    /**
+     * @param int $gold
+     *
+     * @return self
+     */
+    public function setGold(?int $gold): self
+    {
+        $this->gold = $gold;
 
         return $this;
     }
