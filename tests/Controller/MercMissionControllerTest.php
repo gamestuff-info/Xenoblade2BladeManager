@@ -16,6 +16,7 @@ use App\Entity\MercMissionRequirementGender;
 use App\Entity\MercMissionRequirementStrength;
 use App\Entity\MercMissionRequirementWeaponClass;
 use App\Entity\Nation;
+use App\Entity\User;
 use App\Entity\WeaponClass;
 use App\Tests\FixturesTestCase;
 use App\Tests\NeedsLoginTrait;
@@ -403,7 +404,7 @@ class MercMissionControllerTest extends FixturesTestCase
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
         $client = $this->createClient();
-        $this->login($client, 'Test User');
+        $user = $this->login($client, 'Test User');
 
         $em = $client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);
@@ -413,7 +414,7 @@ class MercMissionControllerTest extends FixturesTestCase
         /** @var MercMission $mercMission */
         $mercMission = $mercMissionRepo->find(1);
         /** @var Blade[] $blades */
-        $blades = $bladeRepo->findAll();
+        $blades = $bladeRepo->findBy(['user' => $user]);
         $hasLeader = false;
         foreach ($blades as $blade) {
             $blade->setMercMission($mercMission);
@@ -429,6 +430,151 @@ class MercMissionControllerTest extends FixturesTestCase
         self::assertTrue($client->getResponse()->isRedirect('/mercmissions/'.$mercMission->getNation()->getSlug()), 'Not redirected');
         $crawler = $client->followRedirect();
         self::assertEquals(1, $crawler->filter('.alert.alert-danger')->count(), 'Alert not shown');
+    }
+
+    public function testStart()
+    {
+        $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
+        $client = $this->createClient();
+        $client->followRedirects();
+        $user = $this->login($client, 'Test User');
+
+        $em = $client->getContainer()->get('doctrine')->getManager();
+        $mercMissionRepo = $em->getRepository(MercMission::class);
+        $bladeRepo = $em->getRepository(Blade::class);
+        /** @var MercMission $mercMission */
+        $mercMission = $mercMissionRepo->find(1);
+        /** @var Blade[] $blades */
+        $blades = $bladeRepo->findBy(['user' => $user]);
+
+        $crawler = $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug());
+        self::isSuccessful($client->getResponse());
+        $crawler = $client->click($crawler->filter('a.mercmission-start')->link());
+        self::isSuccessful($client->getResponse());
+        $form = $crawler->filter('form[name=merc_mission_start]')->form();
+        $formValues = $form->getPhpValues();
+        $k = 0;
+        $leader = null;
+        foreach ($blades as $blade) {
+            $formValues['merc_mission_start']['blades'][$k]['blade'] = $blade->getId();
+            if (is_null($leader)) {
+                $formValues['merc_mission_start']['blades'][$k]['leader'] = "1";
+                $leader = $blade;
+            }
+
+            $k++;
+        }
+        $client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($client->getResponse());
+
+        $blades = $bladeRepo->findBladesOnMercMission($user, $mercMission);
+        foreach ($blades as $blade) {
+            $em->refresh($blade);
+            self::assertEquals($mercMission->getId(), $blade->getMercMission()->getId(), 'Blade not assigned to merc mission');
+            if ($leader === $blade) {
+                self::assertTrue($blade->isMercLeader(), 'Leader status not persisted.');
+            }
+        }
+    }
+
+    public function testCannotStartWithUnownedBlades()
+    {
+        $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
+        $client = $this->createClient();
+        $client->followRedirects();
+        $currentUser = $this->login($client, 'Test User');
+
+        $em = $client->getContainer()->get('doctrine')->getManager();
+        $mercMissionRepo = $em->getRepository(MercMission::class);
+        $bladeRepo = $em->getRepository(Blade::class);
+        $userRepo = $em->getRepository(User::class);
+        /** @var User $otherUser */
+        $otherUser = $userRepo->findOneBy(['username' => 'Test Admin']);
+        // Sanity check
+        self::assertNotEquals($otherUser, $currentUser, 'Error in test - needs two different users');
+        /** @var MercMission $mercMission */
+        $mercMission = $mercMissionRepo->find(1);
+        /** @var Blade[] $blades */
+        $blades = $bladeRepo->findBy(['user' => $otherUser]);
+
+        $crawler = $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/start/'.$mercMission->getSlug());
+        self::isSuccessful($client->getResponse());
+        $form = $crawler->filter('form[name=merc_mission_start]')->form();
+        $formValues = $form->getPhpValues();
+        $k = 0;
+        $leader = null;
+        foreach ($blades as $blade) {
+            $formValues['merc_mission_start']['blades'][$k]['blade'] = $blade->getId();
+            if (is_null($leader)) {
+                $formValues['merc_mission_start']['blades'][$k]['leader'] = "1";
+                $leader = $blade;
+            }
+
+            $k++;
+        }
+        $client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($client->getResponse());
+
+        $blades = $bladeRepo->findBladesOnMercMission($otherUser, $mercMission);
+        foreach ($blades as $blade) {
+            $em->refresh($blade);
+            self::assertNull($blade->getMercMission(), 'Blade assigned to merc mission its owner did not start');
+        }
+    }
+
+    public function testStop()
+    {
+        $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
+        $client = $this->createClient();
+        $client->followRedirects();
+        $user = $this->login($client, 'Test User');
+
+        $em = $client->getContainer()->get('doctrine')->getManager();
+        $mercMissionRepo = $em->getRepository(MercMission::class);
+        $bladeRepo = $em->getRepository(Blade::class);
+
+        // Assign the blades to a merc mission
+        /** @var MercMission $mercMission */
+        $mercMission = $mercMissionRepo->find(1);
+        /** @var Blade[] $blades */
+        $blades = $bladeRepo->findBy(['user' => $user]);
+        $hasLeader = false;
+        foreach ($blades as $blade) {
+            $blade->setMercMission($mercMission);
+            if (!$hasLeader) {
+                $blade->setIsMercLeader(true);
+                $hasLeader = true;
+            }
+            $em->persist($blade);
+        }
+        $em->flush();
+
+        $crawler = $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug());
+        self::isSuccessful($client->getResponse());
+        $crawler = $client->click($crawler->filter('a.mercmission-stop')->link());
+        self::isSuccessful($client->getResponse());
+        $form = $crawler->filter('form[name=merc_mission_stop]')->form();
+        $formValues = $form->getPhpValues();
+
+        // Max out all affinity and affinity nodes
+        foreach ($formValues['merc_mission_stop']['blades'] as &$mercMissionStopBlade) {
+            $mercMissionStopBlade['affinity'] = $mercMissionStopBlade['affinityTotal'];
+            foreach ($mercMissionStopBlade['affinityNodes'] as &$affinityNode) {
+                $affinityNode['level'] = $affinityNode['maxLevel'];
+            }
+        }
+        $client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($client->getResponse());
+
+        // Verify the changes were persisted
+        $blades = $bladeRepo->findBy(['user' => $user]);
+        foreach ($blades as $blade) {
+            $em->refresh($blade);
+            self::assertEquals($blade->getAffinity(), $blade->getAffinityTotal(), 'Affinity change not persisted');
+            foreach ($blade->getAffinityNodes() as $bladeAffinityNode) {
+                self::assertEquals($bladeAffinityNode->getLevel(), $bladeAffinityNode->getMaxLevel(), 'Affinity node level change not persisted');
+            }
+        }
     }
 
     /**
@@ -604,14 +750,4 @@ class MercMissionControllerTest extends FixturesTestCase
         sort($missionFieldSkillIds);
         self::assertEquals($formValues['field_skills'], $missionFieldSkillIds, 'Wrong field skills');
     }
-
-    //    public function testStart()
-    //    {
-    //
-    //    }
-
-    //    public function testStop()
-    //    {
-    //
-    //    }
 }
