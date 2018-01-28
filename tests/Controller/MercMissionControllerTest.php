@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Entity\AffinityNode;
+use App\Entity\Blade;
 use App\Entity\BladeClass;
 use App\Entity\Element;
 use App\Entity\Gender;
@@ -396,6 +397,38 @@ class MercMissionControllerTest extends FixturesTestCase
         self::isSuccessful($client->getResponse());
         $mercMission = $mercMissionRepo->find(1);
         self::assertNull($mercMission, 'Merc Mission not deleted when requested');
+    }
+
+    public function testCannotRestart()
+    {
+        $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
+        $client = $this->createClient();
+        $this->login($client, 'Test User');
+
+        $em = $client->getContainer()->get('doctrine')->getManager();
+        $mercMissionRepo = $em->getRepository(MercMission::class);
+        $bladeRepo = $em->getRepository(Blade::class);
+
+        // Assign the blades to a merc mission
+        /** @var MercMission $mercMission */
+        $mercMission = $mercMissionRepo->find(1);
+        /** @var Blade[] $blades */
+        $blades = $bladeRepo->findAll();
+        $hasLeader = false;
+        foreach ($blades as $blade) {
+            $blade->setMercMission($mercMission);
+            if (!$hasLeader) {
+                $blade->setIsMercLeader(true);
+                $hasLeader = true;
+            }
+            $em->persist($blade);
+        }
+        $em->flush();
+
+        $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/start/'.$mercMission->getSlug());
+        self::assertTrue($client->getResponse()->isRedirect('/mercmissions/'.$mercMission->getNation()->getSlug()), 'Not redirected');
+        $crawler = $client->followRedirect();
+        self::assertEquals(1, $crawler->filter('.alert.alert-danger')->count(), 'Alert not shown');
     }
 
     /**
