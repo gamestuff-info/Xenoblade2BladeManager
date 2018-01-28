@@ -14,7 +14,7 @@
             <div class="list-group-item">
                 <div class="row">
                     <div class="col-sm-auto align-self-center">
-                        <a class="btn btn-outline-success" href="{{ path('mercmission_stop', {'nation': currentNation.slug, 'mercMission': mercMission.slug}) }}">
+                        <a class="btn btn-outline-success" href="{{ path('mercmission_stop', {'nation': mercMission.nation.slug, 'mercMission': mercMission.slug}) }}">
                             <span class="sr-only">Stop</span>
                             <i class="fas fa-stop"></i>
                         </a>
@@ -126,7 +126,7 @@
                 <td class="xeno2--mercmission--list--duration" data-text="{{ mercMission.duration|date('G:i') }}">{{ mercMission.duration|date('G:i') }}</td>
                 <td class="xeno2--mercmission--list--action">
                     {% if isActiveMission %}
-                        <a class="btn btn-outline-success mercmission-stop" href="{{ path('mercmission_stop', {'nation': currentNation.slug, 'mercMission': mercMission.slug}) }}">
+                        <a class="btn btn-outline-success mercmission-stop" href="{{ path('mercmission_stop', {'nation': mercMission.nation.slug, 'mercMission': mercMission.slug}) }}">
                             <span class="sr-only">Stop</span>
                             <i class="fas fa-stop"></i>
                         </a>

@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Validator\Constraints\Owned;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -24,6 +25,7 @@ class MercMissionStopType extends AbstractType
             'data' => new ArrayCollection($blades),
             'entry_options' => [
               'label' => false,
+              'constraints' => [new Owned()],
             ],
             'by_reference' => false,
             'label_attr' => ['class' => 'sr-only'],
