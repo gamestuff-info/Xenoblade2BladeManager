@@ -14,8 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity("email")
- * @UniqueEntity("username")
+ * @UniqueEntity("email", groups={"registration", "edit"})
+ * @UniqueEntity("username", groups={"registration", "edit"})
  */
 class User implements AdvancedUserInterface, \Serializable
 {

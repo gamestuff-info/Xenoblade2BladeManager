@@ -4,6 +4,7 @@ namespace App\Tests\Controller;
 
 
 use App\Entity\Blade;
+use App\Entity\Role;
 use App\Entity\User;
 use App\Tests\FixturesTestCase;
 use App\Tests\NeedsLoginTrait;
@@ -94,31 +95,42 @@ class SecurityControllerTest extends FixturesTestCase
         return $user;
     }
 
-    /**
-     * @depends testRegisterAction
-     *
-     * @param User $user
-     *
-     * @return User
-     */
-    public function testActivateAction(User $user)
+    public function testActivateAction()
     {
+        $this->loadFixturesFromFile();
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $roleUser = $em->getRepository(Role::class)->findOneBy(['name' => 'ROLE_USER']);
+        $user = new User();
+        $user->setUsername($this->faker->userName)
+          ->setEmail($this->faker->email)
+          ->setPassword(password_hash($this->faker->password, PASSWORD_BCRYPT))
+          ->addRole($roleUser);
+        $user->newActivateCode();
+        $em->persist($user);
+        $em->flush();
+
         $client = $this->createClient();
         $client->followRedirects();
         $client->request('GET', '/user/activate/'.urlencode($user->getId()).'?key='.urlencode($user->getActivateCode()));
         self::isSuccessful($client->getResponse());
         self::assertEquals('/user/login', $client->getRequest()->getPathInfo(), 'Not redirected to the login page after activation');
-
-        return $user;
     }
 
-    /**
-     * @depends testActivateAction
-     *
-     * @param User $user
-     */
-    public function testLoginAction(User $user)
+    public function testLoginAction()
     {
+        $this->loadFixturesFromFile();
+        $em = $this->getContainer()->get('doctrine')->getManager();
+        $user = new User();
+        $password = $this->faker->password;
+        $roleUser = $em->getRepository(Role::class)->findOneBy(['name' => 'ROLE_USER']);
+        $user->setUsername($this->faker->userName)
+          ->setEmail($this->faker->email)
+          ->setPassword(password_hash($password, PASSWORD_BCRYPT))
+          ->addRole($roleUser);
+        $user->activate();
+        $em->persist($user);
+        $em->flush();
+
         $client = $this->createClient();
         $client->followRedirects();
 
@@ -131,7 +143,7 @@ class SecurityControllerTest extends FixturesTestCase
         // Login with username
         $form = $crawler->filter('form:contains("Username")')->selectButton('Login')->form();
         $form['_username'] = $user->getUsername();
-        $form['_password'] = $user->getPlainPassword();
+        $form['_password'] = $password;
         $crawler = $client->submit($form);
         /** @var SecurityDataCollector $securityCollector */
         $profile = $client->getProfile();
@@ -147,7 +159,7 @@ class SecurityControllerTest extends FixturesTestCase
         self::isSuccessful($client->getResponse());
         $form = $crawler->filter('form:contains("Username")')->selectButton('Login')->form();
         $form['_username'] = $user->getEmail();
-        $form['_password'] = $user->getPlainPassword();
+        $form['_password'] = $password;
         $client->submit($form);
         /** @var SecurityDataCollector $securityCollector */
         $profile = $client->getProfile();
