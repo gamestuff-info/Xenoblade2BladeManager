@@ -9,28 +9,61 @@
     {% import _self as mercMissionForm %}
 
     {{ form_start(form) }}
-    {{ form_row(form.name) }}
-    {{ form_row(form.nation) }}
-    {{ form_row(form.prerequisites) }}
-    <fieldset class="form-group">
-        <legend class="col-form-legend">Requirements</legend>
-        <div id="requirements-accordion" role="tablist">
-            {{ mercMissionForm.requirementsSection(form.requirements_blade_class) }}
-            {{ mercMissionForm.requirementsSection(form.requirements_element) }}
-            {{ mercMissionForm.requirementsSection(form.requirements_field_skill) }}
-            {{ mercMissionForm.requirementsSection(form.requirements_gender) }}
-            {{ mercMissionForm.requirementsSection(form.requirements_strength) }}
-            {{ mercMissionForm.requirementsSection(form.requirements_weapon_class) }}
+    <div class="form-row">
+        <div class="col-sm-6">
+            {{ form_row(form.name) }}
         </div>
-    </fieldset>
-    {{ form_row(form.field_skills) }}
-    <div class="form-group">
-        {{ form_label(form.duration) }}
-        {{ form_errors(form.duration) }}
-        {{ form_widget(form.duration) }}
-        <small class="form-text text-muted">
-            hours:minutes
-        </small>
+        <div class="col-sm-6">
+            {{ form_row(form.nation) }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-sm-12">
+            {{ form_row(form.prerequisites) }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-sm-12">
+            <fieldset class="form-group">
+                <legend class="col-form-legend">Requirements</legend>
+                <div id="requirements-accordion" role="tablist">
+                    {{ mercMissionForm.requirementsSection(form.requirements_blade_class) }}
+                    {{ mercMissionForm.requirementsSection(form.requirements_element) }}
+                    {{ mercMissionForm.requirementsSection(form.requirements_field_skill) }}
+                    {{ mercMissionForm.requirementsSection(form.requirements_gender) }}
+                    {{ mercMissionForm.requirementsSection(form.requirements_strength) }}
+                    {{ mercMissionForm.requirementsSection(form.requirements_weapon_class) }}
+                </div>
+            </fieldset>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-sm-12">
+            {{ form_row(form.field_skills) }}
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                {{ form_label(form.duration) }}
+                {{ form_errors(form.duration) }}
+                {{ form_widget(form.duration) }}
+                <small class="form-text text-muted">
+                    hours:minutes
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-sm-4">
+            {{ form_row(form.merc_points) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_row(form.experience) }}
+        </div>
+        <div class="col-sm-4">
+            {{ form_row(form.gold) }}
+        </div>
     </div>
     {{ form_row(form.repeatable) }}
     {{ form_row(form.save) }}

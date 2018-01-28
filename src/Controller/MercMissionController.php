@@ -384,6 +384,9 @@ class MercMissionController extends Controller
           'prerequisites' => $mercMission->getPrerequisites(),
           'field_skills' => $mercMission->getFieldSkills(),
           'repeatable' => $mercMission->isRepeatable(),
+          'merc_points' => $mercMission->getMercPoints(),
+          'experience' => $mercMission->getExperience(),
+          'gold' => $mercMission->getGold(),
         ];
 
         $requirementsFormFieldMap = [
@@ -425,7 +428,10 @@ class MercMissionController extends Controller
           ->setDuration($data['duration'])
           ->setPrerequisites($data['prerequisites'])
           ->setFieldSkills($data['field_skills'])
-          ->setRepeatable($data['repeatable']);
+          ->setRepeatable($data['repeatable'])
+          ->setMercPoints($data['merc_points'])
+          ->setExperience($data['experience'])
+          ->setGold($data['gold']);
 
         // Empty the requirements list first
         $originalRequirements = $mercMission->getRequirements();

@@ -301,6 +301,9 @@ class MercMissionControllerTest extends FixturesTestCase
               'hour' => $date->format('H'),
               'minute' => $date->format('i'),
             ],
+            'merc_points' => $faker->numberBetween(50, 150),
+            'experience' => $faker->numberBetween(0, 1000),
+            'gold' => $faker->numberBetween(0, 2000),
           ],
         ];
         // Only create the array key if it is true.  This matches the behavior
@@ -334,6 +337,8 @@ class MercMissionControllerTest extends FixturesTestCase
         $this->verifyMissionForm($mercMission, $formValues['merc_mission_form']);
 
         // Make some changes and submit the form.
+        $formValues['merc_mission_form']['name'] = $this->faker->words(3, true);
+        $formValues['merc_mission_form']['nation'] = $this->faker->numberBetween(1, 7);
         unset($formValues['merc_mission_form']['prerequisites']);
         unset($formValues['merc_mission_form']['requirements_blade_class']);
         unset($formValues['merc_mission_form']['requirements_element']);
@@ -343,6 +348,14 @@ class MercMissionControllerTest extends FixturesTestCase
         unset($formValues['merc_mission_form']['requirements_weapon_class']);
         unset($formValues['merc_mission_form']['field_skills']);
         unset($formValues['merc_mission_form']['repeatable']);
+        $date = $this->faker->dateTimeBetween('@0', '@5400');
+        $formValues['merc_mission_form']['duration'] = [
+          'hour' => $date->format('H'),
+          'minute' => $date->format('i'),
+        ];
+        $formValues['merc_mission_form']['merc_points'] = $this->faker->numberBetween(50, 150);
+        $formValues['merc_mission_form']['experience'] = $this->faker->numberBetween(0, 1000);
+        $formValues['merc_mission_form']['gold'] = $this->faker->numberBetween(0, 2000);
         $client->request($form->getMethod(), $form->getUri(), $formValues);
         self::isSuccessful($client->getResponse());
 
@@ -361,6 +374,9 @@ class MercMissionControllerTest extends FixturesTestCase
         self::assertEmpty($mercMission->getPrerequisites(), 'Prerequisites updated incorrectly');
         self::assertEmpty($mercMission->getRequirements(), 'Requirements updated incorrectly');
         self::assertEmpty($mercMission->getFieldSkills(), 'Field skills updated incorrectly');
+        self::assertEquals($formValues['merc_mission_form']['merc_points'], $mercMission->getMercPoints(), 'Merc points updated incorrectly');
+        self::assertEquals($formValues['merc_mission_form']['experience'], $mercMission->getExperience(), 'Experience updated incorrectly');
+        self::assertEquals($formValues['merc_mission_form']['gold'], $mercMission->getGold(), 'Gold updated incorrectly');
     }
 
     public function testDelete()
@@ -485,6 +501,9 @@ class MercMissionControllerTest extends FixturesTestCase
         self::assertEquals($formValues['name'], $mission->getName(), 'Wrong name');
         self::assertEquals($formValues['nation'], $mission->getNation()->getId(), 'Wrong nation');
         self::assertEquals(array_key_exists('repeatable', $formValues), $mission->isRepeatable(), 'Wrong repeatable status');
+        self::assertEquals($formValues['merc_points'], $mission->getMercPoints(), 'Wrong merc points');
+        self::assertEquals($formValues['experience'], $mission->getExperience(), 'Wrong experience');
+        self::assertEquals($formValues['gold'], $mission->getGold(), 'Wrong gold');
 
         $missionDateTime = [
           'hour' => $mission->getDuration()->format('H'),
