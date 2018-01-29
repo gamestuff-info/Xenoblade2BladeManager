@@ -204,8 +204,10 @@ class BladeRepository extends ServiceEntityRepository
      *   - blade: The root blade table
      *   - affinityNodes: blade.affinityNodes
      *   - gender: blade.gender
-     * @param bool $not
-     *   Set to true to invert the conditions (e.g. equals becomes not equals).
+     * @param string $suffix
+     *   The suffix to append to table names to ensure their uniqueness
+     * @param array $parameters
+     *   Query parameters to add to all queries using this result.
      *
      * @return Expr[]
      */
@@ -273,8 +275,10 @@ class BladeRepository extends ServiceEntityRepository
      *   - blade: The root blade table
      *   - affinityNodes: blade.affinityNodes
      *   - gender: blade.gender
-     * @param bool $not
-     *   Set to true to invert the conditions (e.g. equals becomes not equals).
+     * @param string $suffix
+     *   The suffix to append to table names to ensure their uniqueness
+     * @param array $parameters
+     *   Query parameters to add to all queries using this result.
      *
      * @return Expr[]
      */
