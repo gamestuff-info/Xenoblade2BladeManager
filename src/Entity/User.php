@@ -8,13 +8,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity("email")
- * @UniqueEntity("username")
+ * @UniqueEntity("email", groups={"registration", "edit"})
+ * @UniqueEntity("username", groups={"registration", "edit"})
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -30,7 +31,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(type="string", unique=true)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(groups={"registration"})
      */
     private $username;
 
@@ -44,17 +45,24 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @Assert\NotBlank()
-     * @Assert\Length(max=4096)
+     * @Assert\NotBlank(groups={"registration", "passwordChange"})
+     * @Assert\Length(max=4096, groups={"registration", "passwordChange"})
      */
     private $plainPassword;
 
     /**
      * @var string
      *
+     * @SecurityAssert\UserPassword(groups={"edit"})
+     */
+    private $oldPassword;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="string", unique=true)
-     * @Assert\NotBlank()
-     * @Assert\Email()
+     * @Assert\NotBlank(groups={"registration", "edit"})
+     * @Assert\Email(groups={"registration", "edit"})
      */
     private $email;
 
@@ -174,6 +182,26 @@ class User implements AdvancedUserInterface, \Serializable
     public function setPlainPassword(string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOldPassword(): ?string
+    {
+        return $this->oldPassword;
+    }
+
+    /**
+     * @param string $oldPassword
+     *
+     * @return self
+     */
+    public function setOldPassword(string $oldPassword): self
+    {
+        $this->oldPassword = $oldPassword;
 
         return $this;
     }

@@ -1,5 +1,13 @@
 @import "~bootstrap/scss/bootstrap";
 
+.navbar {
+    margin-bottom: $spacer;
+
+    .navbar-brand img {
+        max-width: 10rem;
+    }
+}
+
 .fa-user {
     .user-login > &,
     .user-logout > & {

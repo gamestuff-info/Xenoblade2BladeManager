@@ -73,6 +73,14 @@ abstract class FixturesTestCase extends WebTestCase
         $application->setAutoExit(false);
         $input = new ArrayInput(
           [
+            'command' => 'doctrine:schema:drop',
+            '--force' => true,
+          ]
+        );
+        $output = new NullOutput();
+        $application->run($input, $output);
+        $input = new ArrayInput(
+          [
             'command' => 'doctrine:schema:update',
             '--force' => true,
           ]
