@@ -96,60 +96,79 @@ class BladeRepository extends ServiceEntityRepository
         ];
 
         // All list
-        $allQb = $this->createQueryBuilder('blade');
-        $allQb->join('blade.affinityNodes', 'affinityNodes')
-          ->join('blade.gender', 'gender')
-          ->where('blade.user = :user')
-          ->andWhere('blade.isMerc = true')
-          ->setParameter('user', $user);
+        $allParams = ['user' => $user];
+        $allQb = $this->createQueryBuilder('bladeList');
+        $allQb->where('bladeList.user = :user')
+          ->andWhere('bladeList.isMerc = true')
+          ->setParameters($allParams);
         $allQ = $allQb->getQuery();
         $results['all'] = $allQ->execute();
 
+        // Blades with requirements
+        $reqParams = [];
+        $reqQb = $this->createQueryBuilder('bladeReq');
+        $reqQb->join('bladeReq.affinityNodes', 'affinityNodesReq')
+          ->join('bladeReq.gender', 'genderReq')
+          ->andWhere(
+            $reqQb->expr()->orX(...$this->mercMissionRequirements($mercMission, $reqQb, 'Req', $reqParams))
+          );
+
+        // Blades with field skills
+        $fieldSkillParams = [];
+        $fieldSkillQb = $this->createQueryBuilder('bladeFieldSkill');
+        $fieldSkillQb->join('bladeFieldSkill.affinityNodes', 'affinityNodesFieldSkill')
+          ->join('bladeFieldSkill.gender', 'genderFieldSkill')
+          ->andWhere(
+            $fieldSkillQb->expr()->orX(...$this->mercMissionFieldSkills($mercMission, $fieldSkillQb, 'FieldSkill', $fieldSkillParams))
+          );
+
         // A List
         $aQb = clone $allQb;
-        $aQb->andWhere(
-          $aQb->expr()
-            ->orX(...$this->mercMissionRequirements($mercMission, $aQb))
-        )->andWhere(
-          $aQb->expr()
-            ->orX(...$this->mercMissionFieldSkills($mercMission, $aQb))
-        );
+        // Have to check if there are requirements/field skills or this will
+        // generate an invalid query.
+        if (!$mercMission->getRequirements()->isEmpty()) {
+            $aQb->andWhere($aQb->expr()->in('bladeList', $reqQb->getDQL()));
+        }
+        if (!$mercMission->getFieldSkills()->isEmpty()) {
+            $aQb->andWhere($aQb->expr()->in('bladeList', $fieldSkillQb->getDQL()));
+        }
+        $aQb->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
         $aQ = $aQb->getQuery();
         $results['a'] = $aQ->execute();
 
         // B List
         $bQb = clone $allQb;
-        $bQb->andWhere(
-          $bQb->expr()
-            ->orX(...$this->mercMissionRequirements($mercMission, $bQb))
-        )->andWhere(
-          $bQb->expr()
-            ->andX(...$this->mercMissionFieldSkills($mercMission, $bQb, true))
-        );
+        if (!$mercMission->getRequirements()->isEmpty()) {
+            $bQb->andWhere($bQb->expr()->in('bladeList', $reqQb->getDQL()));
+        }
+        if (!$mercMission->getFieldSkills()->isEmpty()) {
+            $bQb->andWhere($bQb->expr()->notIn('bladeList', $fieldSkillQb->getDQL()));
+        }
+        $bQb->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
         $bQ = $bQb->getQuery();
         $results['b'] = $bQ->execute();
 
         // C List
         $cQb = clone $allQb;
-        $cQb->andWhere(
-          $cQb->expr()
-            ->orX(...$this->mercMissionFieldSkills($mercMission, $cQb))
-        )->andWhere(
-          $cQb->expr()
-            ->andX(...$this->mercMissionRequirements($mercMission, $cQb, true))
-        );
+        if (!$mercMission->getRequirements()->isEmpty()) {
+            $cQb->andWhere($cQb->expr()->notIn('bladeList', $reqQb->getDQL()));
+        }
+        if (!$mercMission->getFieldSkills()->isEmpty()) {
+            $cQb->andWhere($cQb->expr()->in('bladeList', $fieldSkillQb->getDQL()));
+        }
+        $cQb->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
         $cQ = $cQb->getQuery();
         $results['c'] = $cQ->execute();
 
         // D List
         $dQb = clone $allQb;
-        $dQb->andWhere(
-          $dQb->expr()
-            ->andX(...$this->mercMissionRequirements($mercMission, $dQb, true))
-        )->andWhere(
-          $dQb->expr()
-            ->andX(...$this->mercMissionFieldSkills($mercMission, $dQb, true))
-        );
+        if (!$mercMission->getRequirements()->isEmpty()) {
+            $dQb->andWhere($dQb->expr()->notIn('bladeList', $reqQb->getDQL()));
+        }
+        if (!$mercMission->getFieldSkills()->isEmpty()) {
+            $dQb->andWhere($dQb->expr()->notIn('bladeList', $fieldSkillQb->getDQL()));
+        }
+        $dQb->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
         $dQ = $dQb->getQuery();
         $results['d'] = $dQ->execute();
 
@@ -185,74 +204,58 @@ class BladeRepository extends ServiceEntityRepository
      *   - blade: The root blade table
      *   - affinityNodes: blade.affinityNodes
      *   - gender: blade.gender
-     * @param bool $not
-     *   Set to true to invert the conditions (e.g. equals becomes not equals).
+     * @param string $suffix
+     *   The suffix to append to table names to ensure their uniqueness
+     * @param array $parameters
+     *   Query parameters to add to all queries using this result.
      *
      * @return Expr[]
      */
-    private function mercMissionRequirements(MercMission $mercMission, QueryBuilder &$qb, bool $not = false): array
+    private function mercMissionRequirements(MercMission $mercMission, QueryBuilder &$qb, string $suffix, array &$parameters): array
     {
         $requirementsExpr = [];
-        // Expression for testing equality.
-        $eq = $not ? 'neq' : 'eq';
-        // Expression for testing exceeds limit.
-        $gte = $not ? 'lt' : 'gte';
         foreach ($mercMission->getRequirements() as $index => $requirement) {
             $requirementParam = 'requirement_'.$index;
             if ($requirement instanceof MercMissionRequirementClass) {
                 $requirementsExpr[] = $qb->expr()
-                  ->$eq(
-                    'gender.class', ':'.$requirementParam
+                  ->eq(
+                    "gender$suffix.class", ':'.$requirementParam
                   );
-                $qb->setParameter($requirementParam, $requirement->getClass());
+                $parameters[$requirementParam] = $requirement->getClass();
             } elseif ($requirement instanceof MercMissionRequirementElement) {
                 $requirementsExpr[] = $qb->expr()
-                  ->$eq(
-                    'blade.element', ':'.$requirementParam
+                  ->eq(
+                    "blade$suffix.element", ':'.$requirementParam
                   );
-                $qb->setParameter($requirementParam, $requirement->getElement());
+                $parameters[$requirementParam] = $requirement->getElement();
             } elseif ($requirement instanceof MercMissionRequirementFieldSkill) {
-                if ($not) {
-                    $requirementsExpr[] = $qb->expr()
-                      ->orX(
-                        $qb->expr()
-                          ->neq('affinityNodes.affinityNode', ':'.$requirementParam.'_1'),
-                        $qb->expr()->andX(
-                          $qb->expr()
-                            ->eq('affinityNodes.affinityNode', ':'.$requirementParam.'_1'),
-                          $qb->expr()
-                            ->lt('affinityNodes.level', ':'.$requirementParam.'_2')
-                        )
-                      );
-                } else {
-                    $requirementsExpr[] = $qb->expr()
-                      ->andX(
-                        $qb->expr()
-                          ->eq('affinityNodes.affinityNode', ':'.$requirementParam.'_1'),
-                        $qb->expr()
-                          ->gte('affinityNodes.level', ':'.$requirementParam.'_2')
-                      );
-                }
-                $qb->setParameter($requirementParam.'_1', $requirement->getFieldSkill())
-                  ->setParameter($requirementParam.'_2', $requirement->getLevel());
+                $requirementsExpr[] = $qb->expr()
+                  ->andX(
+                    $qb->expr()
+                      ->eq("affinityNodes$suffix.affinityNode", ':'.$requirementParam.'_1'),
+                    $qb->expr()
+                      ->gte("affinityNodes$suffix.level", ':'.$requirementParam.'_2')
+                  );
+                $parameters[$requirementParam.'_1'] = $requirement->getFieldSkill();
+                $parameters[$requirementParam.'_2'] = $requirement->getLevel();
             } elseif ($requirement instanceof MercMissionRequirementGender) {
                 $requirementsExpr[] = $qb->expr()
-                  ->$eq(
-                    'blade.gender', ':'.$requirementParam
+                  ->eq(
+                    "blade$suffix.gender", ':'.$requirementParam
                   );
-                $qb->setParameter($requirementParam, $requirement->getGender());
+                $parameters[$requirementParam] = $requirement->getGender();
             } elseif ($requirement instanceof MercMissionRequirementStrength) {
                 $requirementsExpr[] = $qb->expr()
-                  ->$gte(
-                    'blade.strength', ':'.$requirementParam
+                  ->gte(
+                    "blade$suffix.strength", ':'.$requirementParam
                   );
-                $qb->setParameter($requirementParam, $requirement->getStrength());
+                $parameters[$requirementParam] = $requirement->getStrength();
             } elseif ($requirement instanceof MercMissionRequirementWeaponClass) {
                 $requirementsExpr[] = $qb->expr()
-                  ->$eq(
-                    'blade.weaponClass', ':'.$requirementParam
+                  ->eq(
+                    "blade$suffix.weaponClass", ':'.$requirementParam
                   );
-                $qb->setParameter($requirementParam, $requirement->getWeaponClass());
+                $parameters[$requirementParam] = $requirement->getWeaponClass();
             } else {
                 throw new \LogicException(get_class($requirement).' is not a MercMissionRequirement.');
             }
@@ -272,23 +275,23 @@ class BladeRepository extends ServiceEntityRepository
      *   - blade: The root blade table
      *   - affinityNodes: blade.affinityNodes
      *   - gender: blade.gender
-     * @param bool $not
-     *   Set to true to invert the conditions (e.g. equals becomes not equals).
+     * @param string $suffix
+     *   The suffix to append to table names to ensure their uniqueness
+     * @param array $parameters
+     *   Query parameters to add to all queries using this result.
      *
      * @return Expr[]
      */
-    private function mercMissionFieldSkills(MercMission $mercMission, QueryBuilder &$qb, bool $not = false)
+    private function mercMissionFieldSkills(MercMission $mercMission, QueryBuilder &$qb, string $suffix, array &$parameters)
     {
         $fieldSkillsExpr = [];
-        // Expression for testing equality.
-        $eq = $not ? 'neq' : 'eq';
         foreach ($mercMission->getFieldSkills() as $index => $fieldSkill) {
             $fieldSkillParam = 'field_skill_'.$index;
             $fieldSkillsExpr[] = $qb->expr()
-              ->$eq(
-                'affinityNodes.affinityNode', ':'.$fieldSkillParam
+              ->eq(
+                "affinityNodes$suffix.affinityNode", ':'.$fieldSkillParam
               );
-            $qb->setParameter($fieldSkillParam, $fieldSkill);
+            $parameters[$fieldSkillParam] = $fieldSkill;
         }
 
         return $fieldSkillsExpr;

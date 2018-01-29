@@ -47,7 +47,7 @@
         {% for key, list in lists %}
             <div class="card">
                 <div class="card-header" role="tab" id="blade-select-list-heading-{{ key }}">
-                    <h5 class="mb-0">
+                    <h5 class="mb-0 d-flex align-items-center">
                         <a data-toggle="collapse"
                            href="#blade-select-list-{{ key }}"
                            aria-expanded="{% if loop.first %}true{% else %}false{% endif %}"
@@ -55,7 +55,8 @@
                            role="button">
                             {{ list.name }}
                         </a>
-                        <span class="badge badge-secondary">{{ list.blades|length }}</span>
+                        <span class="badge badge-secondary mx-2">{{ list.blades|length }}</span>
+                        <small class="text-muted ml-auto">{{ list.help }}</small>
                     </h5>
                 </div>
                 <div id="blade-select-list-{{ key }}"
@@ -63,31 +64,39 @@
                      aria-labelledby="blade-select-list-heading-{{ key }}"
                      data-parent="#blade-select-list">
                     <div class="card-body">
-                        <p class="text-muted">{{ list.help }}</p>
-                        <ul class="list-inline">
+                        <ul class="list-inline xeno2--mercmission--blade-select-list">
                             {% for bladeInfo in list.blades %}
                                 {%- set blade = bladeInfo.blade -%}
                                 {# /** @var \App\Entity\Blade blade **/ #}
-                                {%- if blade.affinityPercent == 100 -%}
-                                    {%- set buttonClass = 'btn-outline-secondary' -%}
-                                {%- else -%}
-                                    {%- set buttonClass = 'btn-outline-dark' -%}
-                                {%- endif -%}
                                 <li class="list-inline-item">
                                     <button type="button"
-                                            class="btn {{ buttonClass }} blade-select"
+                                            class="btn btn-outline-dark blade-select xeno2--mercmission--blade-select-list--button xeno2--mercmission--blade-select-list--button--{{ blade.affinityPercent }}"
                                             data-blade-id="{{ blade.id }}"
                                             data-blade-requirements="{{ bladeInfo.requirements.ids|serialize|e('html_attr') }}"
                                             data-blade-fieldskills="{{ bladeInfo.fieldSkills.ids|serialize|e('html_attr') }}"
                                             data-blade-info="{{ bladeInfo.info|serialize|e('html_attr') }}">
-                                        {{ blade.name }} ({{ blade.affinityPercent }}%)<br>
-                                        {% for requirement in bladeInfo.requirements.requirements %}
-                                            {{ requirement.name }}{% if not loop.last %}, {% endif %}
-                                        {% endfor %}
-                                        <br>
-                                        {% for fieldSkill in bladeInfo.fieldSkills.fieldSkills %}
-                                            {{ fieldSkill.name }}{% if not loop.last %}, {% endif %}
-                                        {% endfor %}
+                                        <span class="xeno2--mercmission--blade-select-list--blade-name">{{ blade.name }}</span>
+                                        <span class="xeno2--mercmission--blade-select-list--affinity">
+                                            ({{ blade.affinityPercent }}%)
+                                        </span>
+                                        {%- set metRequirements = [] -%}
+                                        {%- for requirement in bladeInfo.requirements.requirements -%}
+                                            {%- set metRequirements = metRequirements|merge([requirement.name]) -%}
+                                        {%- endfor -%}
+                                        {%- for fieldSkill in bladeInfo.fieldSkills.fieldSkills -%}
+                                            {%- set metRequirements = metRequirements|merge([fieldSkill.name]) -%}
+                                        {%- endfor -%}
+                                        {%- if metRequirements is not empty -%}
+                                            <br>
+                                            {%- for metRequirement in metRequirements -%}
+                                                <span class="xeno2--mercmission--blade-select-list--requirement-met">
+                                                    {{ metRequirement }}
+                                                </span>
+                                                {%- if not loop.last -%}
+                                                    <br>
+                                                {%- endif -%}
+                                            {%- endfor -%}
+                                        {%- endif -%}
                                     </button>
                                 </li>
                             {% endfor %}

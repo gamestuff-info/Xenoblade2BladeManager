@@ -1,3 +1,5 @@
+@import "~bootstrap/scss/bootstrap";
+
 #merc_mission_form_prerequisites,
 #merc_mission_form_field_skills {
     column-width: 12rem;
@@ -18,4 +20,43 @@
 
 .xeno2--mercmission--list--action {
     white-space: nowrap;
+}
+
+.xeno2--mercmission--blade-select-list {
+    text-align: justify-all;
+
+    li {
+        margin-top: $list-inline-padding;
+    }
+
+    .xeno2--mercmission--blade-select-list--button {
+        width: 10rem;
+
+        .xeno2--mercmission--blade-select-list--blade-name {
+            font-weight: bold;
+        }
+        .xeno2--mercmission--blade-select-list--affinity {
+            color: $text-muted;
+        }
+
+        // Vary the grayness with the affinity percentage.
+        @for $pct from 0 through 100 {
+            &--#{$pct} {
+                $buttonColor: change_color($dark, $lightness: $pct/1.8);
+                $textColor: change_color($body-color, $lightness: $pct/1.8);
+                $mutedTextColor: change_color($text-muted, $lightness: $pct/1.8);
+
+                border-color: $buttonColor;
+                color: $textColor;
+                .xeno2--mercmission--blade-select-list--affinity {
+                    color: $mutedTextColor;
+                }
+
+                &:disabled {
+                    border-color: $gray-900;
+                    border-width: $btn-border-width*3;
+                }
+            }
+        }
+    }
 }

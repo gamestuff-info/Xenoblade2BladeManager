@@ -1,0 +1,13 @@
+@import "~bootstrap/scss/bootstrap";
+
+.xeno2--main--gallery {
+    .card {
+        width: 75%;
+        display: block;
+        margin: $spacer auto;
+    }
+}
+
+#lightbox .modal-dialog {
+    max-width: max-content;
+}

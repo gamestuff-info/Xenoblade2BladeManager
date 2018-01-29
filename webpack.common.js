@@ -19,6 +19,7 @@ module.exports = {
         mercMissionForm: path.resolve(assetJsDir, 'mercMissionForm.js'),
         mercMissionStart: path.resolve(assetJsDir, 'mercMissionStart.js'),
         userEdit: path.resolve(assetJsDir, 'userEdit.js'),
+        mainPage: path.resolve(assetJsDir, 'mainPage.js'),
     },
     output: {
         filename: 'js/[name].js',
