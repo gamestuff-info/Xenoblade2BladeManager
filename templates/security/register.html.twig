@@ -8,7 +8,7 @@
     {{ form_row(form.email) }}
     {{ form_row(form.plainPassword.first) }}
     {{ form_row(form.plainPassword.second) }}
-
-    <button class="btn btn-primary" type="submit">Register!</button>
+    {{ form_row(form.recaptcha) }}
+    {{ form_row(form.submit) }}
     {{ form_end(form) }}
 {% endblock %}
