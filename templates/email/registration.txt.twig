@@ -6,8 +6,8 @@ E-Mail: {{ user.email }}
 *You must activate your account before continuing*
 
 Activation code:
-{{ user.activateCode }}
+{{ user.getActivateCode }}
 
-Go to {{ url('user_activate', {'user': user.id, 'key': user.activateCode}) }} to activate your account.
+Go to {{ url('user_activate', {'user': user.id, 'key': user.getActivateCode}) }} to activate your account.
 
 If you believe you have received this email in error, it can be safely ignored.

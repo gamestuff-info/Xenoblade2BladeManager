@@ -13,7 +13,7 @@
         <dd class="col-sm-9">{{ user.email }}</dd>
     </dl>
 
-    <p class="text-sm-center">
+    <p>
         <strong>You must activate your account before continuing:</strong>
     </p>
 
@@ -22,9 +22,9 @@
             <div class="card">
                 <div class="card-body text-sm-center">
                     <h2 class="card-title">Activation code</h2>
-                    <p class="card-text text-uppercase" style="font-family: monospace">{{ user.activateCode }}</p>
+                    <p class="card-text text-uppercase" style="font-family: monospace">{{ user.getActivateCode }}</p>
                     <a class="btn btn-primary"
-                       href="{{ url('user_activate', {'user': user.id, 'key': user.activateCode}) }}">Activate!</a>
+                       href="{{ url('user_activate', {'user': user.id, 'key': user.getActivateCode}) }}">Activate!</a>
                 </div>
             </div>
         </div>
