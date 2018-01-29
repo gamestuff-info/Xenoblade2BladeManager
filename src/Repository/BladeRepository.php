@@ -124,33 +124,51 @@ class BladeRepository extends ServiceEntityRepository
 
         // A List
         $aQb = clone $allQb;
-        $aQb->andWhere($aQb->expr()->in('bladeList', $reqQb->getDQL()))
-          ->andWhere($aQb->expr()->in('bladeList', $fieldSkillQb->getDQL()))
-          ->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
+        // Have to check if there are requirements/field skills or this will
+        // generate an invalid query.
+        if (!$mercMission->getRequirements()->isEmpty()) {
+            $aQb->andWhere($aQb->expr()->in('bladeList', $reqQb->getDQL()));
+        }
+        if (!$mercMission->getFieldSkills()->isEmpty()) {
+            $aQb->andWhere($aQb->expr()->in('bladeList', $fieldSkillQb->getDQL()));
+        }
+        $aQb->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
         $aQ = $aQb->getQuery();
         $results['a'] = $aQ->execute();
 
         // B List
         $bQb = clone $allQb;
-        $bQb->andWhere($bQb->expr()->in('bladeList', $reqQb->getDQL()))
-          ->andWhere($bQb->expr()->notIn('bladeList', $fieldSkillQb->getDQL()))
-          ->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
+        if (!$mercMission->getRequirements()->isEmpty()) {
+            $bQb->andWhere($bQb->expr()->in('bladeList', $reqQb->getDQL()));
+        }
+        if (!$mercMission->getFieldSkills()->isEmpty()) {
+            $bQb->andWhere($bQb->expr()->notIn('bladeList', $fieldSkillQb->getDQL()));
+        }
+        $bQb->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
         $bQ = $bQb->getQuery();
         $results['b'] = $bQ->execute();
 
         // C List
         $cQb = clone $allQb;
-        $cQb->andWhere($cQb->expr()->notIn('bladeList', $reqQb->getDQL()))
-          ->andWhere($cQb->expr()->in('bladeList', $fieldSkillQb->getDQL()))
-          ->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
+        if (!$mercMission->getRequirements()->isEmpty()) {
+            $cQb->andWhere($cQb->expr()->notIn('bladeList', $reqQb->getDQL()));
+        }
+        if (!$mercMission->getFieldSkills()->isEmpty()) {
+            $cQb->andWhere($cQb->expr()->in('bladeList', $fieldSkillQb->getDQL()));
+        }
+        $cQb->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
         $cQ = $cQb->getQuery();
         $results['c'] = $cQ->execute();
 
         // D List
         $dQb = clone $allQb;
-        $dQb->andWhere($dQb->expr()->notIn('bladeList', $reqQb->getDQL()))
-          ->andWhere($dQb->expr()->notIn('bladeList', $fieldSkillQb->getDQL()))
-          ->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
+        if (!$mercMission->getRequirements()->isEmpty()) {
+            $dQb->andWhere($dQb->expr()->notIn('bladeList', $reqQb->getDQL()));
+        }
+        if (!$mercMission->getFieldSkills()->isEmpty()) {
+            $dQb->andWhere($dQb->expr()->notIn('bladeList', $fieldSkillQb->getDQL()));
+        }
+        $dQb->setParameters(array_merge($allParams, $reqParams, $fieldSkillParams));
         $dQ = $dQb->getQuery();
         $results['d'] = $dQ->execute();
 
