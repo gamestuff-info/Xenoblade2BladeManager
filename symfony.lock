@@ -74,6 +74,9 @@
     "egulias/email-validator": {
         "version": "2.1.3"
     },
+    "excelwebzone/recaptcha-bundle": {
+        "version": "dev-master"
+    },
     "fzaninotto/faker": {
         "version": "v1.7.1"
     },

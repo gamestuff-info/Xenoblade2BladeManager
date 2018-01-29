@@ -4,4 +4,5 @@ twig:
     strict_variables: '%kernel.debug%'
     form_themes:
         - 'bootstrap_4_layout.html.twig'
+        - '@EWZRecaptcha/Form/ewz_recaptcha_widget.html.twig'
         - 'form/_form.html.twig'

@@ -26,6 +26,7 @@ use Faker\Generator;
 use PHPUnit\Framework\Constraint\Constraint;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class MercMissionControllerTest extends FixturesTestCase
 {
@@ -36,11 +37,13 @@ class MercMissionControllerTest extends FixturesTestCase
      * @dataProvider missionSecurityDataProvider
      *
      * @param string $username
-     * @param Constraint $visibilityConstrains
-     * @param int $responseCode
+     * @param bool $hasAccess
      */
-    public function testSecurity(string $username, Constraint $visibilityConstrains, int $responseCode)
+    public function testSecurity(string $username, bool $hasAccess)
     {
+        if (!$hasAccess) {
+            self::expectException(AccessDeniedHttpException::class);
+        }
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testIndex.php');
         $client = $this->createClient();
         $this->login($client, $username);
@@ -54,11 +57,21 @@ class MercMissionControllerTest extends FixturesTestCase
         self::isSuccessful($client->getResponse());
 
         // Test normal users can't access merc mission actions
-        self::assertThat($crawler->filter('#mercmission-new')->count(), $visibilityConstrains, 'Normal user can create new missions');
-        self::assertThat($crawler->filter('.mercmission-edit')->count(), $visibilityConstrains, 'Normal user can edit missions');
-        self::assertThat($crawler->filter('.mercmission-delete')->count(), $visibilityConstrains, 'Normal user can delete missions');
+        if ($hasAccess) {
+            $visibilityConstraint = self::greaterThan(0);
+        } else {
+            $visibilityConstraint = self::equalTo(0);
+        }
+        self::assertThat($crawler->filter('#mercmission-new')->count(), $visibilityConstraint, 'Normal user can create new missions');
+        self::assertThat($crawler->filter('.mercmission-edit')->count(), $visibilityConstraint, 'Normal user can edit missions');
+        self::assertThat($crawler->filter('.mercmission-delete')->count(), $visibilityConstraint, 'Normal user can delete missions');
 
         // Try to access some pages directly
+        if ($hasAccess) {
+            $responseCode = 200;
+        } else {
+            $responseCode = 403;
+        }
         $client->request('GET', '/mercmissions/all/new');
         self::assertEquals($responseCode, $client->getResponse()->getStatusCode(), 'Incorrect response code for new page');
         /** @var MercMission $mercMission */
@@ -72,13 +85,11 @@ class MercMissionControllerTest extends FixturesTestCase
         return [
           'Normal User' => [
             'Test User',
-            self::equalTo(0),
-            403,
+            false,
           ],
           'Admin User' => [
             'Test Admin',
-            self::greaterThan(0),
-            200,
+            true,
           ],
         ];
     }
