@@ -80,15 +80,6 @@
     "gedmo/doctrine-extensions": {
         "version": "v2.4.32"
     },
-    "javiereguiluz/easyadmin-bundle": {
-        "version": "1.17",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.17",
-            "ref": "66070ea553247b0cd5275e21d0fe5399a25f40be"
-        }
-    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -118,9 +109,6 @@
     },
     "oro/doctrine-extensions": {
         "version": "1.2.0"
-    },
-    "pagerfanta/pagerfanta": {
-        "version": "v1.0.5"
     },
     "phpdocumentor/reflection-common": {
         "version": "1.0.1"
