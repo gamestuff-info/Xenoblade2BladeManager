@@ -520,36 +520,45 @@ class MercMissionController extends Controller
      */
     private function getRequirementsMet(Blade $blade, MercMission $mercMission)
     {
-        $requirementsMet = [];
+        $requirementsMet = [
+          'ids' => [],
+          'requirements' => [],
+        ];
 
         foreach ($mercMission->getRequirements() as $requirement) {
             if ($requirement instanceof MercMissionRequirementClass) {
                 if ($blade->getGender()->getClass()->getId() == $requirement->getClass()->getId()) {
-                    $requirementsMet[] = $requirement->getId();
+                    $requirementsMet['ids'][] = $requirement->getId();
+                    $requirementsMet['requirements'][] = $requirement;
                 }
             } elseif ($requirement instanceof MercMissionRequirementElement) {
                 if ($blade->getElement()->getId() == $requirement->getElement()->getId()) {
-                    $requirementsMet[] = $requirement->getId();
+                    $requirementsMet['ids'][] = $requirement->getId();
+                    $requirementsMet['requirements'][] = $requirement;
                 }
             } elseif ($requirement instanceof MercMissionRequirementFieldSkill) {
                 foreach ($blade->getAffinityNodes() as $affinityNode) {
                     if ($affinityNode->getAffinityNode()->getId() == $requirement->getFieldSkill()->getId()
                       && $affinityNode->getLevel() >= $requirement->getLevel()) {
-                        $requirementsMet[] = $requirement->getId();
+                        $requirementsMet['ids'][] = $requirement->getId();
+                        $requirementsMet['requirements'][] = $requirement;
                         break;
                     }
                 }
             } elseif ($requirement instanceof MercMissionRequirementGender) {
                 if ($blade->getGender()->getId() == $requirement->getGender()->getId()) {
-                    $requirementsMet[] = $requirement->getId();
+                    $requirementsMet['ids'][] = $requirement->getId();
+                    $requirementsMet['requirements'][] = $requirement;
                 }
             } elseif ($requirement instanceof MercMissionRequirementStrength) {
                 if ($blade->getStrength() >= $requirement->getStrength()) {
-                    $requirementsMet[] = $requirement->getId();
+                    $requirementsMet['ids'][] = $requirement->getId();
+                    $requirementsMet['requirements'][] = $requirement;
                 }
             } elseif ($requirement instanceof MercMissionRequirementWeaponClass) {
                 if ($blade->getWeaponClass()->getId() == $requirement->getWeaponClass()->getId()) {
-                    $requirementsMet[] = $requirement->getId();
+                    $requirementsMet['ids'][] = $requirement->getId();
+                    $requirementsMet['requirements'][] = $requirement;
                 }
             } else {
                 throw new \LogicException(get_class($requirement).' is not a valid Merc Mission Requirement.');
@@ -570,12 +579,16 @@ class MercMissionController extends Controller
      */
     private function getFieldSkillsMet(Blade $blade, MercMission $mercMission)
     {
-        $fieldSkills = [];
+        $fieldSkills = [
+          'ids' => [],
+          'fieldSkills' => [],
+        ];
 
         foreach ($mercMission->getFieldSkills() as $fieldSkill) {
             foreach ($blade->getAffinityNodes() as $affinityNode) {
                 if ($affinityNode->getAffinityNode()->getId() == $fieldSkill->getId()) {
-                    $fieldSkills[] = $fieldSkill->getId();
+                    $fieldSkills['ids'][] = $fieldSkill->getId();
+                    $fieldSkills['fieldSkills'][] = $fieldSkill;
                 }
             }
         }
