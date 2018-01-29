@@ -477,18 +477,22 @@ DROP TABLE IF EXISTS `merc_mission`;
 /*!40101 SET @saved_cs_client = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `merc_mission` (
-  `id`         INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `nation_id`  INT(11)                                          DEFAULT NULL,
-  `duration`   TIME                                    NOT NULL,
-  `repeatable` TINYINT(1)                              NOT NULL,
-  `name`       VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug`       VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`          INT(11)                                 NOT NULL AUTO_INCREMENT,
+  `nation_id`   INT(11)                                          DEFAULT NULL,
+  `duration`    TIME                                    NOT NULL,
+  `repeatable`  TINYINT(1)                              NOT NULL,
+  `name`        VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug`        VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `merc_points` INT(11)                                          DEFAULT NULL,
+  `experience`  INT(11)                                          DEFAULT NULL,
+  `gold`        INT(11)                                          DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_FAF4B51F989D9B62` (`slug`),
   KEY `IDX_FAF4B51FAE3899` (`nation_id`),
   CONSTRAINT `FK_FAF4B51FAE3899` FOREIGN KEY (`nation_id`) REFERENCES `nation` (`id`)
 )
   ENGINE = InnoDB
+  AUTO_INCREMENT = 104
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -500,6 +504,110 @@ CREATE TABLE `merc_mission` (
 LOCK TABLES `merc_mission` WRITE;
 /*!40000 ALTER TABLE `merc_mission`
   DISABLE KEYS */;
+INSERT INTO `merc_mission` (`id`, `nation_id`, `duration`, `repeatable`, `name`, `slug`, `merc_points`, `experience`, `gold`)
+VALUES (1, 1, '00:30:00', 1, 'Unloading of Goods', 'unloading-of-goods', 40, 240, 675),
+  (2, 1, '00:30:00', 1, 'Crane Repairs', 'crane-repairs', 40, 225, 720),
+  (3, 1, '00:30:00', 1, 'Salvaging Security', 'salvaging-security', 40, 285, 600),
+  (4, 1, '00:40:00', 1, 'Nopon Veggie Stir-Fry', 'nopon-veggie-stir-fry', 50, 240, 705),
+  (5, 1, '00:40:00', 1, 'Canteen Job', 'canteen-job', 50, 255, 645),
+  (6, 1, '00:50:00', 1, 'Port Pest Problem', 'port-pest-problem', 65, 240, 675),
+  (7, 1, '00:50:00', 1, 'Grounded Ship Rescue', 'grounded-ship-rescue', 65, 240, 690),
+  (8, 1, '00:50:00', 1, 'Ship Snooping', 'ship-snooping', 65, 315, 495),
+  (9, 1, '00:50:00', 1, 'Avoiding Heavy Losses', 'avoiding-heavy-losses', 65, 270, 630),
+  (10, 1, '01:00:00', 1, 'Money, Money, Money', 'money-money-money', 80, 270, 750),
+  (11, 1, '01:00:00', 1, 'Flying Monsters', 'flying-monsters', 80, 300, 660),
+  (12, 1, '01:20:00', 1, 'Big Catch Opportunity', 'big-catch-opportunity', 105, 300, 690),
+  (13, 1, '01:20:00', 1, 'Crane Protection', 'crane-protection', 105, 330, 615),
+  (14, 1, '01:40:00', 1, 'Nopon News', 'nopon-news', 130, 285, 720),
+  (15, 1, '01:40:00', 1, 'Deck Duty', 'deck-duty', 130, 270, 750),
+  (16, 1, '01:40:00', 1, 'Sunken Ship Survey', 'sunken-ship-survey', 130, 285, 855),
+  (17, 2, '00:30:00', 1, 'Woodworking', 'woodworking', 40, 285, 600),
+  (18, 2, '00:30:00', 1, 'Modeling Work', 'modeling-work', 40, 270, 615),
+  (19, 2, '00:30:00', 1, 'Landslide Prevention', 'landslide-prevention', 40, 300, 555),
+  (20, 2, '00:40:00', 1, 'Harvest Help', 'harvest-help', 50, 240, 675),
+  (21, 2, '00:40:00', 1, 'Field Devastation', 'field-devastation', 50, 285, 585),
+  (22, 2, '00:50:00', 1, 'Mannam Juice Delivery', 'mannam-juice-delivery', 65, 270, 600),
+  (23, 2, '00:50:00', 1, 'Wood Gathering', 'wood-gathering', 65, 285, 585),
+  (24, 2, '00:50:00', 1, 'Armu Retrieval', 'armu-retrieval', 65, 300, 555),
+  (25, 2, '00:50:00', 1, 'Test of Courage', 'test-of-courage', 65, 255, 660),
+  (26, 2, '01:00:00', 1, 'Forest Fire Prevention', 'forest-fire-prevention', 80, 360, 540),
+  (27, 2, '01:00:00', 1, 'Stranded Merchant', 'stranded-merchant', 80, 360, 540),
+  (28, 2, '01:20:00', 1, 'Gormott Secret Area', 'gormott-secret-area', 105, 315, 630),
+  (29, 2, '01:20:00', 1, 'Protect the Holy Place', 'protect-the-holy-place', 105, 360, 540),
+  (30, 2, '01:40:00', 1, 'Mock Maneuvers', 'mock-maneuvers', 130, 240, 795),
+  (31, 2, '01:40:00', 1, 'Arrest Warrant', 'arrest-warrant', 130, 270, 735),
+  (32, 2, '02:00:00', 1, 'Wine Delivery', 'wine-delivery', 160, 645, 1530),
+  (33, 2, '02:00:00', 1, 'Phantom Fruit', 'phantom-fruit', 160, 705, 1425),
+  (34, 2, '02:00:00', 1, 'Weird Water', 'weird-water', 160, 795, 1230),
+  (35, 2, '00:30:00', 1, 'Energy for Remodeling', 'energy-for-remodeling', 100, 405, 1050),
+  (36, 2, '00:30:00', 1, 'Manufacture Help', 'manufacture-help', 100, 0, 0),
+  (37, 3, '00:30:00', 1, 'Flotsam Inspection', 'flotsam-inspection', 40, 255, 630),
+  (38, 3, '00:30:00', 1, 'Lost and Found', 'lost-and-found', 40, 270, 630),
+  (39, 3, '00:40:00', 1, 'Beautiful Pearl', 'beautiful-pearl', 50, 315, 525),
+  (40, 3, '00:40:00', 1, 'Igna Investigation', 'igna-investigation', 50, 285, 570),
+  (41, 3, '00:50:00', 1, 'Rogue Miners', 'rogue-miners', 65, 300, 555),
+  (42, 3, '00:50:00', 1, 'Warehouse Work', 'warehouse-work', 65, 285, 720),
+  (43, 3, '00:50:00', 1, 'King of the Spring', 'king-of-the-spring', 65, 270, 720),
+  (44, 3, '00:50:00', 1, 'Daily Training', 'daily-training', 65, 345, 555),
+  (45, 3, '01:00:00', 1, 'Giant Crab Attack', 'giant-crab-attack', 80, 690, 1440),
+  (46, 3, '01:00:00', 1, 'Goods Transport', 'goods-transport', 80, 255, 660),
+  (47, 3, '01:20:00', 1, 'Art Supplies', 'art-supplies', 105, 255, 630),
+  (48, 3, '01:20:00', 1, 'Water Quality Check', 'water-quality-check', 105, 285, 585),
+  (49, 3, '01:40:00', 1, 'Wonderful Stage', 'wonderful-stage', 130, 255, 645),
+  (50, 3, '01:40:00', 1, 'Road Repairs', 'road-repairs', 130, 285, 720),
+  (51, 3, '02:00:00', 1, 'Rare Goods Repairs', 'rare-goods-repairs', 160, 360, 540),
+  (52, 3, '02:00:00', 1, 'Fort Rescue', 'fort-rescue', 160, 390, 615),
+  (53, 4, '00:30:00', 1, 'Cooking Spices', 'cooking-spices', 40, 315, 510),
+  (54, 4, '00:30:00', 1, 'Lunch of Love', 'lunch-of-love', 40, 285, 600),
+  (55, 4, '00:30:00', 1, 'Titan Weaponry', 'titan-weaponry', 40, 315, 510),
+  (56, 4, '00:40:00', 1, 'VIP Escort', 'vip-escort', 50, 285, 600),
+  (57, 4, '00:40:00', 1, 'Pest Extermination', 'pest-extermination', 50, 315, 495),
+  (58, 4, '00:50:00', 1, 'Gondola Inspection', 'gondola-inspection', 65, 240, 690),
+  (59, 4, '00:50:00', 1, 'Nopon Letter', 'nopon-letter', 65, 255, 645),
+  (60, 4, '00:50:00', 1, 'Antique Judgment', 'antique-judgment', 65, 285, 570),
+  (61, 4, '00:50:00', 1, 'Burned Wanted Posters', 'burned-wanted-posters', 65, 270, 615),
+  (62, 4, '01:00:00', 1, 'Mining Machine', 'mining-machine', 80, 330, 600),
+  (63, 4, '01:00:00', 1, 'Titan Research', 'titan-research', 80, 330, 600),
+  (64, 4, '01:20:00', 1, 'Longing for Mòrag', 'longing-for-morag', 105, 345, 570),
+  (65, 4, '01:20:00', 1, 'Illegal Dumper', 'illegal-dumper', 105, 640, 1470),
+  (66, 4, '01:40:00', 1, 'Acquiring Rare Parts', 'acquiring-rare-parts', 130, 240, 795),
+  (67, 4, '01:40:00', 1, 'Street Patrols', 'street-patrols', 130, 330, 615),
+  (68, 4, '01:40:00', 1, 'Scientific Development', 'scientific-development', 130, 270, 735),
+  (69, 4, '02:00:00', 1, 'Hot Nopon', 'hot-nopon', 160, 615, 1620),
+  (70, 4, '02:00:00', 1, 'Smuggler Arrest', 'smuggler-arrest', 160, 570, 1710),
+  (71, 5, '00:30:00', 1, 'Graveside Flowers', 'graveside-flowers', 40, 270, 720),
+  (72, 5, '00:30:00', 1, 'Heavy Angling', 'heavy-angling', 40, 255, 765),
+  (73, 5, '00:30:00', 1, 'Lost Property', 'lost-property', 40, 300, 690),
+  (74, 5, '00:30:00', 1, 'Lost Property', 'lost-property-1', 40, 300, 690),
+  (75, 5, '00:40:00', 1, 'Field Pests', 'field-pests', 50, 255, 780),
+  (76, 5, '00:40:00', 1, 'Taminbi', 'taminbi', 50, 255, 780),
+  (77, 5, '00:50:00', 1, 'Insect Professor', 'insect-professor', 65, 330, 600),
+  (78, 5, '00:50:00', 1, 'Parisax Extermination', 'parisax-extermination', 65, 360, 555),
+  (79, 5, '00:50:00', 1, 'Pending Payout', 'pending-payout', 65, 300, 690),
+  (80, 5, '00:50:00', 1, 'Shellfish Savior', 'shellfish-savior', 65, 360, 555),
+  (81, 5, '01:00:00', 1, 'Vessel Scrapping', 'vessel-scrapping', 80, 405, 600),
+  (82, 5, '01:00:00', 1, 'Memory Bracelet', 'memory-bracelet', 80, 300, 825),
+  (83, 5, '01:20:00', 1, 'Rex\'s Condition', 'rexs-condition', 105, 315, 795),
+  (84, 5, '01:20:00', 1, 'Research Results', 'research-results', 105, 300, 840),
+  (85, 5, '01:40:00', 1, 'Suspicious Ship', 'suspicious-ship', 130, 375, 645),
+  (86, 5, '01:40:00', 1, 'Dringworm Hunting', 'dringworm-hunting', 130, 270, 870),
+  (87, 5, '01:40:00', 1, 'Yashima Festival', 'yashima-festival', 130, 405, 600),
+  (88, 7, '00:30:00', 1, 'Ether Furnace Checks', 'ether-furnace-checks', 40, 345, 705),
+  (89, 7, '00:30:00', 1, 'Children\'s Snowsuit', 'childrens-snowsuit', 40, 300, 810),
+  (90, 7, '00:30:00', 1, 'Snow Removal', 'snow-removal', 40, 375, 660),
+  (91, 7, '00:40:00', 1, 'Exiting Tantal', 'exiting-tantal', 50, 375, 645),
+  (92, 7, '00:40:00', 1, 'Warming Stralu', 'warming-stralu', 50, 390, 630),
+  (93, 7, '00:50:00', 1, 'Snow Flower', 'snow-flower', 65, 360, 855),
+  (94, 7, '00:50:00', 1, 'Carnivorous Beast', 'carnivorous-beast', 65, 315, 945),
+  (95, 7, '00:50:00', 1, 'New Book', 'new-book', 65, 420, 735),
+  (96, 7, '00:50:00', 1, 'Blizzard Zone', 'blizzard-zone', 65, 405, 750),
+  (97, 7, '01:00:00', 1, 'Cold-Proof Crops', 'cold-proof-crops', 80, 375, 810),
+  (98, 7, '01:00:00', 1, 'Military Training', 'military-training', 80, 405, 735),
+  (99, 7, '01:20:00', 1, 'The Black Market', 'the-black-market', 105, 450, 660),
+  (100, 7, '01:20:00', 1, 'Dandes Salt Cave', 'dandes-salt-cave', 105, 375, 795),
+  (101, 7, '01:40:00', 1, 'Snow Survey', 'snow-survey', 130, 375, 810),
+  (102, 7, '01:40:00', 1, 'Shaking Icicles', 'shaking-icicles', 130, 375, 825),
+  (103, 7, '01:40:00', 1, 'Confidential Documents', 'confidential-documents', 130, 345, 870);
 /*!40000 ALTER TABLE `merc_mission`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -534,6 +642,30 @@ CREATE TABLE `merc_mission_affinity_node` (
 LOCK TABLES `merc_mission_affinity_node` WRITE;
 /*!40000 ALTER TABLE `merc_mission_affinity_node`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_affinity_node` (`merc_mission_id`, `affinity_node_id`)
+VALUES (1, 29), (1, 40), (2, 3), (2, 26), (3, 7), (3, 15), (3, 25), (4, 23), (4, 28), (5, 17), (5, 19), (5, 27),
+  (6, 11), (6, 25), (6, 26), (7, 7), (7, 18), (7, 26), (8, 22), (8, 23), (9, 27), (9, 29), (10, 10), (10, 27), (10, 29),
+  (11, 8), (11, 21), (11, 41), (12, 13), (12, 15), (13, 7), (13, 13), (13, 26), (14, 16), (14, 19), (14, 27), (15, 6),
+  (15, 51), (16, 15), (16, 22), (16, 45), (17, 12), (17, 24), (18, 12), (18, 18), (18, 41), (19, 2), (19, 12), (20, 9),
+  (20, 28), (20, 29), (21, 3), (21, 9), (22, 11), (22, 12), (23, 6), (23, 12), (23, 29), (24, 2), (24, 24), (24, 29),
+  (25, 1), (25, 41), (25, 44), (26, 7), (26, 12), (26, 35), (27, 10), (27, 21), (27, 36), (28, 12), (28, 16), (29, 16),
+  (29, 22), (29, 25), (30, 3), (30, 42), (30, 52), (31, 18), (31, 27), (31, 29), (32, 3), (32, 6), (32, 28), (33, 10),
+  (33, 11), (33, 41), (34, 10), (34, 13), (34, 20), (35, 14), (35, 26), (35, 55), (36, 7), (36, 8), (36, 10), (37, 14),
+  (37, 17), (37, 20), (38, 7), (38, 25), (38, 27), (39, 19), (39, 27), (39, 28), (40, 1), (40, 20), (41, 1), (41, 7),
+  (41, 18), (42, 9), (42, 29), (42, 55), (43, 7), (43, 13), (43, 18), (44, 7), (44, 42), (45, 3), (45, 25), (46, 29),
+  (46, 55), (47, 14), (47, 20), (47, 28), (48, 7), (48, 20), (48, 27), (49, 28), (49, 48), (50, 8), (50, 14), (50, 26),
+  (51, 22), (51, 26), (51, 46), (52, 6), (52, 18), (52, 40), (53, 9), (53, 10), (53, 29), (54, 14), (54, 21), (54, 25),
+  (55, 9), (55, 11), (55, 52), (56, 3), (56, 18), (57, 6), (57, 9), (58, 17), (58, 21), (58, 26), (60, 16), (60, 17),
+  (60, 20), (61, 20), (61, 27), (61, 36), (62, 14), (62, 26), (62, 29), (63, 2), (63, 4), (63, 44), (64, 1), (64, 4),
+  (64, 7), (65, 3), (65, 26), (65, 27), (66, 15), (66, 18), (66, 26), (67, 1), (67, 7), (67, 41), (68, 2), (68, 11),
+  (68, 12), (69, 4), (69, 6), (69, 47), (70, 1), (70, 18), (70, 27), (71, 10), (71, 37), (72, 13), (72, 46), (73, 17),
+  (73, 27), (73, 37), (74, 17), (74, 27), (74, 37), (75, 9), (75, 11), (76, 9), (76, 18), (76, 27), (77, 12), (77, 27),
+  (78, 3), (78, 6), (79, 17), (79, 22), (79, 26), (80, 14), (80, 28), (81, 17), (81, 26), (81, 29), (82, 8), (82, 21),
+  (82, 47), (83, 19), (83, 25), (83, 27), (84, 3), (84, 13), (84, 29), (85, 15), (85, 22), (85, 27), (86, 3), (86, 11),
+  (86, 17), (88, 17), (88, 26), (88, 45), (89, 1), (89, 6), (89, 28), (90, 4), (90, 6), (91, 23), (91, 25), (92, 1),
+  (92, 7), (93, 10), (93, 20), (93, 54), (94, 1), (94, 25), (95, 11), (95, 14), (95, 16), (96, 1), (96, 6), (96, 14),
+  (97, 2), (97, 9), (97, 10), (98, 3), (98, 18), (98, 42), (99, 18), (99, 20), (99, 22), (100, 2), (100, 4), (100, 14),
+  (101, 6), (101, 14), (101, 20), (102, 16), (102, 24), (103, 18), (103, 27), (103, 51);
 /*!40000 ALTER TABLE `merc_mission_affinity_node`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -602,6 +734,23 @@ CREATE TABLE `merc_mission_merc_mission_requirement` (
 LOCK TABLES `merc_mission_merc_mission_requirement` WRITE;
 /*!40000 ALTER TABLE `merc_mission_merc_mission_requirement`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_merc_mission_requirement` (`merc_mission_id`, `merc_mission_requirement_id`)
+VALUES (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (9, 10), (10, 11), (10, 12), (11, 13),
+  (11, 14), (12, 15), (12, 16), (13, 17), (13, 18), (14, 19), (14, 20), (15, 21), (15, 22), (16, 23), (16, 24),
+  (17, 25), (18, 26), (19, 27), (20, 28), (21, 29), (22, 30), (22, 31), (23, 32), (24, 33), (24, 34), (25, 35),
+  (26, 36), (26, 37), (27, 38), (28, 39), (29, 40), (30, 41), (30, 42), (31, 43), (31, 44), (32, 45), (32, 46),
+  (33, 47), (33, 48), (33, 49), (34, 50), (34, 51), (34, 52), (35, 53), (35, 54), (35, 55), (36, 56), (37, 57),
+  (38, 58), (39, 59), (40, 60), (41, 61), (41, 62), (42, 63), (42, 64), (43, 65), (43, 66), (44, 67), (44, 68),
+  (45, 69), (45, 70), (45, 71), (46, 72), (47, 73), (48, 74), (49, 75), (49, 76), (50, 77), (50, 78), (51, 79),
+  (51, 80), (52, 81), (52, 82), (52, 83), (53, 84), (54, 85), (55, 86), (56, 87), (57, 88), (58, 89), (59, 90),
+  (59, 91), (60, 92), (61, 93), (62, 94), (62, 95), (63, 96), (63, 97), (64, 98), (64, 99), (65, 100), (65, 101),
+  (66, 102), (66, 103), (67, 104), (67, 105), (68, 106), (68, 107), (69, 108), (69, 109), (69, 110), (70, 111),
+  (70, 112), (71, 113), (72, 114), (73, 115), (74, 116), (75, 117), (76, 118), (77, 119), (77, 120), (78, 121),
+  (79, 122), (79, 123), (80, 124), (80, 125), (81, 126), (81, 127), (82, 128), (82, 129), (83, 130), (83, 131),
+  (84, 132), (84, 133), (85, 134), (86, 135), (86, 136), (87, 137), (87, 138), (88, 139), (89, 140), (90, 141),
+  (91, 142), (92, 143), (93, 144), (93, 145), (94, 146), (95, 147), (95, 148), (96, 149), (97, 150), (97, 151),
+  (98, 152), (98, 153), (99, 154), (99, 155), (100, 156), (100, 157), (101, 158), (101, 159), (102, 160), (102, 161),
+  (103, 162), (103, 163);
 /*!40000 ALTER TABLE `merc_mission_merc_mission_requirement`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -674,6 +823,7 @@ CREATE TABLE `merc_mission_requirement` (
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
+  AUTO_INCREMENT = 164
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -685,6 +835,89 @@ CREATE TABLE `merc_mission_requirement` (
 LOCK TABLES `merc_mission_requirement` WRITE;
 /*!40000 ALTER TABLE `merc_mission_requirement`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_requirement` (`id`, `count`, `discr`)
+VALUES (1, 1, 'mercmissionrequirementclass'), (2, 2, 'mercmissionrequirementclass'),
+  (3, 1, 'mercmissionrequirementweaponclass'), (4, 1, 'mercmissionrequirementelement'),
+  (5, 2, 'mercmissionrequirementgender'), (6, 2, 'mercmissionrequirementstrength'),
+  (7, 2, 'mercmissionrequirementweaponclass'), (8, 2, 'mercmissionrequirementclass'),
+  (9, 1, 'mercmissionrequirementclass'), (10, 1, 'mercmissionrequirementclass'),
+  (11, 2, 'mercmissionrequirementelement'), (12, 1, 'mercmissionrequirementclass'),
+  (13, 2, 'mercmissionrequirementstrength'), (14, 2, 'mercmissionrequirementelement'),
+  (15, 3, 'mercmissionrequirementgender'), (16, 1, 'mercmissionrequirementelement'),
+  (17, 2, 'mercmissionrequirementelement'), (18, 1, 'mercmissionrequirementelement'),
+  (19, 2, 'mercmissionrequirementgender'), (20, 2, 'mercmissionrequirementelement'),
+  (21, 1, 'mercmissionrequirementweaponclass'), (22, 3, 'mercmissionrequirementstrength'),
+  (23, 2, 'mercmissionrequirementstrength'), (24, 2, 'mercmissionrequirementelement'),
+  (25, 1, 'mercmissionrequirementgender'), (26, 1, 'mercmissionrequirementelement'),
+  (27, 2, 'mercmissionrequirementclass'), (28, 1, 'mercmissionrequirementelement'),
+  (29, 1, 'mercmissionrequirementweaponclass'), (30, 1, 'mercmissionrequirementstrength'),
+  (31, 1, 'mercmissionrequirementclass'), (32, 2, 'mercmissionrequirementelement'),
+  (33, 2, 'mercmissionrequirementweaponclass'), (34, 1, 'mercmissionrequirementclass'),
+  (35, 2, 'mercmissionrequirementclass'), (36, 3, 'mercmissionrequirementelement'),
+  (37, 2, 'mercmissionrequirementclass'), (38, 3, 'mercmissionrequirementweaponclass'),
+  (39, 3, 'mercmissionrequirementstrength'), (40, 3, 'mercmissionrequirementweaponclass'),
+  (41, 2, 'mercmissionrequirementstrength'), (42, 3, 'mercmissionrequirementelement'),
+  (43, 3, 'mercmissionrequirementweaponclass'), (44, 3, 'mercmissionrequirementgender'),
+  (45, 3, 'mercmissionrequirementweaponclass'), (46, 3, 'mercmissionrequirementstrength'),
+  (47, 1, 'mercmissionrequirementfieldskill'), (48, 2, 'mercmissionrequirementelement'),
+  (49, 2, 'mercmissionrequirementelement'), (50, 2, 'mercmissionrequirementelement'),
+  (51, 2, 'mercmissionrequirementelement'), (52, 2, 'mercmissionrequirementelement'),
+  (53, 2, 'mercmissionrequirementfieldskill'), (54, 3, 'mercmissionrequirementclass'),
+  (55, 2, 'mercmissionrequirementclass'), (56, 3, 'mercmissionrequirementfieldskill'),
+  (57, 1, 'mercmissionrequirementstrength'), (58, 1, 'mercmissionrequirementclass'),
+  (59, 2, 'mercmissionrequirementgender'), (60, 2, 'mercmissionrequirementstrength'),
+  (61, 2, 'mercmissionrequirementweaponclass'), (62, 1, 'mercmissionrequirementclass'),
+  (63, 2, 'mercmissionrequirementgender'), (64, 2, 'mercmissionrequirementelement'),
+  (65, 2, 'mercmissionrequirementelement'), (66, 2, 'mercmissionrequirementclass'),
+  (67, 2, 'mercmissionrequirementweaponclass'), (68, 2, 'mercmissionrequirementweaponclass'),
+  (69, 1, 'mercmissionrequirementweaponclass'), (70, 1, 'mercmissionrequirementweaponclass'),
+  (71, 3, 'mercmissionrequirementstrength'), (72, 2, 'mercmissionrequirementgender'),
+  (73, 1, 'mercmissionrequirementclass'), (74, 2, 'mercmissionrequirementelement'),
+  (75, 2, 'mercmissionrequirementgender'), (76, 1, 'mercmissionrequirementelement'),
+  (77, 3, 'mercmissionrequirementgender'), (78, 2, 'mercmissionrequirementelement'),
+  (79, 2, 'mercmissionrequirementelement'), (80, 3, 'mercmissionrequirementclass'),
+  (81, 2, 'mercmissionrequirementweaponclass'), (82, 2, 'mercmissionrequirementstrength'),
+  (83, 2, 'mercmissionrequirementelement'), (84, 1, 'mercmissionrequirementstrength'),
+  (85, 2, 'mercmissionrequirementstrength'), (86, 2, 'mercmissionrequirementelement'),
+  (87, 2, 'mercmissionrequirementgender'), (88, 2, 'mercmissionrequirementstrength'),
+  (89, 2, 'mercmissionrequirementclass'), (90, 1, 'mercmissionrequirementelement'),
+  (91, 1, 'mercmissionrequirementclass'), (92, 2, 'mercmissionrequirementclass'),
+  (93, 2, 'mercmissionrequirementclass'), (94, 3, 'mercmissionrequirementgender'),
+  (95, 2, 'mercmissionrequirementclass'), (96, 3, 'mercmissionrequirementstrength'),
+  (97, 1, 'mercmissionrequirementclass'), (98, 2, 'mercmissionrequirementgender'),
+  (99, 2, 'mercmissionrequirementelement'), (100, 2, 'mercmissionrequirementweaponclass'),
+  (101, 3, 'mercmissionrequirementstrength'), (102, 3, 'mercmissionrequirementstrength'),
+  (103, 2, 'mercmissionrequirementgender'), (104, 2, 'mercmissionrequirementstrength'),
+  (105, 3, 'mercmissionrequirementclass'), (106, 2, 'mercmissionrequirementelement'),
+  (107, 3, 'mercmissionrequirementclass'), (108, 3, 'mercmissionrequirementstrength'),
+  (109, 1, 'mercmissionrequirementelement'), (110, 1, 'mercmissionrequirementelement'),
+  (111, 3, 'mercmissionrequirementweaponclass'), (112, 3, 'mercmissionrequirementstrength'),
+  (113, 1, 'mercmissionrequirementelement'), (114, 1, 'mercmissionrequirementelement'),
+  (115, 2, 'mercmissionrequirementclass'), (116, 2, 'mercmissionrequirementclass'),
+  (117, 1, 'mercmissionrequirementweaponclass'), (118, 2, 'mercmissionrequirementclass'),
+  (119, 1, 'mercmissionrequirementelement'), (120, 1, 'mercmissionrequirementclass'),
+  (121, 2, 'mercmissionrequirementstrength'), (122, 1, 'mercmissionrequirementgender'),
+  (123, 2, 'mercmissionrequirementclass'), (124, 1, 'mercmissionrequirementstrength'),
+  (125, 2, 'mercmissionrequirementelement'), (126, 3, 'mercmissionrequirementgender'),
+  (127, 1, 'mercmissionrequirementclass'), (128, 2, 'mercmissionrequirementweaponclass'),
+  (129, 2, 'mercmissionrequirementelement'), (130, 2, 'mercmissionrequirementgender'),
+  (131, 2, 'mercmissionrequirementgender'), (132, 2, 'mercmissionrequirementstrength'),
+  (133, 3, 'mercmissionrequirementelement'), (134, 6, 'mercmissionrequirementstrength'),
+  (135, 2, 'mercmissionrequirementweaponclass'), (136, 3, 'mercmissionrequirementelement'),
+  (137, 3, 'mercmissionrequirementgender'), (138, 3, 'mercmissionrequirementgender'),
+  (139, 1, 'mercmissionrequirementclass'), (140, 1, 'mercmissionrequirementelement'),
+  (141, 2, 'mercmissionrequirementstrength'), (142, 1, 'mercmissionrequirementgender'),
+  (143, 2, 'mercmissionrequirementweaponclass'), (144, 1, 'mercmissionrequirementgender'),
+  (145, 2, 'mercmissionrequirementelement'), (146, 2, 'mercmissionrequirementstrength'),
+  (147, 6, 'mercmissionrequirementgender'), (148, 2, 'mercmissionrequirementclass'),
+  (149, 2, 'mercmissionrequirementweaponclass'), (150, 2, 'mercmissionrequirementelement'),
+  (151, 2, 'mercmissionrequirementclass'), (152, 2, 'mercmissionrequirementweaponclass'),
+  (153, 2, 'mercmissionrequirementweaponclass'), (154, 3, 'mercmissionrequirementstrength'),
+  (155, 1, 'mercmissionrequirementclass'), (156, 3, 'mercmissionrequirementstrength'),
+  (157, 2, 'mercmissionrequirementelement'), (158, 3, 'mercmissionrequirementweaponclass'),
+  (159, 2, 'mercmissionrequirementstrength'), (160, 3, 'mercmissionrequirementweaponclass'),
+  (161, 2, 'mercmissionrequirementelement'), (162, 3, 'mercmissionrequirementstrength'),
+  (163, 1, 'mercmissionrequirementclass');
 /*!40000 ALTER TABLE `merc_mission_requirement`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -717,6 +950,10 @@ CREATE TABLE `merc_mission_requirement_class` (
 LOCK TABLES `merc_mission_requirement_class` WRITE;
 /*!40000 ALTER TABLE `merc_mission_requirement_class`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_requirement_class` (`id`, `class_id`)
+VALUES (1, 1), (2, 1), (8, 1), (9, 1), (27, 1), (31, 1), (54, 1), (66, 1), (80, 1), (89, 1), (92, 1), (95, 1), (115, 1),
+  (116, 1), (118, 1), (123, 1), (127, 1), (139, 1), (148, 1), (10, 2), (12, 2), (34, 2), (35, 2), (37, 2), (55, 2),
+  (58, 2), (62, 2), (73, 2), (91, 2), (93, 2), (97, 2), (105, 2), (107, 2), (120, 2), (151, 2), (155, 2), (163, 2);
 /*!40000 ALTER TABLE `merc_mission_requirement_class`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -749,6 +986,11 @@ CREATE TABLE `merc_mission_requirement_element` (
 LOCK TABLES `merc_mission_requirement_element` WRITE;
 /*!40000 ALTER TABLE `merc_mission_requirement_element`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_requirement_element` (`id`, `element_id`)
+VALUES (4, 1), (86, 1), (99, 1), (109, 1), (140, 1), (161, 1), (16, 2), (17, 2), (32, 2), (36, 2), (50, 2), (65, 2),
+  (74, 2), (20, 3), (42, 3), (49, 3), (64, 3), (110, 3), (145, 3), (150, 3), (14, 4), (26, 4), (52, 4), (76, 4),
+  (90, 4), (106, 4), (119, 4), (125, 4), (11, 5), (28, 5), (48, 5), (51, 5), (78, 5), (113, 5), (136, 5), (157, 5),
+  (18, 6), (79, 6), (114, 6), (129, 6), (133, 6), (24, 8), (83, 8);
 /*!40000 ALTER TABLE `merc_mission_requirement_element`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -782,6 +1024,8 @@ CREATE TABLE `merc_mission_requirement_field_skill` (
 LOCK TABLES `merc_mission_requirement_field_skill` WRITE;
 /*!40000 ALTER TABLE `merc_mission_requirement_field_skill`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_requirement_field_skill` (`id`, `field_skill_id`, `level`)
+VALUES (47, 12, 1), (53, 15, 1), (56, 9, 1);
 /*!40000 ALTER TABLE `merc_mission_requirement_field_skill`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -814,6 +1058,9 @@ CREATE TABLE `merc_mission_requirement_gender` (
 LOCK TABLES `merc_mission_requirement_gender` WRITE;
 /*!40000 ALTER TABLE `merc_mission_requirement_gender`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_requirement_gender` (`id`, `gender_id`)
+VALUES (15, 1), (25, 1), (44, 1), (72, 1), (77, 1), (94, 1), (103, 1), (122, 1), (126, 1), (131, 1), (137, 1), (142, 1),
+  (5, 2), (19, 2), (59, 2), (63, 2), (75, 2), (87, 2), (98, 2), (130, 2), (138, 2), (144, 2), (147, 2);
 /*!40000 ALTER TABLE `merc_mission_requirement_gender`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -844,6 +1091,10 @@ CREATE TABLE `merc_mission_requirement_strength` (
 LOCK TABLES `merc_mission_requirement_strength` WRITE;
 /*!40000 ALTER TABLE `merc_mission_requirement_strength`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_requirement_strength` (`id`, `strength`)
+VALUES (6, 15), (13, 20), (22, 30), (23, 30), (30, 15), (39, 20), (41, 30), (46, 35), (57, 10), (60, 15), (71, 35),
+  (82, 35), (84, 10), (85, 10), (88, 10), (96, 20), (101, 30), (102, 30), (104, 30), (108, 35), (112, 35), (121, 15),
+  (124, 15), (132, 30), (134, 30), (141, 10), (146, 15), (154, 20), (156, 30), (159, 30), (162, 30);
 /*!40000 ALTER TABLE `merc_mission_requirement_strength`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -876,6 +1127,10 @@ CREATE TABLE `merc_mission_requirement_weapon_class` (
 LOCK TABLES `merc_mission_requirement_weapon_class` WRITE;
 /*!40000 ALTER TABLE `merc_mission_requirement_weapon_class`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_requirement_weapon_class` (`id`, `weapon_class_id`)
+VALUES (38, 3), (67, 3), (135, 3), (40, 4), (45, 4), (100, 4), (21, 8), (43, 8), (117, 8), (143, 8), (152, 8), (160, 8),
+  (29, 9), (69, 9), (149, 9), (33, 10), (81, 10), (3, 12), (7, 12), (61, 12), (128, 12), (158, 12), (68, 14), (70, 14),
+  (111, 14), (153, 14);
 /*!40000 ALTER TABLE `merc_mission_requirement_weapon_class`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1013,9 +1268,6 @@ CREATE TABLE `user` (
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user`
   DISABLE KEYS */;
-INSERT INTO `user` (`id`, `username`, `password`, `email`, `is_active`, `created`, `activate_code`, `activate_code_time`)
-VALUES (1, 'dk', '$2y$13$E939/rSZ4HI0qvv1OYi0h.VFqVfaaQjymgYTPHajBEKfLNKlna3ci', 'dk@dankeenan.org', 1,
-        '2018-01-12 02:27:38', NULL, NULL);
 /*!40000 ALTER TABLE `user`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1050,7 +1302,6 @@ CREATE TABLE `user_role` (
 LOCK TABLES `user_role` WRITE;
 /*!40000 ALTER TABLE `user_role`
   DISABLE KEYS */;
-INSERT INTO `user_role` (`user_id`, `role_id`) VALUES (1, 1), (1, 2);
 /*!40000 ALTER TABLE `user_role`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1102,4 +1353,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
 
--- Dump completed on 2018-01-23 20:36:06
+-- Dump completed on 2018-01-28 22:06:07
