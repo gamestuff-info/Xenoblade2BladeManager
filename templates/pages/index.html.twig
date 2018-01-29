@@ -3,8 +3,56 @@
 {% block title %}
 {% endblock %}
 
-{% block content %}
-    <img class="d-block mx-auto" src="{{ asset('dist/static/logo.svg') }}" alt="Xenoblade Chronicles 2: Management Simulator">
-    <p>
-    </p>
+{% block javascripts %}
+    <script src="{{ asset('dist/js/mainPage.js') }}"></script>
 {% endblock %}
+
+{% block content %}
+    {%- import _self as mainPage %}
+    <div class="jumbotron">
+        <img class="d-block mx-auto" src="{{ asset('dist/static/logo.svg') }}" alt="Xenoblade Chronicles 2: Management Simulator">
+        <hr class="my-4">
+        <p class="lead">Everything that should have been in the game in the first place.</p>
+        <p class="lead">
+            {% if not is_granted('ROLE_USER') %}
+                <a class="btn btn-primary btn-lg" href="{{ path('user_login') }}">Login</a>
+            {% endif %}
+        </p>
+    </div>
+
+    <div class="xeno2--main--gallery">
+        {{ mainPage.figure(asset('dist/static/front/bladelist.png'), "Get a bird's eye view of your team.") }}
+        {{ mainPage.figure(asset('dist/static/front/editblade.png'), 'Track Blade development progress.') }}
+        {{ mainPage.figure(asset('dist/static/front/missionlist.png'), 'Complete the missions your team is best suited for.') }}
+        {{ mainPage.figure(asset('dist/static/front/startmission2.png'), 'Find the best Blade for the job.') }}
+    </div>
+
+    <div class="modal fade" id="lightbox" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="far fa-window-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="" class="rounded">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% macro figure(img, text) %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title text-right">{{ text }}</h5>
+        </div>
+        <a href="#" data-toggle="modal" data-target="#lightbox" data-image="{{ img }}">
+            <img class="card-img-bottom" src="{{ img }}">
+        </a>
+    </div>
+{% endmacro %}
