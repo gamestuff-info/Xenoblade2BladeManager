@@ -8,6 +8,9 @@ return [
       'prerequisites' => '<numberBetween(0, 1)>x @merc_mission_prerequisite_entity_*',
       'duration' => '<dateTimeBetween("@0", "@5400")>',
       'repeatable' => '<boolean()>',
+      'gold' => '<numberBetween(500, 1000)>',
+      'experience' => '<numberBetween(500, 1000)>',
+      'mercPoints' => '<numberBetween(30, 200)>',
     ],
   ],
 ];

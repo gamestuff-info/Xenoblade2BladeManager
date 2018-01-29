@@ -125,18 +125,21 @@ class MercMissionControllerTest extends FixturesTestCase
         foreach ($crawler->filter('#mercmission-list tbody tr') as $row) {
             $nodeCrawler = new Crawler($row);
             $pageMercMission = [
-              'repeatable' => trim($nodeCrawler->filter('td.xeno2--mercmission--list--repeatable')->text()),
+                //              'repeatable' => trim($nodeCrawler->filter('td.xeno2--mercmission--list--repeatable')->text()),
               'nation' => trim($nodeCrawler->filter('td.xeno2--mercmission--list--nation')->text()),
               'name' => trim($nodeCrawler->filter('td.xeno2--mercmission--list--name')->text()),
-              'prerequisites' => [],
+                //              'prerequisites' => [],
               'requirements' => [],
               'fieldSkills' => [],
               'duration' => trim($nodeCrawler->filter('td.xeno2--mercmission--list--duration')->text()),
+              'gold' => trim($nodeCrawler->filter('td.xeno2--mercmission--list--gold')->text()),
+              'experience' => trim($nodeCrawler->filter('td.xeno2--mercmission--list--experience')->text()),
+              'mercpoints' => trim($nodeCrawler->filter('td.xeno2--mercmission--list--mercpoints')->text()),
               'actions' => [],
             ];
-            foreach ($nodeCrawler->filter('td.xeno2--mercmission--list--prerequisites ul li') as $prerequisiteName) {
-                $pageMercMission['prerequisites'][] = trim($prerequisiteName->textContent);
-            }
+            //            foreach ($nodeCrawler->filter('td.xeno2--mercmission--list--prerequisites ul li') as $prerequisiteName) {
+            //                $pageMercMission['prerequisites'][] = trim($prerequisiteName->textContent);
+            //            }
             foreach ($nodeCrawler->filter('td.xeno2--mercmission--list--requirements ul li') as $requirementString) {
                 $pageMercMission['requirements'][] = trim($requirementString->textContent);
             }
@@ -161,17 +164,20 @@ class MercMissionControllerTest extends FixturesTestCase
         $yesNo = ['Yes' => true, 'No' => false];
         foreach ($mercMissions as $mercMission) {
             $pageMercMission = $pageMercMissions[$mercMission->getName()];
-            self::assertEquals($mercMission->isRepeatable(), $yesNo[$pageMercMission['repeatable']], 'Wrong repeatable status displayed');
+            //            self::assertEquals($mercMission->isRepeatable(), $yesNo[$pageMercMission['repeatable']], 'Wrong repeatable status displayed');
             self::assertEquals($mercMission->getDuration()->format('G:i'), $pageMercMission['duration'], 'Wrong duration displayed');
+            self::assertEquals(sprintf('%s G', $mercMission->getGold()), $pageMercMission['gold'], 'Wrong gold displayed');
+            self::assertEquals($mercMission->getExperience(), $pageMercMission['experience'], 'Wrong experience displayed');
+            self::assertEquals($mercMission->getMercPoints(), $pageMercMission['mercpoints'], 'Wrong merc points displayed');
             self::assertContains('Start', $pageMercMission['actions'], 'Start action not displayed');
 
-            sort($pageMercMission['prerequisites']);
-            $prerequisiteNames = [];
-            foreach ($mercMission->getPrerequisites() as $prerequisite) {
-                $prerequisiteNames[] = $prerequisite->getName();
-            }
-            sort($prerequisiteNames);
-            self::assertEquals($prerequisiteNames, $pageMercMission['prerequisites'], 'Wrong prerequisites displayed');
+            //            sort($pageMercMission['prerequisites']);
+            //            $prerequisiteNames = [];
+            //            foreach ($mercMission->getPrerequisites() as $prerequisite) {
+            //                $prerequisiteNames[] = $prerequisite->getName();
+            //            }
+            //            sort($prerequisiteNames);
+            //            self::assertEquals($prerequisiteNames, $pageMercMission['prerequisites'], 'Wrong prerequisites displayed');
 
             sort($pageMercMission['requirements']);
             $requirementStrings = [];
