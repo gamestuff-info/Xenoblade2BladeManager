@@ -125,7 +125,7 @@ class SecurityController extends Controller
         $codeExpired = new \DateTime() >= $user->getActivateCodeTime()->add(
             $expirationTime
           );
-        if ($user->getActivateCode() == $activationCode) {
+        if (strtoupper($user->getActivateCode()) == strtoupper($activationCode)) {
             if (!$codeExpired) {
                 $user->activate();
 
@@ -228,7 +228,7 @@ class SecurityController extends Controller
     }
 
     /**
-     * @param $user
+     * @param User $user
      * @param \Swift_Mailer $mailer
      */
     private function sendRegistrationMail($user, \Swift_Mailer $mailer): void
