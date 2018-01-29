@@ -77,10 +77,17 @@
                                     <button type="button"
                                             class="btn {{ buttonClass }} blade-select"
                                             data-blade-id="{{ blade.id }}"
-                                            data-blade-requirements="{{ bladeInfo.requirements|serialize|e('html_attr') }}"
-                                            data-blade-fieldskills="{{ bladeInfo.fieldSkills|serialize|e('html_attr') }}"
+                                            data-blade-requirements="{{ bladeInfo.requirements.ids|serialize|e('html_attr') }}"
+                                            data-blade-fieldskills="{{ bladeInfo.fieldSkills.ids|serialize|e('html_attr') }}"
                                             data-blade-info="{{ bladeInfo.info|serialize|e('html_attr') }}">
-                                        {{ blade.name }} ({{ blade.affinityPercent }}%)
+                                        {{ blade.name }} ({{ blade.affinityPercent }}%)<br>
+                                        {% for requirement in bladeInfo.requirements.requirements %}
+                                            {{ requirement.name }}{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                        <br>
+                                        {% for fieldSkill in bladeInfo.fieldSkills.fieldSkills %}
+                                            {{ fieldSkill.name }}{% if not loop.last %}, {% endif %}
+                                        {% endfor %}
                                     </button>
                                 </li>
                             {% endfor %}
