@@ -71,16 +71,19 @@
     {% endif %}
 
     {{ utils.tablesorterHelp(true) }}
-    <table id="mercmission-list" class="table xeno2--mercmission--list" data-sortlist="{{ [[1, 0], [0, 0], [2, 0]]|json_encode|e('html_attr') }}">
+    <table id="mercmission-list" class="table xeno2--mercmission--list" data-sortlist="{{ [[4, 0]]|json_encode|e('html_attr') }}">
         <thead>
         <tr>
-            <th class="xeno2--mercmission--list--repeatable filter-select">Repeatable</th>
+            {#<th class="xeno2--mercmission--list--repeatable filter-select">Repeatable</th>#}
             <th class="xeno2--mercmission--list--nation filter-select">Nation</th>
             <th class="xeno2--mercmission--list--name">Name</th>
-            <th class="xeno2--mercmission--list--prerequisites" data-empty="zero">Prerequisites</th>
+            {#<th class="xeno2--mercmission--list--prerequisites" data-empty="zero">Prerequisites</th>#}
             <th class="xeno2--mercmission--list--requirements" data-empty="zero">Requirements</th>
             <th class="xeno2--mercmission--list--fieldskills" data-empty="zero">Field Skills</th>
             <th class="xeno2--mercmission--list--duration">Duration</th>
+            <th class="xeno2--mercmission--list--gold">G</th>
+            <th class="xeno2--mercmission--list--experience">Exp.</th>
+            <th class="xeno2--mercmission--list--mercpoints">Merc Points</th>
             <th class="xeno2--mercmission--list--action filter-false">Action</th>
         </tr>
         </thead>
@@ -94,21 +97,21 @@
                 {%- else -%}
                     {%- set missionRepetable = 'No' -%}
                 {%- endif -%}
-                <td class="xeno2--mercmission--list--repeatable" data-text="{{ missionRepetable }}">
-                    {{ missionRepetable }}
-                    <i class="fas fa-square xeno2--mercmission--repeatable--{{ mercMission.repeatable|default('0') }}"></i>
-                </td>
+                {#<td class="xeno2--mercmission--list--repeatable" data-text="{{ missionRepetable }}">#}
+                {#{{ missionRepetable }}#}
+                {#<i class="fas fa-square xeno2--mercmission--repeatable--{{ mercMission.repeatable|default('0') }}"></i>#}
+                {#</td>#}
                 <td class="xeno2--mercmission--list--nation">
                     {{ mercMission.nation }}
                 </td>
                 <td class="xeno2--mercmission--list--name">{{ mercMission.name }}</td>
-                <td class="xeno2--mercmission--list--prerequisites">
-                    <ul class="list-unstyled">
-                        {% for prerequisite in mercMission.prerequisites %}
-                            <li>{{ prerequisite.name }}</li>
-                        {% endfor %}
-                    </ul>
-                </td>
+                {#<td class="xeno2--mercmission--list--prerequisites">#}
+                {#<ul class="list-unstyled">#}
+                {#{% for prerequisite in mercMission.prerequisites %}#}
+                {#<li>{{ prerequisite.name }}</li>#}
+                {#{% endfor %}#}
+                {#</ul>#}
+                {#</td>#}
                 <td class="xeno2--mercmission--list--requirements">
                     <ul class="list-unstyled">
                         {% for requirement in mercMission.requirements %}
@@ -123,7 +126,12 @@
                         {% endfor %}
                     </ul>
                 </td>
-                <td class="xeno2--mercmission--list--duration" data-text="{{ mercMission.duration|date('G:i') }}">{{ mercMission.duration|date('G:i') }}</td>
+                <td class="xeno2--mercmission--list--duration" data-text="{{ mercMission.duration|date('G:i') }}">
+                    {{ mercMission.duration|date('G:i') }}
+                </td>
+                <td class="xeno2--mercmission--list--gold" data-text="{{ mercMission.gold }}">{{ mercMission.gold }} G</td>
+                <td class="xeno2--mercmission--list--experience">{{ mercMission.experience }}</td>
+                <td class="xeno2--mercmission--list--mercpoints">{{ mercMission.mercPoints }}</td>
                 <td class="xeno2--mercmission--list--action">
                     {% if isActiveMission %}
                         <a class="btn btn-outline-success mercmission-stop" href="{{ path('mercmission_stop', {'nation': mercMission.nation.slug, 'mercMission': mercMission.slug}) }}">
