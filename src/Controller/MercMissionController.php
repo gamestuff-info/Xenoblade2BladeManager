@@ -471,15 +471,6 @@ class MercMissionController extends Controller
     private function buildBladeMetadata(array $blades, MercMission $mercMission): array
     {
         // Sort the Blade list by affinity percentage, ascending.
-        uasort(
-          $blades,
-          function (Blade $a, Blade $b) {
-              $aPct = $a->getAffinity() / $a->getAffinityTotal();
-              $bPct = $b->getAffinity() / $b->getAffinityTotal();
-
-              return (100 * $aPct) - (100 * $bPct);
-          }
-        );
         $bladeList = [];
 
         foreach ($blades as $blade) {

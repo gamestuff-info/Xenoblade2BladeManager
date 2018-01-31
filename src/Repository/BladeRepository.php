@@ -98,8 +98,11 @@ class BladeRepository extends ServiceEntityRepository
         // All list
         $allParams = ['user' => $user];
         $allQb = $this->createQueryBuilder('bladeList');
-        $allQb->where('bladeList.user = :user')
+        $allQb->addSelect('bladeList.affinity / bladeList.affinityTotal AS HIDDEN affinityPct')
+          ->where('bladeList.user = :user')
           ->andWhere('bladeList.isMerc = true')
+          ->andWhere('bladeList.mercMission IS NULL')
+          ->orderBy('affinityPct')
           ->setParameters($allParams);
         $allQ = $allQb->getQuery();
         $results['all'] = $allQ->execute();
