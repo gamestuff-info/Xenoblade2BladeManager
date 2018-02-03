@@ -259,6 +259,18 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * @param Role[]|Collection $roles
+     *
+     * @return self
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
      * @return Collection|Role[]
      */
     public function getRoleEntities(): Collection
@@ -495,6 +507,18 @@ class User implements AdvancedUserInterface, \Serializable
     public function getNations()
     {
         return $this->nations;
+    }
+
+    /**
+     * @param Nation[]|Collection $nations
+     *
+     * @return self
+     */
+    public function setNations($nations)
+    {
+        $this->nations = $nations;
+
+        return $this;
     }
 
     /**

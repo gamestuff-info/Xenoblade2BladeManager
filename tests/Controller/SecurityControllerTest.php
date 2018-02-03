@@ -201,7 +201,7 @@ class SecurityControllerTest extends FixturesTestCase
         $em = $this->getContainer()->get('doctrine')->getManager();
         $userRepo = $em->getRepository(User::class);
 
-        $crawler = $client->request('GET', '/user/profile');
+        $crawler = $client->request('GET', '/user/profile/edit');
         self::isSuccessful($client->getResponse());
         $form = $crawler->filter('form[name=user_edit]')->form();
         $newEmail = $this->faker->email;
@@ -223,6 +223,8 @@ class SecurityControllerTest extends FixturesTestCase
         $em->refresh($user);
         self::assertEquals($newEmail, $user->getEmail(), 'E-mail change not persisted');
 
+        $crawler = $client->request('GET', '/user/profile/edit');
+        self::isSuccessful($client->getResponse());
         $form = $crawler->filter('form[name=user_edit]')->form();
         $formValues = $form->getPhpValues();
         $formValues['user_edit']['oldPassword'] = 'password_old';
