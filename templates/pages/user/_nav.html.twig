@@ -1,0 +1,19 @@
+<nav>
+    <ul class="nav nav-tabs" id="user-nav" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link{% if app.request.pathInfo == path('user_show') %} active{% endif %}" href="{{ path('user_show') }}" role="tab" aria-selected="{% if app.request.pathInfo == path('user_show') %}true{% else %}false{% endif %}">
+                Profile
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if app.request.pathInfo == path('user_edit') %} active{% endif %}" href="{{ path('user_edit') }}" role="tab" aria-selected="{% if app.request.pathInfo == path('user_edit') %}true{% else %}false{% endif %}">
+                Edit
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link{% if app.request.pathInfo == path('user_progress') %} active{% endif %}" href="{{ path('user_progress') }}" role="tab" aria-selected="{% if app.request.pathInfo == path('user_progress') %}true{% else %}false{% endif %}">
+                Progress
+            </a>
+        </li>
+    </ul>
+</nav>

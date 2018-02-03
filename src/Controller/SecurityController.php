@@ -6,6 +6,7 @@ use App\Entity\Blade;
 use App\Entity\Role;
 use App\Entity\User;
 use App\Form\UserEditType;
+use App\Form\UserProgressType;
 use App\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -150,14 +151,11 @@ class SecurityController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $passwordEncoder
-     *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route("/user/profile", name="user_show")
      */
-    public function showAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    public function showAction()
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -165,10 +163,29 @@ class SecurityController extends Controller
         $bladeRepo = $this->getDoctrine()->getRepository(Blade::class);
         $blades = $bladeRepo->findBy(['user' => $user]);
 
-        $form = $this->createForm(
-          UserEditType::class, $user
+        return $this->render(
+          'pages/user/show.html.twig', [
+            'title' => $user->getUsername(),
+            'user' => $user,
+            'blades' => $blades,
+          ]
         );
+    }
 
+    /**
+     * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/user/profile/edit", name="user_edit")
+     */
+    public function editAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
@@ -186,16 +203,50 @@ class SecurityController extends Controller
 
             $this->addFlash('success', 'Your profile has been changed.');
 
-            return $this->redirectToRoute('user_show', ['_fragment' => 'profile']);
+            return $this->redirectToRoute('user_show');
         }
 
         return $this->render(
-          'pages/user/show.html.twig', [
+          'pages/user/edit.html.twig', [
             'title' => $user->getUsername(),
             'user' => $user,
-            'blades' => $blades,
             'form' => $form->createView(),
-            'formErrors' => $form->getErrors(true),
+          ]
+        );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @Route("/user/profile/progress", name="user_progress")
+     */
+    public function progressAction(Request $request)
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $form = $this->createForm(UserProgressType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $user */
+            $user = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+
+            $this->addFlash('success', 'Your game progress has been updated.');
+
+            return $this->redirectToRoute('user_show');
+        }
+
+        return $this->render(
+          'pages/user/progress.html.twig', [
+            'title' => $user->getUsername(),
+            'user' => $user,
+            'form' => $form->createView(),
           ]
         );
     }
