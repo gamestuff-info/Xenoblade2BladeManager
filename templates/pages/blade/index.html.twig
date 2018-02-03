@@ -11,20 +11,26 @@
     {%- else -%}
         {%- set driverSlug = currentDriver.slug -%}
     {%- endif -%}
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link{% if currentDriver is null %} active{% endif %}" href="{{ path('blade_index') }}">
-                All
-            </a>
-        </li>
-        {% for driver in drivers %}
+    {% if drivers is empty %}
+        <div class="alert alert-warning">
+            You have no drivers active. <a href="{{ path('user_progress') }}">Activate some drivers here</a>.
+        </div>
+    {% else %}
+        <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link{% if driver == currentDriver %} active{% endif %}" href="{{ path('blade_index', {'driverSlug': driver.slug}) }}">
-                    {{ driver.name }}
+                <a class="nav-link{% if currentDriver is null %} active{% endif %}" href="{{ path('blade_index') }}">
+                    All
                 </a>
             </li>
-        {% endfor %}
-    </ul>
+            {% for driver in drivers %}
+                <li class="nav-item">
+                    <a class="nav-link{% if driver == currentDriver %} active{% endif %}" href="{{ path('blade_index', {'driverSlug': driver.slug}) }}">
+                        {{ driver.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
     <ul class="xeno2--actions list-inline">
         <li class="list-inline-item">
@@ -53,7 +59,11 @@
             </thead>
             <tbody>
             {% for blade in blades %}
-                <tr>
+                {%- set bladeClasses = [] %}
+                {%- if blade.driver not in drivers %}
+                    {%- set bladeClasses = bladeClasses|merge(['disabled']) %}
+                {%- endif %}
+                <tr class="{{ bladeClasses|join(' ') }}">
                     <td class="xeno2--blade--list--name">{{ blade.name }}</td>
                     <td class="xeno2--blade--list--element">
                         <i class="fas fa-circle xeno2--element--{{ blade.element.slug }}"></i>&nbsp;<span>{{ blade.element.name }}</span>

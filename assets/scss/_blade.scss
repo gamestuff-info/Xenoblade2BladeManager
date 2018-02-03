@@ -1,3 +1,9 @@
+@import "~bootstrap/scss/bootstrap";
+
+table.xeno2--blade--list tr.disabled {
+    opacity: 0.65;
+}
+
 td.xeno2--blade--list--element {
     white-space: nowrap;
 }

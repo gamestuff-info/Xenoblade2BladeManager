@@ -11,6 +11,7 @@ use App\Entity\MercMissionRequirementFieldSkill;
 use App\Entity\MercMissionRequirementGender;
 use App\Entity\MercMissionRequirementStrength;
 use App\Entity\MercMissionRequirementWeaponClass;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
@@ -99,9 +100,11 @@ class BladeRepository extends ServiceEntityRepository
         $allParams = ['user' => $user];
         $allQb = $this->createQueryBuilder('bladeList');
         $allQb->addSelect('bladeList.affinity / bladeList.affinityTotal AS HIDDEN affinityPct')
+          ->join(User::class, 'user', 'WITH', 'user = :user')
           ->where('bladeList.user = :user')
           ->andWhere('bladeList.isMerc = true')
           ->andWhere('bladeList.mercMission IS NULL')
+          ->andWhere('bladeList.driver MEMBER OF user.drivers')
           ->orderBy('affinityPct')
           ->setParameters($allParams);
         $allQ = $allQb->getQuery();

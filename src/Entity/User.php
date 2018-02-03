@@ -104,11 +104,27 @@ class User implements AdvancedUserInterface, \Serializable
     private $activateCodeTime;
 
     /**
+     * @var Collection|Nation[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Nation")
+     */
+    private $nations;
+
+    /**
+     * @var Collection|Driver[]
+     *
+     * @ORM\ManyToMany(targetEntity="App\Entity\Driver")
+     */
+    private $drivers;
+
+    /**
      * User constructor.
      */
     public function __construct()
     {
         $this->roles = new ArrayCollection();
+        $this->nations = new ArrayCollection();
+        $this->drivers = new ArrayCollection();
     }
 
     /**
@@ -240,6 +256,18 @@ class User implements AdvancedUserInterface, \Serializable
         }
 
         return $roles;
+    }
+
+    /**
+     * @param Role[]|Collection $roles
+     *
+     * @return self
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     /**
@@ -471,5 +499,85 @@ class User implements AdvancedUserInterface, \Serializable
     public function getActivateCodeTime(): \DateTime
     {
         return $this->activateCodeTime;
+    }
+
+    /**
+     * @return Nation[]|Collection
+     */
+    public function getNations()
+    {
+        return $this->nations;
+    }
+
+    /**
+     * @param Nation[]|Collection $nations
+     *
+     * @return self
+     */
+    public function setNations($nations)
+    {
+        $this->nations = $nations;
+
+        return $this;
+    }
+
+    /**
+     * @param Nation $nation
+     *
+     * @return self
+     */
+    public function addNation(Nation $nation): self
+    {
+        if (!$this->nations->contains($nation)) {
+            $this->nations->add($nation);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Nation $nation
+     *
+     * @return self
+     */
+    public function removeNation(Nation $nation): self
+    {
+        $this->nations->removeElement($nation);
+
+        return $this;
+    }
+
+    /**
+     * @return Driver[]|Collection
+     */
+    public function getDrivers()
+    {
+        return $this->drivers;
+    }
+
+    /**
+     * @param Driver $driver
+     *
+     * @return self
+     */
+    public function addDriver(Driver $driver): self
+    {
+        if (!$this->drivers->contains($driver)) {
+            $this->drivers->add($driver);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Driver $driver
+     *
+     * @return self
+     */
+    public function removeDriver(Driver $driver): self
+    {
+        $this->drivers->removeElement($driver);
+
+        return $this;
     }
 }

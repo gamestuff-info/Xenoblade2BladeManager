@@ -16,7 +16,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Serializer\SerializerInterface;
 
 class BladeController extends Controller
 {
@@ -45,7 +44,7 @@ class BladeController extends Controller
 
         $bladeRepo = $this->getDoctrine()->getRepository(Blade::class);
 
-        $drivers = $driverRepo->findAll();
+        $drivers = $driverRepo->findDriversForUser($this->getUser());
         if ($driver) {
             $blades = $bladeRepo->findDriverBlades($this->getUser(), $driver);
         } else {

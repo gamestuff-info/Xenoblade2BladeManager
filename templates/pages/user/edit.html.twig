@@ -1,0 +1,20 @@
+{% extends '_base.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('dist/js/userEdit.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    {{ include('pages/user/_nav.html.twig') }}
+
+    <div class="tab-pane" role="tabpanel">
+        {{ form_errors(form) }}
+        {{ form_start(form) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.oldPassword) }}
+        {{ form_row(form.changePassword) }}
+        {{ form_row(form.plainPassword) }}
+        {{ form_row(form.submit) }}
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
