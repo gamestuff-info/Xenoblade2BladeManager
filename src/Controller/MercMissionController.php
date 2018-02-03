@@ -45,7 +45,7 @@ class MercMissionController extends Controller
 
         if ($nationSlug == self::NATION_ALL) {
             $nation = null;
-            $mercMissions = $mercMissionRepo->findAll();
+            $mercMissions = $mercMissionRepo->findMissionsForUser($this->getUser());
             $title = 'Merc Missions - All';
         } else {
             $nation = $nationRepo->findOneBy(['slug' => $nationSlug]);
@@ -56,7 +56,7 @@ class MercMissionController extends Controller
             $title = 'Merc Missions - '.$nation->getName();
         }
 
-        $nations = $nationRepo->findAll();
+        $nations = $nationRepo->findNationsForUser($this->getUser());
         $activeMissionList = $mercMissionRepo->findActiveMissions($this->getUser());
         $activeMissions = [];
         foreach ($activeMissionList as $mercMission) {
