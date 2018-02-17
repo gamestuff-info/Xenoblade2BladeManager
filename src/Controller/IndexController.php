@@ -16,7 +16,7 @@ class IndexController extends Controller
         return $this->render(
           'pages/index.html.twig',
           [
-            'title' => 'Xeno2',
+            'title' => 'Xenoblade Chronicles 2: Management Simulator',
           ]
         );
     }
