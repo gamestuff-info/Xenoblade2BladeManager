@@ -4,37 +4,37 @@
 -- ------------------------------------------------------
 -- Server version	5.7.20-0ubuntu0.16.04.1
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT = @@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS = @@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION = @@COLLATION_CONNECTION */;
+/*!40101 SET @`OLD_CHARACTER_SET_CLIENT` = @@`CHARACTER_SET_CLIENT` */;
+/*!40101 SET @`OLD_CHARACTER_SET_RESULTS` = @@`CHARACTER_SET_RESULTS` */;
+/*!40101 SET @`OLD_COLLATION_CONNECTION` = @@`COLLATION_CONNECTION` */;
 /*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE = @@TIME_ZONE */;
+/*!40103 SET @`OLD_TIME_ZONE` = @@`TIME_ZONE` */;
 /*!40103 SET TIME_ZONE = '+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS = @@UNIQUE_CHECKS, UNIQUE_CHECKS = 0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS = @@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS = 0 */;
-/*!40101 SET @OLD_SQL_MODE = @@SQL_MODE, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES = @@SQL_NOTES, SQL_NOTES = 0 */;
+/*!40014 SET @`OLD_UNIQUE_CHECKS` = @@`UNIQUE_CHECKS`, UNIQUE_CHECKS = 0 */;
+/*!40014 SET @`OLD_FOREIGN_KEY_CHECKS` = @@`FOREIGN_KEY_CHECKS`, FOREIGN_KEY_CHECKS = 0 */;
+/*!40101 SET @`OLD_SQL_MODE` = @@`SQL_MODE`, SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @`OLD_SQL_NOTES` = @@`SQL_NOTES`, SQL_NOTES = 0 */;
 
 --
 -- Table structure for table `affinity_node`
 --
 
 DROP TABLE IF EXISTS `affinity_node`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `affinity_node` (
-  `id`   INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `sort` INT(11)                                 NOT NULL,
-  `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `sort` INT(11)                                   NOT NULL,
+  `name` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_FF9AD9A4989D9B62` (`slug`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 56
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `affinity_node`
@@ -78,20 +78,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `battle_role`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `battle_role` (
-  `id`   INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_E49FC989D9B62` (`slug`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `battle_role`
@@ -110,8 +110,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `blade`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `blade` (
   `id`               INT(11)    NOT NULL,
   `user_id`          INT(11) DEFAULT NULL,
@@ -137,9 +137,9 @@ CREATE TABLE `blade` (
   CONSTRAINT `FK_217C01E8C3423909` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`id`)
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `blade`
@@ -157,8 +157,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `blade_affinity_node`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `blade_affinity_node` (
   `id`               INT(11) NOT NULL AUTO_INCREMENT,
   `blade_id`         INT(11)          DEFAULT NULL,
@@ -173,9 +173,9 @@ CREATE TABLE `blade_affinity_node` (
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 115
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `blade_affinity_node`
@@ -214,20 +214,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `blade_class`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `blade_class` (
-  `id`   INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_B86276AF989D9B62` (`slug`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 3
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `blade_class`
@@ -246,21 +246,21 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `blade_superclass`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `blade_superclass` (
-  `id`              INT(11)                                 NOT NULL                     AUTO_INCREMENT,
-  `element_id`      INT(11)                                                              DEFAULT NULL,
-  `gender_id`       INT(11)                                                              DEFAULT NULL,
-  `battle_role_id`  INT(11)                                                              DEFAULT NULL,
-  `weapon_class_id` INT(11)                                                              DEFAULT NULL,
-  `is_merc`         TINYINT(1)                              NOT NULL,
-  `merc_team_name`  VARCHAR(255) COLLATE utf8mb4_unicode_ci                              DEFAULT NULL,
-  `rarity`          INT(11)                                 NOT NULL,
-  `affinity_total`  INT(11)                                 NOT NULL,
-  `can_be_released` TINYINT(1)                              NOT NULL,
-  `name`            VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `discr`           VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`              INT(11)                                   NOT NULL                       AUTO_INCREMENT,
+  `element_id`      INT(11)                                                                  DEFAULT NULL,
+  `gender_id`       INT(11)                                                                  DEFAULT NULL,
+  `battle_role_id`  INT(11)                                                                  DEFAULT NULL,
+  `weapon_class_id` INT(11)                                                                  DEFAULT NULL,
+  `is_merc`         TINYINT(1)                                NOT NULL,
+  `merc_team_name`  VARCHAR(255) COLLATE `utf8mb4_unicode_ci`                                DEFAULT NULL,
+  `rarity`          INT(11)                                   NOT NULL,
+  `affinity_total`  INT(11)                                   NOT NULL,
+  `can_be_released` TINYINT(1)                                NOT NULL,
+  `name`            VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `discr`           VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_6EA9EB401F1F2A24` (`element_id`),
   KEY `IDX_6EA9EB40708A0E0` (`gender_id`),
@@ -273,9 +273,9 @@ CREATE TABLE `blade_superclass` (
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 39
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `blade_superclass`
@@ -332,20 +332,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `blade_template`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `blade_template` (
-  `id`   INT(11)                                 NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_13DC1542989D9B62` (`slug`),
   CONSTRAINT `FK_13DC1542BF396750` FOREIGN KEY (`id`) REFERENCES `blade_superclass` (`id`)
     ON DELETE CASCADE
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `blade_template`
@@ -370,20 +370,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `driver`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `driver` (
-  `id`   INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_11667CD9989D9B62` (`slug`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 6
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `driver`
@@ -403,20 +403,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `element`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `element` (
-  `id`   INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_41405E39989D9B62` (`slug`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 9
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `element`
@@ -437,14 +437,14 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `gender`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `gender` (
-  `id`       INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `class_id` INT(11)                                          DEFAULT NULL,
-  `sort`     INT(11)                                 NOT NULL,
-  `name`     VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug`     VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`       INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `class_id` INT(11)                                            DEFAULT NULL,
+  `sort`     INT(11)                                   NOT NULL,
+  `name`     VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug`     VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_C7470A42989D9B62` (`slug`),
   KEY `IDX_C7470A42EA000B10` (`class_id`),
@@ -452,9 +452,9 @@ CREATE TABLE `gender` (
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 4
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `gender`
@@ -474,28 +474,28 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission` (
-  `id`          INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `nation_id`   INT(11)                                          DEFAULT NULL,
-  `duration`    TIME                                    NOT NULL,
-  `repeatable`  TINYINT(1)                              NOT NULL,
-  `name`        VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug`        VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `merc_points` INT(11)                                          DEFAULT NULL,
-  `experience`  INT(11)                                          DEFAULT NULL,
-  `gold`        INT(11)                                          DEFAULT NULL,
+  `id`          INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `nation_id`   INT(11)                                            DEFAULT NULL,
+  `duration`    TIME                                      NOT NULL,
+  `repeatable`  TINYINT(1)                                NOT NULL,
+  `name`        VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug`        VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `merc_points` INT(11)                                            DEFAULT NULL,
+  `experience`  INT(11)                                            DEFAULT NULL,
+  `gold`        INT(11)                                            DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_FAF4B51F989D9B62` (`slug`),
   KEY `IDX_FAF4B51FAE3899` (`nation_id`),
   CONSTRAINT `FK_FAF4B51FAE3899` FOREIGN KEY (`nation_id`) REFERENCES `nation` (`id`)
 )
   ENGINE = InnoDB
-  AUTO_INCREMENT = 104
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  AUTO_INCREMENT = 114
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission`
@@ -607,7 +607,17 @@ VALUES (1, 1, '00:30:00', 1, 'Unloading of Goods', 'unloading-of-goods', 40, 240
   (100, 7, '01:20:00', 1, 'Dandes Salt Cave', 'dandes-salt-cave', 105, 375, 795),
   (101, 7, '01:40:00', 1, 'Snow Survey', 'snow-survey', 130, 375, 810),
   (102, 7, '01:40:00', 1, 'Shaking Icicles', 'shaking-icicles', 130, 375, 825),
-  (103, 7, '01:40:00', 1, 'Confidential Documents', 'confidential-documents', 130, 345, 870);
+  (103, 7, '01:40:00', 1, 'Confidential Documents', 'confidential-documents', 130, 345, 870),
+  (104, 1, '02:00:00', 1, 'Big Ship Escort', 'big-ship-escort', 160, 765, 1275),
+  (105, 1, '02:00:00', 1, 'Cooking Up a Feast', 'cooking-up-a-feast', 160, 675, 1470),
+  (106, 1, '02:00:00', 1, 'Lifesaving', 'lifesaving', 160, 795, 1215),
+  (107, 7, '02:00:00', 1, 'Book Writing', 'book-writing', 160, 690, 2055),
+  (108, 7, '02:00:00', 1, 'World in a Book', 'world-in-a-book', 160, 840, 1740),
+  (109, 7, '02:00:00', 1, 'Mysterious Lifeform', 'mysterious-lifeform', 160, 915, 1575),
+  (110, 7, '02:00:00', 1, 'Ice Hunter', 'ice-hunter', 160, 885, 1635),
+  (111, 3, '02:00:00', 1, 'Source Security', 'source-security', 160, 630, 1560),
+  (112, 5, '02:00:00', 1, 'Energy investigation', 'energy-investigation', 160, 630, 1875),
+  (113, 5, '02:00:00', 1, 'Elpys Investigation', 'elpys-investigation', 160, 855, 1395);
 /*!40000 ALTER TABLE `merc_mission`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -617,8 +627,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_affinity_node`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_affinity_node` (
   `merc_mission_id`  INT(11) NOT NULL,
   `affinity_node_id` INT(11) NOT NULL,
@@ -631,9 +641,9 @@ CREATE TABLE `merc_mission_affinity_node` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_affinity_node`
@@ -665,7 +675,10 @@ VALUES (1, 29), (1, 40), (2, 3), (2, 26), (3, 7), (3, 15), (3, 25), (4, 23), (4,
   (86, 17), (88, 17), (88, 26), (88, 45), (89, 1), (89, 6), (89, 28), (90, 4), (90, 6), (91, 23), (91, 25), (92, 1),
   (92, 7), (93, 10), (93, 20), (93, 54), (94, 1), (94, 25), (95, 11), (95, 14), (95, 16), (96, 1), (96, 6), (96, 14),
   (97, 2), (97, 9), (97, 10), (98, 3), (98, 18), (98, 42), (99, 18), (99, 20), (99, 22), (100, 2), (100, 4), (100, 14),
-  (101, 6), (101, 14), (101, 20), (102, 16), (102, 24), (103, 18), (103, 27), (103, 51);
+  (101, 6), (101, 14), (101, 20), (102, 16), (102, 24), (103, 18), (103, 27), (103, 51), (104, 26), (104, 46),
+  (105, 23), (105, 33), (106, 22), (106, 26), (106, 27), (107, 1), (107, 6), (107, 19), (108, 19), (108, 20), (108, 27),
+  (109, 7), (109, 16), (109, 25), (110, 2), (110, 8), (110, 35), (111, 3), (111, 7), (111, 25), (112, 5), (112, 28),
+  (112, 46), (113, 1), (113, 6), (113, 27);
 /*!40000 ALTER TABLE `merc_mission_affinity_node`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -675,8 +688,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_merc_mission_prerequisite`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_merc_mission_prerequisite` (
   `merc_mission_id`              INT(11) NOT NULL,
   `merc_mission_prerequisite_id` INT(11) NOT NULL,
@@ -689,9 +702,9 @@ CREATE TABLE `merc_mission_merc_mission_prerequisite` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_merc_mission_prerequisite`
@@ -700,6 +713,8 @@ CREATE TABLE `merc_mission_merc_mission_prerequisite` (
 LOCK TABLES `merc_mission_merc_mission_prerequisite` WRITE;
 /*!40000 ALTER TABLE `merc_mission_merc_mission_prerequisite`
   DISABLE KEYS */;
+INSERT INTO `merc_mission_merc_mission_prerequisite` (`merc_mission_id`, `merc_mission_prerequisite_id`)
+VALUES (104, 5), (105, 5), (106, 5), (107, 25), (108, 25), (109, 25), (110, 25), (111, 15), (112, 35);
 /*!40000 ALTER TABLE `merc_mission_merc_mission_prerequisite`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -709,8 +724,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_merc_mission_requirement`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_merc_mission_requirement` (
   `merc_mission_id`             INT(11) NOT NULL,
   `merc_mission_requirement_id` INT(11) NOT NULL,
@@ -723,9 +738,9 @@ CREATE TABLE `merc_mission_merc_mission_requirement` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_merc_mission_requirement`
@@ -750,7 +765,9 @@ VALUES (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (
   (84, 132), (84, 133), (85, 134), (86, 135), (86, 136), (87, 137), (87, 138), (88, 139), (89, 140), (90, 141),
   (91, 142), (92, 143), (93, 144), (93, 145), (94, 146), (95, 147), (95, 148), (96, 149), (97, 150), (97, 151),
   (98, 152), (98, 153), (99, 154), (99, 155), (100, 156), (100, 157), (101, 158), (101, 159), (102, 160), (102, 161),
-  (103, 162), (103, 163);
+  (103, 162), (103, 163), (104, 164), (104, 165), (105, 166), (105, 167), (106, 168), (106, 169), (106, 170),
+  (107, 171), (107, 172), (107, 173), (108, 174), (108, 175), (108, 176), (109, 177), (109, 178), (110, 179),
+  (110, 180), (110, 181), (111, 182), (111, 183), (111, 184), (112, 185), (112, 186), (113, 187), (113, 188);
 /*!40000 ALTER TABLE `merc_mission_merc_mission_requirement`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -760,21 +777,21 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_prerequisite`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_prerequisite` (
-  `id`   INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `sort` INT(11)                                 NOT NULL,
-  `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `sort` INT(11)                                   NOT NULL,
+  `name` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_5E819534989D9B62` (`slug`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 36
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_prerequisite`
@@ -814,19 +831,19 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_requirement`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_requirement` (
-  `id`    INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `count` INT(11)                                 NOT NULL,
-  `discr` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`    INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `count` INT(11)                                   NOT NULL,
+  `discr` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
-  AUTO_INCREMENT = 164
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  AUTO_INCREMENT = 189
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_requirement`
@@ -917,7 +934,19 @@ VALUES (1, 1, 'mercmissionrequirementclass'), (2, 2, 'mercmissionrequirementclas
   (157, 2, 'mercmissionrequirementelement'), (158, 3, 'mercmissionrequirementweaponclass'),
   (159, 2, 'mercmissionrequirementstrength'), (160, 3, 'mercmissionrequirementweaponclass'),
   (161, 2, 'mercmissionrequirementelement'), (162, 3, 'mercmissionrequirementstrength'),
-  (163, 1, 'mercmissionrequirementclass');
+  (163, 1, 'mercmissionrequirementclass'), (164, 1, 'mercmissionrequirementstrength'),
+  (165, 3, 'mercmissionrequirementelement'), (166, 1, 'mercmissionrequirementfieldskill'),
+  (167, 6, 'mercmissionrequirementclass'), (168, 1, 'mercmissionrequirementgender'),
+  (169, 1, 'mercmissionrequirementfieldskill'), (170, 2, 'mercmissionrequirementclass'),
+  (171, 1, 'mercmissionrequirementweaponclass'), (172, 2, 'mercmissionrequirementstrength'),
+  (173, 1, 'mercmissionrequirementfieldskill'), (174, 2, 'mercmissionrequirementgender'),
+  (175, 2, 'mercmissionrequirementgender'), (176, 2, 'mercmissionrequirementclass'),
+  (177, 3, 'mercmissionrequirementweaponclass'), (178, 3, 'mercmissionrequirementstrength'),
+  (179, 2, 'mercmissionrequirementstrength'), (180, 1, 'mercmissionrequirementfieldskill'),
+  (181, 2, 'mercmissionrequirementelement'), (182, 1, 'mercmissionrequirementweaponclass'),
+  (183, 1, 'mercmissionrequirementweaponclass'), (184, 3, 'mercmissionrequirementstrength'),
+  (185, 3, 'mercmissionrequirementstrength'), (186, 3, 'mercmissionrequirementelement'),
+  (187, 2, 'mercmissionrequirementstrength'), (188, 2, 'mercmissionrequirementfieldskill');
 /*!40000 ALTER TABLE `merc_mission_requirement`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -927,8 +956,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_requirement_class`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_requirement_class` (
   `id`       INT(11) NOT NULL,
   `class_id` INT(11) DEFAULT NULL,
@@ -939,9 +968,9 @@ CREATE TABLE `merc_mission_requirement_class` (
   CONSTRAINT `FK_A94D0871EA000B10` FOREIGN KEY (`class_id`) REFERENCES `blade_class` (`id`)
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_requirement_class`
@@ -952,8 +981,9 @@ LOCK TABLES `merc_mission_requirement_class` WRITE;
   DISABLE KEYS */;
 INSERT INTO `merc_mission_requirement_class` (`id`, `class_id`)
 VALUES (1, 1), (2, 1), (8, 1), (9, 1), (27, 1), (31, 1), (54, 1), (66, 1), (80, 1), (89, 1), (92, 1), (95, 1), (115, 1),
-  (116, 1), (118, 1), (123, 1), (127, 1), (139, 1), (148, 1), (10, 2), (12, 2), (34, 2), (35, 2), (37, 2), (55, 2),
-  (58, 2), (62, 2), (73, 2), (91, 2), (93, 2), (97, 2), (105, 2), (107, 2), (120, 2), (151, 2), (155, 2), (163, 2);
+  (116, 1), (118, 1), (123, 1), (127, 1), (139, 1), (148, 1), (167, 1), (170, 1), (176, 1), (10, 2), (12, 2), (34, 2),
+  (35, 2), (37, 2), (55, 2), (58, 2), (62, 2), (73, 2), (91, 2), (93, 2), (97, 2), (105, 2), (107, 2), (120, 2),
+  (151, 2), (155, 2), (163, 2);
 /*!40000 ALTER TABLE `merc_mission_requirement_class`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -963,8 +993,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_requirement_element`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_requirement_element` (
   `id`         INT(11) NOT NULL,
   `element_id` INT(11) DEFAULT NULL,
@@ -975,9 +1005,9 @@ CREATE TABLE `merc_mission_requirement_element` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_requirement_element`
@@ -990,7 +1020,7 @@ INSERT INTO `merc_mission_requirement_element` (`id`, `element_id`)
 VALUES (4, 1), (86, 1), (99, 1), (109, 1), (140, 1), (161, 1), (16, 2), (17, 2), (32, 2), (36, 2), (50, 2), (65, 2),
   (74, 2), (20, 3), (42, 3), (49, 3), (64, 3), (110, 3), (145, 3), (150, 3), (14, 4), (26, 4), (52, 4), (76, 4),
   (90, 4), (106, 4), (119, 4), (125, 4), (11, 5), (28, 5), (48, 5), (51, 5), (78, 5), (113, 5), (136, 5), (157, 5),
-  (18, 6), (79, 6), (114, 6), (129, 6), (133, 6), (24, 8), (83, 8);
+  (181, 5), (18, 6), (79, 6), (114, 6), (129, 6), (133, 6), (165, 6), (186, 6), (24, 8), (83, 8);
 /*!40000 ALTER TABLE `merc_mission_requirement_element`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1000,8 +1030,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_requirement_field_skill`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_requirement_field_skill` (
   `id`             INT(11) NOT NULL,
   `field_skill_id` INT(11) DEFAULT NULL,
@@ -1013,9 +1043,9 @@ CREATE TABLE `merc_mission_requirement_field_skill` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_requirement_field_skill`
@@ -1025,7 +1055,7 @@ LOCK TABLES `merc_mission_requirement_field_skill` WRITE;
 /*!40000 ALTER TABLE `merc_mission_requirement_field_skill`
   DISABLE KEYS */;
 INSERT INTO `merc_mission_requirement_field_skill` (`id`, `field_skill_id`, `level`)
-VALUES (47, 12, 1), (53, 15, 1), (56, 9, 1);
+VALUES (47, 12, 1), (53, 15, 1), (56, 9, 1), (166, 28, 1), (169, 18, 1), (173, 25, 1), (180, 25, 1), (188, 16, 1);
 /*!40000 ALTER TABLE `merc_mission_requirement_field_skill`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1035,8 +1065,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_requirement_gender`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_requirement_gender` (
   `id`        INT(11) NOT NULL,
   `gender_id` INT(11) DEFAULT NULL,
@@ -1047,9 +1077,9 @@ CREATE TABLE `merc_mission_requirement_gender` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_requirement_gender`
@@ -1060,7 +1090,8 @@ LOCK TABLES `merc_mission_requirement_gender` WRITE;
   DISABLE KEYS */;
 INSERT INTO `merc_mission_requirement_gender` (`id`, `gender_id`)
 VALUES (15, 1), (25, 1), (44, 1), (72, 1), (77, 1), (94, 1), (103, 1), (122, 1), (126, 1), (131, 1), (137, 1), (142, 1),
-  (5, 2), (19, 2), (59, 2), (63, 2), (75, 2), (87, 2), (98, 2), (130, 2), (138, 2), (144, 2), (147, 2);
+  (168, 1), (174, 1), (5, 2), (19, 2), (59, 2), (63, 2), (75, 2), (87, 2), (98, 2), (130, 2), (138, 2), (144, 2),
+  (147, 2), (175, 2);
 /*!40000 ALTER TABLE `merc_mission_requirement_gender`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1070,8 +1101,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_requirement_strength`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_requirement_strength` (
   `id`       INT(11) NOT NULL,
   `strength` INT(11) NOT NULL,
@@ -1080,9 +1111,9 @@ CREATE TABLE `merc_mission_requirement_strength` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_requirement_strength`
@@ -1094,7 +1125,8 @@ LOCK TABLES `merc_mission_requirement_strength` WRITE;
 INSERT INTO `merc_mission_requirement_strength` (`id`, `strength`)
 VALUES (6, 15), (13, 20), (22, 30), (23, 30), (30, 15), (39, 20), (41, 30), (46, 35), (57, 10), (60, 15), (71, 35),
   (82, 35), (84, 10), (85, 10), (88, 10), (96, 20), (101, 30), (102, 30), (104, 30), (108, 35), (112, 35), (121, 15),
-  (124, 15), (132, 30), (134, 30), (141, 10), (146, 15), (154, 20), (156, 30), (159, 30), (162, 30);
+  (124, 15), (132, 30), (134, 30), (141, 10), (146, 15), (154, 20), (156, 30), (159, 30), (162, 30), (164, 35),
+  (172, 35), (178, 35), (179, 35), (184, 35), (185, 35), (187, 35);
 /*!40000 ALTER TABLE `merc_mission_requirement_strength`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1104,8 +1136,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `merc_mission_requirement_weapon_class`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `merc_mission_requirement_weapon_class` (
   `id`              INT(11) NOT NULL,
   `weapon_class_id` INT(11) DEFAULT NULL,
@@ -1116,9 +1148,9 @@ CREATE TABLE `merc_mission_requirement_weapon_class` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `merc_mission_requirement_weapon_class`
@@ -1128,9 +1160,9 @@ LOCK TABLES `merc_mission_requirement_weapon_class` WRITE;
 /*!40000 ALTER TABLE `merc_mission_requirement_weapon_class`
   DISABLE KEYS */;
 INSERT INTO `merc_mission_requirement_weapon_class` (`id`, `weapon_class_id`)
-VALUES (38, 3), (67, 3), (135, 3), (40, 4), (45, 4), (100, 4), (21, 8), (43, 8), (117, 8), (143, 8), (152, 8), (160, 8),
-  (29, 9), (69, 9), (149, 9), (33, 10), (81, 10), (3, 12), (7, 12), (61, 12), (128, 12), (158, 12), (68, 14), (70, 14),
-  (111, 14), (153, 14);
+VALUES (38, 3), (67, 3), (135, 3), (40, 4), (45, 4), (100, 4), (182, 4), (21, 8), (43, 8), (117, 8), (143, 8), (152, 8),
+  (160, 8), (183, 8), (29, 9), (69, 9), (149, 9), (177, 9), (33, 10), (81, 10), (3, 12), (7, 12), (61, 12), (128, 12),
+  (158, 12), (68, 14), (70, 14), (111, 14), (153, 14), (171, 14);
 /*!40000 ALTER TABLE `merc_mission_requirement_weapon_class`
   ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1140,20 +1172,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `nation`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `nation` (
-  `id`   INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_CC5A6D27989D9B62` (`slug`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 8
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `nation`
@@ -1174,20 +1206,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `role`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `role` (
-  `id`   INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_57698A6A989D9B62` (`slug`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 3
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `role`
@@ -1206,21 +1238,21 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `trust_rank`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `trust_rank` (
-  `id`   INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `sort` INT(11)                                 NOT NULL,
-  `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `sort` INT(11)                                   NOT NULL,
+  `name` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_7880D3B1989D9B62` (`slug`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 7
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `trust_rank`
@@ -1240,26 +1272,26 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `user` (
-  `id`                 INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `username`           VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password`           VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email`              VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_active`          TINYINT(1)                              NOT NULL,
-  `created`            DATETIME                                NOT NULL,
-  `activate_code`      VARCHAR(255) COLLATE utf8mb4_unicode_ci          DEFAULT NULL,
-  `activate_code_time` DATETIME                                         DEFAULT NULL,
+  `id`                 INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `username`           VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `password`           VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `email`              VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `is_active`          TINYINT(1)                                NOT NULL,
+  `created`            DATETIME                                  NOT NULL,
+  `activate_code`      VARCHAR(255) COLLATE `utf8mb4_unicode_ci`          DEFAULT NULL,
+  `activate_code_time` DATETIME                                           DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_8D93D649F85E0677` (`username`),
   UNIQUE KEY `UNIQ_8D93D649E7927C74` (`email`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 2
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `user`
@@ -1277,8 +1309,8 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `user_role`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `user_role` (
   `user_id` INT(11) NOT NULL,
   `role_id` INT(11) NOT NULL,
@@ -1291,9 +1323,9 @@ CREATE TABLE `user_role` (
     ON DELETE CASCADE
 )
   ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `user_role`
@@ -1311,20 +1343,20 @@ UNLOCK TABLES;
 --
 
 DROP TABLE IF EXISTS `weapon_class`;
-/*!40101 SET @saved_cs_client = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+/*!40101 SET @`saved_cs_client` = @@`character_set_client` */;
+/*!40101 SET character_set_client = `utf8` */;
 CREATE TABLE `weapon_class` (
-  `id`   INT(11)                                 NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` VARCHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id`   INT(11)                                   NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
+  `slug` VARCHAR(255) COLLATE `utf8mb4_unicode_ci` NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_C0F1E9FA989D9B62` (`slug`)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 19
-  DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  DEFAULT CHARSET = `utf8mb4`
+  COLLATE = `utf8mb4_unicode_ci`;
+/*!40101 SET character_set_client = @`saved_cs_client` */;
 
 --
 -- Dumping data for table `weapon_class`
@@ -1343,14 +1375,14 @@ VALUES (1, 'Aegis Sword', 'aegis-sword'), (2, 'Big Bang Edge', 'big-bang-edge')
 /*!40000 ALTER TABLE `weapon_class`
   ENABLE KEYS */;
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE = @OLD_TIME_ZONE */;
+/*!40103 SET TIME_ZONE = @`OLD_TIME_ZONE` */;
 
-/*!40101 SET SQL_MODE = @OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT = @OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS = @OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION = @OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES = @OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE = @`OLD_SQL_MODE` */;
+/*!40014 SET FOREIGN_KEY_CHECKS = @`OLD_FOREIGN_KEY_CHECKS` */;
+/*!40014 SET UNIQUE_CHECKS = @`OLD_UNIQUE_CHECKS` */;
+/*!40101 SET CHARACTER_SET_CLIENT = @`OLD_CHARACTER_SET_CLIENT` */;
+/*!40101 SET CHARACTER_SET_RESULTS = @`OLD_CHARACTER_SET_RESULTS` */;
+/*!40101 SET COLLATION_CONNECTION = @`OLD_COLLATION_CONNECTION` */;
+/*!40111 SET SQL_NOTES = @`OLD_SQL_NOTES` */;
 
 -- Dump completed on 2018-01-28 22:06:07
