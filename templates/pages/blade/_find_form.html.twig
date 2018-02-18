@@ -1,0 +1,88 @@
+{% block findForm %}
+    {% form_theme form _self 'vendor/jquery.collection.html.twig' %}
+    {{ form_start(form) }}
+    {{ form_errors(form) }}
+    {{ form_row(form.queries) }}
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block blade_find_query_widget %}
+    <div class="form-row">
+        <div class="col-md-1">
+            {{ form_row(form.operator) }}
+        </div>
+        <div class="col-md-1">
+            {{ form_row(form.not) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_row(form.field) }}
+        </div>
+        <div class="col-md-4">
+            {{ form_rest(form) }}
+        </div>
+        <div class="col-sm-3 blade_find_queries-collection-actions">
+            {# Front-end javascript will put action buttons here #}
+        </div>
+    </div>
+{% endblock %}
+
+{% block blade_find_query_affinity_widget %}
+    <div id="{{ form.vars.id }}" class="form-row">
+        <div class="col-md-5">
+            {{ form_row(form.min) }}
+        </div>
+        <div class="col-lg-auto d-none d-lg-block">
+            <div class="form-group">&ndash;</div>
+        </div>
+        <div class="col-md-5">
+            {{ form_row(form.max) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block blade_find_query_rarity_widget %}
+    <div id="{{ form.vars.id }}" class="form-row">
+        <div class="col-md-5">
+            {{ form_row(form.min) }}
+        </div>
+        <div class="col-lg-auto d-none d-lg-block">
+            <div class="form-group">&ndash;</div>
+        </div>
+        <div class="col-md-5">
+            {{ form_row(form.max) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block blade_find_query_trust_widget %}
+    <div id="{{ form.vars.id }}" class="form-row">
+        <div class="col-md-5">
+            {{ form_row(form.min) }}
+        </div>
+        <div class="col-lg-auto d-none d-lg-block">
+            <div class="form-group">&ndash;</div>
+        </div>
+        <div class="col-md-5">
+            {{ form_row(form.max) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block blade_find_query_field_skill_widget %}
+    <div id="{{ form.vars.id }}" class="form-row">
+        <div class="col-md-5">
+            {{ form_row(form.affinityNode) }}
+        </div>
+        <div class="col-md-2">
+            {{ form_row(form.comparison) }}
+        </div>
+        <div class="col-md-5">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Lv.</span>
+                </div>
+                {{ form_row(form.level) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

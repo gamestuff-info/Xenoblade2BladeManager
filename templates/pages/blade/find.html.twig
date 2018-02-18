@@ -1,0 +1,9 @@
+{% extends '_base.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('dist/js/bladeFind.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    {{ block('findForm', 'pages/blade/_find_form.html.twig') }}
+{% endblock %}

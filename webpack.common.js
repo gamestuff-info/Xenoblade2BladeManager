@@ -15,6 +15,7 @@ module.exports = {
         main: path.resolve(__dirname, 'assets', 'main.js'),
         bladeIndex: path.resolve(assetJsDir, 'bladeIndex.js'),
         bladeForm: path.resolve(assetJsDir, 'bladeForm.js'),
+        bladeFind: path.resolve(assetJsDir, 'bladeFind.js'),
         mercMissionIndex: path.resolve(assetJsDir, 'mercMissionIndex.js'),
         mercMissionForm: path.resolve(assetJsDir, 'mercMissionForm.js'),
         mercMissionStart: path.resolve(assetJsDir, 'mercMissionStart.js'),

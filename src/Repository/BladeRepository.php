@@ -11,6 +11,7 @@ use App\Entity\MercMissionRequirementFieldSkill;
 use App\Entity\MercMissionRequirementGender;
 use App\Entity\MercMissionRequirementStrength;
 use App\Entity\MercMissionRequirementWeaponClass;
+use App\Entity\TrustRank;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\Expr;
@@ -66,6 +67,123 @@ class BladeRepository extends ServiceEntityRepository
         }
 
         return parent::findBy($criteria, $orderBy, $limit, $offset);
+    }
+
+    /**
+     * @param UserInterface $user
+     * @param array $searchQueries
+     *
+     * @return Blade[]
+     */
+    public function findBladesFromSearch(UserInterface $user, array $searchQueries)
+    {
+        $qb = $this->createQueryBuilder('blade')
+          ->join('blade.user', 'user')
+          ->join('blade.trust', 'trust')
+          ->join('blade.affinityNodes', 'affinityNodes');
+
+        $params = [];
+        foreach ($searchQueries as $k => $searchQuery) {
+            switch ($searchQuery['operator']) {
+                case 'OR':
+                    $where = 'orWhere';
+                    break;
+                case 'AND':
+                default:
+                    $where = 'andWhere';
+            }
+
+            // Create a list of operators.
+            $not = $searchQuery['not'] == 'NOT';
+            $eq = $not ? '!=' : '=';
+            $gt = $not ? '<' : '>';
+            $lt = $not ? '>' : '<';
+            $gte = $not ? '<=' : '>=';
+            $lte = $not ? '>=' : '<=';
+            $in = $not ? 'NOT IN' : 'IN';
+            $between = $not ? 'NOT BETWEEN' : 'BETWEEN';
+            $memberOf = $not ? 'NOT MEMBER OF' : 'MEMBER OF';
+
+            $paramName = sprintf('field_%s_%s', $k, $searchQuery['field']);
+            switch ($searchQuery['field']) {
+                case 'driver':
+                    $qb->$where("blade.driver $eq :$paramName");
+                    $params[$paramName] = $searchQuery['driver'];
+                    break;
+                case 'active':
+                    $qb->$where("blade.driver $memberOf user.drivers");
+                    break;
+                case 'element':
+                    $qb->$where("blade.element $eq :$paramName");
+                    $params[$paramName] = $searchQuery['element'];
+                    break;
+                case 'role':
+                    $qb->$where("blade.battleRole $eq :$paramName");
+                    $params[$paramName] = $searchQuery['role'];
+                    break;
+                case 'weaponClass':
+                    $qb->$where("blade.weaponClass $eq :$paramName");
+                    $params[$paramName] = $searchQuery['weaponClass'];
+                    break;
+                case 'strength':
+                    $qb->$where("blade.strength $gte :$paramName");
+                    $params[$paramName] = $searchQuery['strength'];
+                    break;
+                case 'affinity':
+                    $qb->$where("((blade.affinity / blade.affinityTotal) $gte :${paramName}_min AND (blade.affinity / blade.affinityTotal) $lte :${paramName}_max)");
+                    $params["${paramName}_min"] = min($searchQuery['affinity']['min'], $searchQuery['affinity']['max']);
+                    $params["${paramName}_max"] = max($searchQuery['affinity']['min'], $searchQuery['affinity']['max']);
+                    break;
+                case 'trust':
+                    $qb->$where("trust.sort $between :${paramName}_min AND :${paramName}_max");
+                    /** @var TrustRank $trustMin */
+                    $trustMin = $searchQuery['trust']['min'];
+                    /** @var TrustRank $trustMax */
+                    $trustMax = $searchQuery['trust']['max'];
+                    $params["${paramName}_min"] = min($trustMin->getSort(), $trustMax->getSort());
+                    $params["${paramName}_max"] = max($trustMin->getSort(), $trustMax->getSort());
+                    break;
+                case 'rarity':
+                    $qb->$where("blade.rarity $between :${paramName}_min AND :${paramName}_max");
+                    $params["${paramName}_min"] = min($searchQuery['rarity']['min'], $searchQuery['rarity']['max']);
+                    $params["${paramName}_max"] = min($searchQuery['rarity']['min'], $searchQuery['rarity']['max']);
+                    break;
+                case 'fieldSkill':
+                    switch ($searchQuery['fieldSkill']['comparison']) {
+                        case 'lte':
+                            $comparison = $lte;
+                            break;
+                        case 'eq':
+                            $comparison = $eq;
+                            break;
+                        case 'gte':
+                        default:
+                            $comparison = $gte;
+                            break;
+                    }
+                    $qb->$where("(:${paramName}_affinity_node $eq affinityNodes.affinityNode AND :${paramName}_level $comparison affinityNodes.level)");
+                    $params["${paramName}_affinity_node"] = $searchQuery['fieldSkill']['affinityNode'];
+                    $params["${paramName}_level"] = $searchQuery['fieldSkill']['level'];
+                    break;
+                case 'isMerc':
+                    $qb->$where("blade.isMerc $eq :$paramName");
+                    $params[$paramName] = $searchQuery['isMerc'];
+                    break;
+                case 'canBeReleased':
+                    $qb->$where("blade.canBeReleased $eq :$paramName");
+                    $params[$paramName] = $searchQuery['canBeReleased'];
+                    break;
+            }
+        }
+        $userBladesQb = $this->createQueryBuilder('bladeList');
+        $userBladesQb->where('bladeList.user = :user')
+          ->andWhere($userBladesQb->expr()->in('bladeList', $qb->getDQL()))
+          ->setParameters($params)
+          ->setParameter('user', $user);
+        $q = $userBladesQb->getQuery();
+        $blades = $q->execute();
+
+        return $blades;
     }
 
     /**

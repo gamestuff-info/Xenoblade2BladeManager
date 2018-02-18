@@ -18,3 +18,22 @@ td.xeno2--blade--list--rarity {
 td.xeno2--blade--list--action {
     white-space: nowrap;
 }
+
+form[name=blade_find] {
+    #blade_find_queries .form-row {
+        .form-group > .row,
+        .form-group > .form-row {
+            &,
+            & .input-group {
+                @extend .align-items-baseline;
+            }
+        }
+    }
+}
+
+.xeno2--blade--find--desc {
+    .xeno2--blade--find--desc--field,
+    .xeno2--blade--find--desc--value {
+        font-weight: bold;
+    }
+}
