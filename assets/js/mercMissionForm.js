@@ -1,5 +1,5 @@
 const $ = require('jquery');
-const collections = require('./collections');
+const collections = require('./_collections');
 
 $(document).ready(function () {
     $('#merc_mission_form_requirements_blade_class').collection(collections.settings({

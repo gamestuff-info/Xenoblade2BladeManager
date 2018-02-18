@@ -1,7 +1,10 @@
 const $ = require('jquery');
-const collections = require('./collections');
+const collections = require('./_collections');
+const bladeList = require('./_bladeList');
 
 $(document).ready(function () {
+    bladeList.prepareBladeList();
+
     $('#blade_find_queries').collection(collections.settings({
         allow_up: true,
         allow_down: true,
