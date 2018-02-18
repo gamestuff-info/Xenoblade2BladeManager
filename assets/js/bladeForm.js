@@ -1,7 +1,7 @@
 const $ = require('jquery');
 require('popper.js');
 require('bootstrap');
-const collections = require('./collections');
+const collections = require('./_collections');
 
 $(document).ready(function () {
     $('#blade_form_affinityNodes').collection(collections.settings());

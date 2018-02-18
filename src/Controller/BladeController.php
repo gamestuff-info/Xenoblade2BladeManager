@@ -6,6 +6,7 @@ use App\Entity\Blade;
 use App\Entity\BladeAffinityNode;
 use App\Entity\BladeTemplate;
 use App\Entity\Driver;
+use App\Form\BladeFindType;
 use App\Form\BladeFormType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -19,6 +20,42 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class BladeController extends Controller
 {
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     *
+     * @Route("/blades/find", name="blade_find")
+     */
+    public function find(Request $request)
+    {
+        $form = $this->createForm(BladeFindType::class);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $queries = $form->getData()['queries'];
+            $bladeRepo = $this->getDoctrine()->getRepository(Blade::class);
+            $blades = $bladeRepo->findBladesFromSearch($this->getUser(), $queries);
+            $drivers = $this->getDoctrine()->getRepository(Driver::class)->findDriversForUser($this->getUser());
+
+            return $this->render(
+              'pages/blade/find_results.html.twig', [
+                'title' => 'Search Results',
+                'blades' => $blades,
+                'drivers' => $drivers,
+                'form' => $form->createView(),
+              ]
+            );
+        }
+
+        return $this->render(
+          'pages/blade/find.html.twig', [
+            'title' => 'Find Blades',
+            'form' => $form->createView(),
+          ]
+        );
+    }
 
     /**
      * @param string $driverSlug
@@ -134,15 +171,16 @@ class BladeController extends Controller
 
     /**
      * @param Request $request
-     * @param string $driverSlug
      * @param Blade $blade
+     *
+     * @param string $driverSlug
      *
      * @return Response
      *
      * @Route("/blades/{driverSlug}/edit/{blade}", name="blade_edit")
      * @ParamConverter("blade", options={"mapping": {"blade": "id"}})
      */
-    public function edit(Request $request, string $driverSlug, Blade $blade)
+    public function edit(Request $request, Blade $blade, string $driverSlug = 'all')
     {
         $this->denyAccessUnlessGranted('EDIT', $blade);
 
@@ -199,15 +237,16 @@ class BladeController extends Controller
     }
 
     /**
-     * @param string $driverSlug
      * @param Blade $blade
+     *
+     * @param string $driverSlug
      *
      * @return Response
      *
      * @Route("/blades/{driverSlug}/delete/{blade}", name="blade_delete")
      * @ParamConverter("blade", options={"mapping": {"blade": "id"}})
      */
-    public function delete(string $driverSlug, Blade $blade)
+    public function delete(Blade $blade, string $driverSlug = 'all')
     {
         $this->denyAccessUnlessGranted('DELETE', $blade);
 
