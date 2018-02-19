@@ -37,3 +37,15 @@ form[name=blade_find] {
         font-weight: bold;
     }
 }
+
+.xeno2--blade--mercmission--blade-desc {
+    @extend .row;
+    dt {
+        @extend .col-sm-3;
+        @extend .col-md-2;
+    }
+    dd {
+        @extend .col-sm-9;
+        @extend .col-md-10;
+    }
+}

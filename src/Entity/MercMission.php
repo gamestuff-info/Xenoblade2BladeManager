@@ -94,6 +94,15 @@ class MercMission
      */
     protected $blades;
 
+    /**
+     * Used when ranking missions by suitability for a specific blade.
+     *
+     * This is not present in the database.
+     *
+     * @var int
+     */
+    protected $suitabilityRank = 0;
+
     public function __construct()
     {
         $this->requirements = new ArrayCollection();
@@ -352,6 +361,26 @@ class MercMission
     public function setGold(?int $gold): self
     {
         $this->gold = $gold;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSuitabilityRank(): int
+    {
+        return $this->suitabilityRank;
+    }
+
+    /**
+     * @param int $suitabilityRank
+     *
+     * @return self
+     */
+    public function setSuitabilityRank(int $suitabilityRank): self
+    {
+        $this->suitabilityRank = $suitabilityRank;
 
         return $this;
     }

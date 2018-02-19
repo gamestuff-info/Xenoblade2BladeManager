@@ -29,16 +29,6 @@ export function prepareBladeList() {
                         return e == 1;
                     },
                 },
-
-                // Merc Mission
-                8: {
-                    'No': function (e, n, f, i, $r, c, data) {
-                        return e == '';
-                    },
-                    'Yes': function (e, n, f, i, $r, c, data) {
-                        return /.+/.test(e);
-                    },
-                },
             },
         },
     }));
