@@ -245,7 +245,7 @@ class MercMissionController extends Controller
           ],
           'd' => [
             'name' => 'D List',
-            'help' => "Blades that don't meet any of the requirements or have any recommended field skills.",
+            'help' => "Blades that don't meet any requirements or have any recommended field skills.",
             'blades' => $this->buildBladeMetadata($listBlades['d'], $mercMission),
           ],
           'all' => [
