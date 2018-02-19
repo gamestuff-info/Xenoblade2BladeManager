@@ -1,0 +1,50 @@
+{% extends '_base.html.twig' %}
+
+{% block javascripts %}
+    <script src="{{ asset('dist/js/mercMissionIndex.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <dl class="xeno2--blade--mercmission--blade-desc">
+        <dt>
+            Gender
+        </dt>
+        <dd>
+            {{ blade.gender.name }}
+        </dd>
+
+        <dt>
+            Element
+        </dt>
+        <dd>
+            {{ blade.element.name }}
+        </dd>
+
+        <dt>
+            Strength
+        </dt>
+        <dd>
+            {{ blade.strength }}
+        </dd>
+
+        <dt>
+            Weapon
+        </dt>
+        <dd>
+            {{ blade.weaponClass.name }}
+        </dd>
+
+        <dt>
+            Field Skills
+        </dt>
+        <dd>
+            <ul class="list-unstyled">
+                {% for bladeAffinityNode in blade.affinityNodes %}
+                    <li>{{ bladeAffinityNode.affinityNode.name }} Lv. {{ bladeAffinityNode.level }}</li>
+                {% endfor %}
+            </ul>
+        </dd>
+    </dl>
+
+    {% include 'pages/merc_mission/_mission_list.html.twig' with {'mercMissions': mercMissions, 'activeMissions': activeMissions, 'tableInitialSort': [[0,1]], 'rankColumn': true} %}
+{% endblock %}

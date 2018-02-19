@@ -6,6 +6,13 @@ use App\Entity\Blade;
 use App\Entity\BladeAffinityNode;
 use App\Entity\BladeTemplate;
 use App\Entity\Driver;
+use App\Entity\MercMission;
+use App\Entity\MercMissionRequirementClass;
+use App\Entity\MercMissionRequirementElement;
+use App\Entity\MercMissionRequirementFieldSkill;
+use App\Entity\MercMissionRequirementGender;
+use App\Entity\MercMissionRequirementStrength;
+use App\Entity\MercMissionRequirementWeaponClass;
 use App\Form\BladeFindType;
 use App\Form\BladeFormType;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -261,6 +268,42 @@ class BladeController extends Controller
 
     /**
      * @param Blade $blade
+     *
+     * @return Response
+     *
+     * @Route("/blades/{driverSlug}/mercmissions/{blade}", name="blade_missions")
+     * @ParamConverter("blade", options={"mapping": {"blade": "id"}})
+     */
+    public function indexForBlade(Blade $blade)
+    {
+        $mercMissions = $this->rankMercMissions($blade);
+        usort(
+          $mercMissions,
+          function (MercMission $a, MercMission $b) {
+              return $b->getSuitabilityRank() - $a->getSuitabilityRank();
+          }
+        );
+
+        $mercMissionRepo = $this->getDoctrine()->getRepository(MercMission::class);
+        $activeMissionList = $mercMissionRepo->findActiveMissions($this->getUser());
+        $activeMissions = [];
+        foreach ($activeMissionList as $activeMission) {
+            $activeMissions[$activeMission->getId()] = $activeMission;
+        }
+
+        return $this->render(
+          'pages/blade/merc_missions.html.twig',
+          [
+            'title' => 'Missions suitable for '.$blade->getName(),
+            'blade' => $blade,
+            'mercMissions' => $mercMissions,
+            'activeMissions' => $activeMissions,
+          ]
+        );
+    }
+
+    /**
+     * @param Blade $blade
      */
     private function showBladeAddedMessage(Blade $blade)
     {
@@ -286,5 +329,79 @@ class BladeController extends Controller
             $blade->getName() ?: 'this Blade'
           )
         );
+    }
+
+    /**
+     * Find missions suitable for the given blade.
+     *
+     * This will set the suitabilityRank property in each MercMission entity
+     * returned.
+     *
+     * @param Blade $blade
+     *
+     * @return MercMission[]
+     */
+    private function rankMercMissions(Blade $blade)
+    {
+        $mercMissionRepo = $this->getDoctrine()->getRepository(MercMission::class);
+        $mercMissions = $mercMissionRepo->findMissionsForUser($this->getUser());
+
+        $suitableMercMissions = [];
+        foreach ($mercMissions as &$mercMission) {
+            $rank = 0;
+
+            // Check requirements against this blade
+            foreach ($mercMission->getRequirements() as $requirement) {
+                if ($requirement instanceof MercMissionRequirementClass) {
+                    if ($requirement->getClass()->getId() == $blade->getGender()->getClass()->getId()) {
+                        $rank++;
+                    }
+                } elseif ($requirement instanceof MercMissionRequirementElement) {
+                    if ($requirement->getElement()->getId() == $blade->getElement()->getId()) {
+                        $rank++;
+                    }
+                } elseif ($requirement instanceof MercMissionRequirementFieldSkill) {
+                    foreach ($blade->getAffinityNodes() as $bladeAffinityNode) {
+                        if ($requirement->getFieldSkill()->getId() == $bladeAffinityNode->getAffinityNode()->getId()) {
+                            if ($requirement->getLevel() <= $bladeAffinityNode->getLevel()) {
+                                $rank++;
+                            }
+                            break;
+                        }
+                    }
+                } elseif ($requirement instanceof MercMissionRequirementGender) {
+                    if ($requirement->getGender()->getId() == $blade->getGender()->getId()) {
+                        $rank++;
+                    }
+                } elseif ($requirement instanceof MercMissionRequirementStrength) {
+                    if ($requirement->getStrength() <= $blade->getStrength()) {
+                        $rank++;
+                    }
+                } elseif ($requirement instanceof MercMissionRequirementWeaponClass) {
+                    if ($requirement->getWeaponClass()->getId() == $blade->getWeaponClass()->getId()) {
+                        $rank++;
+                    }
+                }
+            }
+
+            // Check if blade has recommended field skill(s)
+            foreach ($mercMission->getFieldSkills() as $fieldSkill) {
+                foreach ($blade->getAffinityNodes() as $bladeAffinityNode) {
+                    if ($fieldSkill->getId() == $bladeAffinityNode->getAffinityNode()->getId()) {
+                        if ($bladeAffinityNode->getLevel() > 0) {
+                            $rank++;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if ($rank > 0) {
+                $mercMission->setSuitabilityRank($rank);
+                $suitableMercMissions[] = $mercMission;
+            }
+        }
+
+        return $suitableMercMissions;
     }
 }

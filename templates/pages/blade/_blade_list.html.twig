@@ -12,7 +12,6 @@
             <th class="xeno2--blade--list--affinity" data-sorter="percent">Affinity</th>
             <th class="xeno2--blade--list--trust filter-select">Trust</th>
             <th class="xeno2--blade--list--rarity">Rarity</th>
-            <th class="xeno2--blade--list--merc-mission filter-select" data-empty="zero">Merc Mission</th>
             <th class="xeno2--blade--list--action filter-false">Action</th>
         </tr>
         </thead>
@@ -21,6 +20,9 @@
             {%- set bladeClasses = [] %}
             {%- if blade.driver not in drivers %}
                 {%- set bladeClasses = bladeClasses|merge(['disabled']) %}
+            {%- endif %}
+            {%- if blade.mercMission %}
+                {%- set bladeClasses = bladeClasses|merge(['table-active']) %}
             {%- endif %}
             <tr class="{{ bladeClasses|join(' ') }}">
                 <td class="xeno2--blade--list--name">{{ blade.name }}</td>
@@ -46,16 +48,26 @@
                             </span>
                     {% endspaceless %}
                 </td>
-                <td class="xeno2--blade--list--merc-mission">{{ blade.mercMission.name|default('') }}</td>
                 <td class="xeno2--blade--list--action">
-                    <a class="btn btn-outline-info" href="{{ path('blade_edit', {'blade': blade.id}) }}">
-                        <span class="sr-only">Edit</span>
-                        <i class="fas fa-edit"></i>
-                    </a>
-                    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#delete-blade" data-blade-name="{{ blade.name }}" data-blade-delete-path="{{ path('blade_delete', {'blade': blade.id}) }}">
-                        <span class="sr-only">Delete</span>
-                        <i class="fas fa-minus-circle"></i>
-                    </button>
+                    {% if blade.mercMission %}
+                        <a class="btn btn-outline-success mercmission-stop" title="{{ blade.mercMission.name }}" href="{{ path('mercmission_stop', {'nation': blade.mercMission.nation.slug, 'mercMission': blade.mercMission.slug}) }}">
+                            <span class="sr-only">Stop</span>
+                            <i class="fas fa-stop"></i>
+                        </a>
+                    {% else %}
+                        <a class="btn btn-outline-primary mercmission-start" href="{{ path('blade_missions', {'blade': blade.id, 'driverSlug': blade.driver.slug}) }}">
+                            <span class="sr-only">Start</span>
+                            <i class="fas fa-play"></i>
+                        </a>
+                        <a class="btn btn-outline-info" href="{{ path('blade_edit', {'blade': blade.id}) }}">
+                            <span class="sr-only">Edit</span>
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#delete-blade" data-blade-name="{{ blade.name }}" data-blade-delete-path="{{ path('blade_delete', {'blade': blade.id}) }}">
+                            <span class="sr-only">Delete</span>
+                            <i class="fas fa-minus-circle"></i>
+                        </button>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
