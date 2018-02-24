@@ -84,11 +84,11 @@ class MercMissionControllerTest extends FixturesTestCase
     {
         return [
           'Normal User' => [
-            'Test User',
+            'user@test.com',
             false,
           ],
           'Admin User' => [
-            'Test Admin',
+            'admin@test.com',
             true,
           ],
         ];
@@ -103,7 +103,7 @@ class MercMissionControllerTest extends FixturesTestCase
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testIndex.php');
         $client = $this->createClient();
-        $this->login($client, 'Test User');
+        $this->login($client, 'user@test.com');
         $em = $client->getContainer()->get('doctrine')->getManager();
         $this->addRequirementsToMissions($em, $this->faker);
         $this->addFieldSkillsToMissions($em, $this->faker);
@@ -232,7 +232,7 @@ class MercMissionControllerTest extends FixturesTestCase
         $this->loadFixturesFromFile([]);
         $client = $this->createClient();
         $client->followRedirects();
-        $this->login($client, 'Test Admin');
+        $this->login($client, 'admin@test.com');
         $em = $client->getContainer()->get('doctrine')->getManager();
 
         $crawler = $client->request('GET', '/mercmissions/all/new');
@@ -339,7 +339,7 @@ class MercMissionControllerTest extends FixturesTestCase
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testEdit.php');
         $client = $this->createClient();
         $client->followRedirects();
-        $this->login($client, 'Test Admin');
+        $this->login($client, 'admin@test.com');
         $em = $client->getContainer()->get('doctrine')->getManager();
         $this->addRequirementsToMissions($em, $this->faker);
         $this->addFieldSkillsToMissions($em, $this->faker);
@@ -403,7 +403,7 @@ class MercMissionControllerTest extends FixturesTestCase
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testEdit.php');
         $client = $this->createClient();
         $client->followRedirects();
-        $this->login($client, 'Test Admin');
+        $this->login($client, 'admin@test.com');
 
         $em = $client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);
@@ -421,7 +421,7 @@ class MercMissionControllerTest extends FixturesTestCase
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
         $client = $this->createClient();
-        $user = $this->login($client, 'Test User');
+        $user = $this->login($client, 'user@test.com');
 
         $em = $client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);
@@ -454,7 +454,7 @@ class MercMissionControllerTest extends FixturesTestCase
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
         $client = $this->createClient();
         $client->followRedirects();
-        $user = $this->login($client, 'Test User');
+        $user = $this->login($client, 'user@test.com');
 
         $em = $client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);
@@ -499,14 +499,14 @@ class MercMissionControllerTest extends FixturesTestCase
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
         $client = $this->createClient();
         $client->followRedirects();
-        $currentUser = $this->login($client, 'Test User');
+        $currentUser = $this->login($client, 'user@test.com');
 
         $em = $client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);
         $bladeRepo = $em->getRepository(Blade::class);
         $userRepo = $em->getRepository(User::class);
         /** @var User $otherUser */
-        $otherUser = $userRepo->findOneBy(['username' => 'Test Admin']);
+        $otherUser = $userRepo->findOneBy(['email' => 'admin@test.com']);
         // Sanity check
         self::assertNotEquals($otherUser, $currentUser, 'Error in test - needs two different users');
         /** @var MercMission $mercMission */
@@ -544,7 +544,7 @@ class MercMissionControllerTest extends FixturesTestCase
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
         $client = $this->createClient();
         $client->followRedirects();
-        $user = $this->login($client, 'Test User');
+        $user = $this->login($client, 'user@test.com');
 
         $em = $client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);

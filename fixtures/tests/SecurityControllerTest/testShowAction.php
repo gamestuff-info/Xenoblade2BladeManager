@@ -3,7 +3,6 @@
 return [
   \App\Entity\User::class => [
     'user_entity_new' => [
-      'username' => 'Test New Admin',
       'password' => '<(password_hash("password_old", PASSWORD_BCRYPT))>',
       'email' => 'newguy@test.com',
       '__calls' => [

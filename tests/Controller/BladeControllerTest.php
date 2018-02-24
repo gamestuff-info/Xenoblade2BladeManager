@@ -25,7 +25,7 @@ class BladeControllerTest extends FixturesTestCase
     {
         $this->loadFixturesFromFile([], 'BladeControllerTest/testIndex.php');
         $client = $this->createClient();
-        $user = $this->login($client, 'Test User');
+        $user = $this->login($client, 'user@test.com');
 
         $bladeRepo = $client->getContainer()->get('doctrine')->getRepository(Blade::class);
         if ($driverSlug !== 'all') {
@@ -132,7 +132,7 @@ class BladeControllerTest extends FixturesTestCase
     {
         $this->loadFixturesFromFile();
         $client = $this->createClient();
-        $user = $this->login($client, 'Test User');
+        $user = $this->login($client, 'user@test.com');
 
         $crawler = $client->request('GET', '/blades');
         self::isSuccessful($client->getResponse());
@@ -259,7 +259,7 @@ class BladeControllerTest extends FixturesTestCase
     {
         $this->loadFixturesFromFile();
         $client = $this->createClient();
-        $this->login($client, 'Test User');
+        $this->login($client, 'user@test.com');
 
         $crawler = $client->request('GET', '/blades');
         self::isSuccessful($client->getResponse());
@@ -303,7 +303,7 @@ class BladeControllerTest extends FixturesTestCase
     {
         $this->loadFixturesFromFile([], 'BladeControllerTest/testEdit.php');
         $client = $this->createClient();
-        $user = $this->login($client, 'Test User');
+        $user = $this->login($client, 'user@test.com');
 
         $em = $client->getContainer()->get('doctrine')->getManager();
         $bladeRepo = $em->getRepository(Blade::class);
@@ -389,7 +389,7 @@ class BladeControllerTest extends FixturesTestCase
     {
         $this->loadFixturesFromFile([], 'BladeControllerTest/testEdit.php');
         $client = $this->createClient();
-        $user = $this->login($client, 'Test User');
+        $user = $this->login($client, 'user@test.com');
 
         $em = $client->getContainer()->get('doctrine')->getManager();
         $bladeRepo = $em->getRepository(Blade::class);
