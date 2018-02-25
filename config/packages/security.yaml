@@ -26,6 +26,9 @@ security:
             logout:
                 path: /user/logout
                 target: /
+            guard:
+                authenticators:
+                    - App\Security\GoogleAuthenticator
     access_control:
         - { path: ^/user/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin, roles: ROLE_ADMIN }

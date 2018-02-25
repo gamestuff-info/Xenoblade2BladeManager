@@ -185,6 +185,10 @@ class SecurityController extends Controller
         /** @var User $user */
         $user = $this->getUser();
 
+        if ($user->usesOAuth()) {
+            throw new NotFoundHttpException('OAuth users cannot edit their profile.');
+        }
+
         $form = $this->createForm(UserEditType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

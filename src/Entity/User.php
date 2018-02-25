@@ -27,9 +27,13 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
+     * The user's password may be blank if they only authenticate with an OAuth
+     * provider.
+     *
      * @var string
      *
-     * @ORM\Column(type="string")
+     * @Assert\NotBlank(groups={"registration", "passwordChange"})
+     * @ORM\Column(type="string", nullable=true)
      */
     private $password;
 
@@ -109,6 +113,15 @@ class User implements AdvancedUserInterface, \Serializable
     private $drivers;
 
     /**
+     * Google Sign-In Id
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", unique=true, nullable=true);
+     */
+    private $googleId;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -154,7 +167,7 @@ class User implements AdvancedUserInterface, \Serializable
      *
      * @return self
      */
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -295,6 +308,7 @@ class User implements AdvancedUserInterface, \Serializable
         return serialize(
           [
             $this->id,
+            $this->email,
             $this->password,
             $this->isActive,
           ]
@@ -317,6 +331,7 @@ class User implements AdvancedUserInterface, \Serializable
     {
         list(
           $this->id,
+          $this->email,
           $this->password,
           $this->isActive
           ) = unserialize($serialized);
@@ -554,6 +569,34 @@ class User implements AdvancedUserInterface, \Serializable
     public function removeDriver(Driver $driver): self
     {
         $this->drivers->removeElement($driver);
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function usesOAuth(): bool
+    {
+        return !is_null($this->googleId);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param string|null $googleId
+     *
+     * @return self
+     */
+    public function setGoogleId(?string $googleId): self
+    {
+        $this->googleId = $googleId;
 
         return $this;
     }
