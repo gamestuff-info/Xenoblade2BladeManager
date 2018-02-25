@@ -20,12 +20,18 @@ td.xeno2--blade--list--action {
 }
 
 form[name=blade_find] {
-    #blade_find_queries .form-row {
-        .form-group > .row,
-        .form-group > .form-row {
-            &,
-            & .input-group {
-                @extend .align-items-baseline;
+    #blade_find_queries {
+        fieldset:first-child select[id$='operator'] {
+            display: none;
+        }
+
+        .form-row {
+            .form-group > .row,
+            .form-group > .form-row {
+                &,
+                & .input-group {
+                    @extend .align-items-baseline;
+                }
             }
         }
     }
