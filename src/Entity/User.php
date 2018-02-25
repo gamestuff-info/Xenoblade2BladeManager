@@ -32,7 +32,6 @@ class User implements AdvancedUserInterface, \Serializable
      *
      * @var string
      *
-     * @Assert\NotBlank(groups={"registration", "passwordChange"})
      * @ORM\Column(type="string", nullable=true)
      */
     private $password;

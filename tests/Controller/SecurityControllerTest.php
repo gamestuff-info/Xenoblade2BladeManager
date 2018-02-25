@@ -64,7 +64,6 @@ class SecurityControllerTest extends FixturesTestCase
         $message = $mailCollector->getMessages()[0];
         self::assertEquals([$email], array_keys($message->getTo()), 'Confirmation e-mail sent to wrong recipient.');
         $messageCrawler = new Crawler($message->getBody());
-        self::assertEquals($email, $messageCrawler->filter('dt:contains("E-Mail") + dd')->html(), 'Wrong e-mail in confirmation e-mail (HTML)');
         self::assertEquals($user->getActivateCode(), $messageCrawler->filter('h2:contains("Activation code") + p')->html(), 'Wrong activation code in confirmation e-mail (HTML)');
         $textMessage = null;
         foreach ($message->getChildren() as $child) {
@@ -73,7 +72,6 @@ class SecurityControllerTest extends FixturesTestCase
             }
         }
         self::assertNotNull($textMessage, 'No text/plain part in the confirmation email.');
-        self::assertRegExp('`E-Mail:\s'.$email.'`m', $textMessage->getBody(), 'Wrong e-mail in confirmation e-mail (Text)');
         self::assertRegExp('`Activation code:\s'.$user->getActivateCode().'`m', $textMessage->getBody(), 'Wrong activation code in confirmation e-mail (Text)');
 
         // Verify that registration with the same e-mail is impossible.
