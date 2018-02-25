@@ -1,11 +1,11 @@
 require('symfony-collection/jquery.collection');
 
 const defaults = {
-    up: '<a class="btn btn-outline-info mb-2 mr-sm-2" href="#"><i class="fas fa-arrow-circle-up"></i></a>',
-    down: '<a class="btn btn-outline-info mb-2 mr-sm-2" href="#"><i class="fas fa-arrow-circle-down"></i></a>',
+    up: '<a class="btn btn-outline-info mb-2 mr-2" href="#"><i class="fas fa-arrow-circle-up"></i></a>',
+    down: '<a class="btn btn-outline-info mb-2 mr-2" href="#"><i class="fas fa-arrow-circle-down"></i></a>',
     add: '<a class="btn btn-outline-success" href="#"><i class="fas fa-plus-circle"></i></a>',
-    remove: '<a class="btn btn-outline-danger mb-2 mr-sm-2" href="#"><i class="fas fa-minus-circle"></i></a>',
-    duplicate: '<a class="btn btn-outline-success mb-2 mr-sm-2" href="#"><i class="fas fa-copy"></i></a>',
+    remove: '<a class="btn btn-outline-danger mb-2 mr-2" href="#"><i class="fas fa-minus-circle"></i></a>',
+    duplicate: '<a class="btn btn-outline-success mb-2 mr-2" href="#"><i class="fas fa-copy"></i></a>',
     allow_up: false,
     allow_down: false,
     allow_add: true,

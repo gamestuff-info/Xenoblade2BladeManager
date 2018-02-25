@@ -9,7 +9,7 @@ $(document).ready(function () {
         allow_up: true,
         allow_down: true,
         add_at_the_end: false,
-        add: '<a class="btn btn-outline-success mb-2 mr-sm-2" href="#"><i class="fas fa-plus-circle"></i></a>',
+        add: '<a class="btn btn-outline-success mb-2 mr-2" href="#"><i class="fas fa-plus-circle"></i></a>',
         min: 1,
         init_with_n_elements: 1,
         before_init: collectionBeforeInit,
