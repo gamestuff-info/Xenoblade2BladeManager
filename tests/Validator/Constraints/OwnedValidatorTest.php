@@ -35,8 +35,8 @@ class OwnedValidatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->currentUser = (new User())->setUsername('User 1');
-        $this->otherUser = (new User())->setUsername('User 2');
+        $this->currentUser = (new User())->setEmail('user1@test.com');
+        $this->otherUser = (new User())->setEmail('user2@test.com');
 
         $tokenMock = self::createMock(TokenInterface::class);
         $tokenMock->method('getUser')->willReturn($this->currentUser);

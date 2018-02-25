@@ -41,10 +41,10 @@ class BladeVoterTest extends TestCase
 
         $roleUser = (new Role())->setName('ROLE_USER');
         $this->currentUser = (new User())
-          ->setUsername('User 1')
+          ->setEmail('user1@example.com')
           ->addRole($roleUser);
         $this->otherUser = (new User())
-          ->setUsername('User 2')
+          ->setEmail('user2@example.com')
           ->addRole($roleUser);
         $tokenMock = self::createMock(TokenInterface::class);
         $tokenMock->method('getUser')->willReturn($this->currentUser);
@@ -73,10 +73,10 @@ class BladeVoterTest extends TestCase
     {
         $roleUser = (new Role())->setName('ROLE_USER');
         $this->currentUser = (new User())
-          ->setUsername('User 1')
+          ->setEmail('user1@example.com')
           ->addRole($roleUser);
         $this->otherUser = (new User())
-          ->setUsername('User 2')
+          ->setEmail('user2@example.com')
           ->addRole($roleUser);
         $ownedBlade = (new Blade())
           ->setUser($this->currentUser);

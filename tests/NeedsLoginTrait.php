@@ -16,6 +16,7 @@ trait NeedsLoginTrait
     /**
      * @param Client $client
      * @param User|string $user
+     *   Either a User entity or the user's e-mail address to login as.
      *
      * @return User
      *   The user that is logged in.
@@ -30,7 +31,7 @@ trait NeedsLoginTrait
         // Get the user if specified as a string
         if (is_string($user)) {
             $userRepo = $client->getContainer()->get('doctrine')->getRepository(User::class);
-            $user = $userRepo->findOneBy(['username' => $user]);
+            $user = $userRepo->findOneBy(['email' => $user]);
             if (!$user) {
                 throw new UsernameNotFoundException();
             }

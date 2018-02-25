@@ -15,7 +15,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity("email", groups={"registration", "edit"})
- * @UniqueEntity("username", groups={"registration", "edit"})
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -28,17 +27,12 @@ class User implements AdvancedUserInterface, \Serializable
     private $id;
 
     /**
+     * The user's password may be blank if they only authenticate with an OAuth
+     * provider.
+     *
      * @var string
      *
-     * @ORM\Column(type="string", unique=true)
-     * @Assert\NotBlank(groups={"registration"})
-     */
-    private $username;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     private $password;
 
@@ -118,6 +112,15 @@ class User implements AdvancedUserInterface, \Serializable
     private $drivers;
 
     /**
+     * Google Sign-In Id
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", unique=true, nullable=true);
+     */
+    private $googleId;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -142,19 +145,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function getUsername(): ?string
     {
-        return $this->username;
-    }
-
-    /**
-     * @param string $username
-     *
-     * @return self
-     */
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
+        return $this->email;
     }
 
     /**
@@ -175,7 +166,7 @@ class User implements AdvancedUserInterface, \Serializable
      *
      * @return self
      */
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
         $this->password = $password;
 
@@ -316,7 +307,7 @@ class User implements AdvancedUserInterface, \Serializable
         return serialize(
           [
             $this->id,
-            $this->username,
+            $this->email,
             $this->password,
             $this->isActive,
           ]
@@ -339,7 +330,7 @@ class User implements AdvancedUserInterface, \Serializable
     {
         list(
           $this->id,
-          $this->username,
+          $this->email,
           $this->password,
           $this->isActive
           ) = unserialize($serialized);
@@ -365,7 +356,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function eraseCredentials()
     {
-
+        $this->plainPassword = null;
     }
 
     /**
@@ -479,7 +470,7 @@ class User implements AdvancedUserInterface, \Serializable
     public function newActivateCode(): string
     {
         $this->isActive = false;
-        $this->activateCode = bin2hex(openssl_random_pseudo_bytes(32));
+        $this->activateCode = bin2hex(openssl_random_pseudo_bytes(16));
         $this->activateCodeTime = new \DateTime();
 
         return $this->activateCode;
@@ -577,6 +568,34 @@ class User implements AdvancedUserInterface, \Serializable
     public function removeDriver(Driver $driver): self
     {
         $this->drivers->removeElement($driver);
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function usesOAuth(): bool
+    {
+        return !is_null($this->googleId);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param string|null $googleId
+     *
+     * @return self
+     */
+    public function setGoogleId(?string $googleId): self
+    {
+        $this->googleId = $googleId;
 
         return $this;
     }

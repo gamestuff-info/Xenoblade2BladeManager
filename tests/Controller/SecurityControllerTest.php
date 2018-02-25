@@ -35,22 +35,20 @@ class SecurityControllerTest extends FixturesTestCase
         self::isSuccessful($client->getResponse());
 
         // Fill out the registration form
-        $username = $this->faker->name;
         $email = $this->faker->email;
         $password = $this->faker->password();
         $form = $crawler->filter('form[name="user"]')->selectButton('Register!')->form();
-        $form['user[username]'] = $username;
-        $form['user[email]'] = $email;
+        $form['user[email][first]'] = $email;
+        $form['user[email][second]'] = $email;
         $form['user[plainPassword][first]'] = $password;
         $form['user[plainPassword][second]'] = $password;
         $client->submit($form);
 
         // Verify the user was created
         $userRepo = $this->doctrine->getRepository(User::class);
-        $user = $userRepo->findOneBy(['username' => $username]);
+        $user = $userRepo->findOneBy(['email' => $email]);
         self::assertInstanceOf(User::class, $user, 'User not persisted.');
         self::assertFalse($user->isActive(), 'Newly-created user should not be active.');
-        self::assertEquals($username, $user->getUsername(), 'Wrong username persisted.');
         self::assertEquals($email, $user->getEmail(), 'Wrong e-mail persisted.');
         self::assertTrue(password_verify($password, $user->getPassword()), 'Wrong password persisted or not hashed correctly.');
 
@@ -66,8 +64,6 @@ class SecurityControllerTest extends FixturesTestCase
         $message = $mailCollector->getMessages()[0];
         self::assertEquals([$email], array_keys($message->getTo()), 'Confirmation e-mail sent to wrong recipient.');
         $messageCrawler = new Crawler($message->getBody());
-        self::assertEquals($username, $messageCrawler->filter('dt:contains("Username") + dd')->html(), 'Wrong username in confirmation e-mail (HTML)');
-        self::assertEquals($email, $messageCrawler->filter('dt:contains("E-Mail") + dd')->html(), 'Wrong e-mail in confirmation e-mail (HTML)');
         self::assertEquals($user->getActivateCode(), $messageCrawler->filter('h2:contains("Activation code") + p')->html(), 'Wrong activation code in confirmation e-mail (HTML)');
         $textMessage = null;
         foreach ($message->getChildren() as $child) {
@@ -76,21 +72,18 @@ class SecurityControllerTest extends FixturesTestCase
             }
         }
         self::assertNotNull($textMessage, 'No text/plain part in the confirmation email.');
-        self::assertRegExp('`Username:\s'.$username.'`m', $textMessage->getBody(), 'Wrong username in confirmation e-mail (Text)');
-        self::assertRegExp('`E-Mail:\s'.$email.'`m', $textMessage->getBody(), 'Wrong e-mail in confirmation e-mail (Text)');
         self::assertRegExp('`Activation code:\s'.$user->getActivateCode().'`m', $textMessage->getBody(), 'Wrong activation code in confirmation e-mail (Text)');
 
-        // Verify that registration with the same username/e-mail is impossible.
+        // Verify that registration with the same e-mail is impossible.
         $crawler = $client->request('GET', '/user/register');
         $form = $crawler->filter('form[name="user"]')->selectButton('Register!')->form();
-        $form['user[username]'] = $username;
-        $form['user[email]'] = $email;
+        $form['user[email][first]'] = $email;
+        $form['user[email][second]'] = $email;
         $form['user[plainPassword][first]'] = $password;
         $form['user[plainPassword][second]'] = $password;
         $crawler = $client->submit($form);
         self::assertEquals('/user/register', $client->getRequest()->getPathInfo(), 'Not redirected to registration page after bad registration');
-        self::assertEquals(1, $crawler->filter('input[id="user_username"] + .invalid-feedback')->count(), 'Not showing error on duplicate username');
-        self::assertEquals(1, $crawler->filter('input[id="user_email"] + .invalid-feedback')->count(), 'Not showing error on duplicate e-mail');
+        self::assertEquals(1, $crawler->filter('input[id="user_email_first"] + .invalid-feedback')->count(), 'Not showing error on duplicate e-mail');
 
         return $user;
     }
@@ -101,8 +94,7 @@ class SecurityControllerTest extends FixturesTestCase
         $em = $this->getContainer()->get('doctrine')->getManager();
         $roleUser = $em->getRepository(Role::class)->findOneBy(['name' => 'ROLE_USER']);
         $user = new User();
-        $user->setUsername($this->faker->userName)
-          ->setEmail($this->faker->email)
+        $user->setEmail($this->faker->email)
           ->setPassword(password_hash($this->faker->password, PASSWORD_BCRYPT))
           ->addRole($roleUser);
         $user->newActivateCode();
@@ -123,8 +115,7 @@ class SecurityControllerTest extends FixturesTestCase
         $user = new User();
         $password = $this->faker->password;
         $roleUser = $em->getRepository(Role::class)->findOneBy(['name' => 'ROLE_USER']);
-        $user->setUsername($this->faker->userName)
-          ->setEmail($this->faker->email)
+        $user->setEmail($this->faker->email)
           ->setPassword(password_hash($password, PASSWORD_BCRYPT))
           ->addRole($roleUser);
         $user->activate();
@@ -141,37 +132,21 @@ class SecurityControllerTest extends FixturesTestCase
         self::isSuccessful($client->getResponse());
 
         // Login with username
-        $form = $crawler->filter('form:contains("Username")')->selectButton('Login')->form();
-        $form['_username'] = $user->getUsername();
+        $form = $crawler->filter('form:contains("E-Mail")')->selectButton('Login')->form();
+        $form['_username'] = $user->getEmail();
         $form['_password'] = $password;
         $crawler = $client->submit($form);
         /** @var SecurityDataCollector $securityCollector */
         $profile = $client->getProfile();
         $securityCollector = $profile->getCollector('security');
-        self::assertEquals($user->getUsername(), $securityCollector->getUser(), 'Not logged in using username');
-
-        // Logout to try again
-        $crawler = $client->click($crawler->filter('#navbarMain a:contains("Logout")')->link());
-        self::isSuccessful($client->getResponse());
-
-        // Login with email
-        $crawler = $client->click($crawler->filter('#navbarMain a:contains("Login")')->link());
-        self::isSuccessful($client->getResponse());
-        $form = $crawler->filter('form:contains("Username")')->selectButton('Login')->form();
-        $form['_username'] = $user->getEmail();
-        $form['_password'] = $password;
-        $client->submit($form);
-        /** @var SecurityDataCollector $securityCollector */
-        $profile = $client->getProfile();
-        $securityCollector = $profile->getCollector('security');
-        self::assertEquals($user->getUsername(), $securityCollector->getUser(), 'Not logged in using e-mail');
+        self::assertEquals($user->getUsername(), $securityCollector->getUser(), 'Not logged in');
     }
 
     public function testShowAction()
     {
         $this->loadFixturesFromFile([], 'SecurityControllerTest/testShowAction.php');
         $client = $this->createClient();
-        $user = $this->login($client, 'Test New Admin');
+        $user = $this->login($client, 'newguy@test.com');
 
         $crawler = $client->request('GET', '/');
         $crawler = $client->click($crawler->filter('.dropdown-menu a:contains(Profile)')->link());
@@ -182,12 +157,12 @@ class SecurityControllerTest extends FixturesTestCase
 
         // Verify profile information shown
         self::assertEquals($user->getCreated()->format('F d, Y'), $crawler->filter('dt:contains(User since) + dd')->text(), 'Wrong date displayed');
-        self::assertEquals($user->getEmail(), $crawler->filter('dt:contains(E-Mail) + dd')->text(), 'Wrong email displayed');
+        self::assertEquals($user->getEmail(), $crawler->filter('main > h1:first-child')->text(), 'Wrong email displayed');
         self::assertEquals(implode(', ', $user->getRoles()), $crawler->filter('dt:contains(Roles) + dd')->text(), 'Wrong roles displayed');
         self::assertEquals(count($blades), $crawler->filter('dt:contains(Blades) + dd')->text(), 'Wrong blade count displayed');
 
         // Verify roles not shown if only one.
-        $this->login($client, 'Test User');
+        $this->login($client, 'user@test.com');
         $crawler = $client->request('GET', '/user/profile');
         self::assertEquals(0, $crawler->filter('dt:contains(Roles) + dd')->count());
     }
@@ -197,7 +172,7 @@ class SecurityControllerTest extends FixturesTestCase
         $this->loadFixturesFromFile([], 'SecurityControllerTest/testShowAction.php');
         $client = $this->createClient();
         $client->followRedirects();
-        $this->login($client, 'Test New Admin');
+        $this->login($client, 'newguy@test.com');
         $em = $this->getContainer()->get('doctrine')->getManager();
         $userRepo = $em->getRepository(User::class);
 
@@ -218,7 +193,7 @@ class SecurityControllerTest extends FixturesTestCase
         self::isSuccessful($client->getResponse());
 
         /** @var User $user */
-        $user = $userRepo->findOneBy(['username' => 'Test New Admin']);
+        $user = $userRepo->findOneBy(['email' => $newEmail]);
         // Make sure this comes from the database.
         $em->refresh($user);
         self::assertEquals($newEmail, $user->getEmail(), 'E-mail change not persisted');

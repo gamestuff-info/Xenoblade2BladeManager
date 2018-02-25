@@ -3,9 +3,18 @@
 {% block content %}
     {% include "security/_nav.html.twig" %}
 
+    <ul class="list-inline">
+        <li class="list-inline-item">
+            <a href="{{ path('connect_google_connect') }}">
+                <img src="{{ asset('dist/static/oauth/btn_google_signin_light_normal_web.png') }}"
+                     srcset="{{ asset('dist/static/oauth/btn_google_signin_light_normal_web@2x.png') }} 2x"
+                     alt="Sign in with Google">
+            </a>
+        </li>
+    </ul>
     <form action="{{ path('user_login') }}" method="post">
         <div class="form-group">
-            <label for="_username">Username/E-Mail</label>
+            <label for="_username">E-Mail</label>
             <input type="text" class="form-control" id="_username" name="_username" value="{{ last_username }}">
         </div>
         <div class="form-group">

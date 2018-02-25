@@ -7,8 +7,6 @@
         <dl>
             <dt>User since</dt>
             <dd>{{ user.created|date('F d, Y') }}</dd>
-            <dt>E-Mail</dt>
-            <dd>{{ user.email }}</dd>
             {% if user.roles|length > 1 %}
                 <dt>Roles</dt>
                 <dd>{{ user.roles|join(', ') }}</dd>
