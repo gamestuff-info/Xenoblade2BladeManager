@@ -146,7 +146,7 @@ class BladeRepository extends ServiceEntityRepository
                 case 'rarity':
                     $qb->$where("blade.rarity $between :${paramName}_min AND :${paramName}_max");
                     $params["${paramName}_min"] = min($searchQuery['rarity']['min'], $searchQuery['rarity']['max']);
-                    $params["${paramName}_max"] = min($searchQuery['rarity']['min'], $searchQuery['rarity']['max']);
+                    $params["${paramName}_max"] = max($searchQuery['rarity']['min'], $searchQuery['rarity']['max']);
                     break;
                 case 'fieldSkill':
                     switch ($searchQuery['fieldSkill']['comparison']) {
@@ -161,7 +161,7 @@ class BladeRepository extends ServiceEntityRepository
                             $comparison = $gte;
                             break;
                     }
-                    $qb->$where("(:${paramName}_affinity_node $eq affinityNodes.affinityNode AND :${paramName}_level $comparison affinityNodes.level)");
+                    $qb->$where("(:${paramName}_affinity_node $eq affinityNodes.affinityNode AND affinityNodes.level $comparison :${paramName}_level)");
                     $params["${paramName}_affinity_node"] = $searchQuery['fieldSkill']['affinityNode'];
                     $params["${paramName}_level"] = $searchQuery['fieldSkill']['level'];
                     break;
