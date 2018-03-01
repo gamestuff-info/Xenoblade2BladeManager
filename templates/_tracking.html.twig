@@ -1,0 +1,17 @@
+<!-- Global site tag (gtag.js) - Google Analytics -->
+{% if app.debug %}
+    <!-- gtag.js goes here; disabled for debug -->
+{% else %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-49494164-2"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'UA-49494164-2');
+    </script>
+{% endif %}
