@@ -76,6 +76,13 @@ class Blade extends BladeSuperclass implements OwnedInterface
     protected $isMercLeader = false;
 
     /**
+     * @var int|null
+     *
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    protected $mercTeamPosition = null;
+
+    /**
      * @var BladeTemplate|null
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\BladeTemplate")
@@ -226,6 +233,26 @@ class Blade extends BladeSuperclass implements OwnedInterface
     public function setIsMercLeader(bool $isMercLeader): self
     {
         $this->isMercLeader = $isMercLeader;
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMercTeamPosition(): ?int
+    {
+        return $this->mercTeamPosition;
+    }
+
+    /**
+     * @param int|null $mercTeamPosition
+     *
+     * @return self
+     */
+    public function setMercTeamPosition(?int $mercTeamPosition): self
+    {
+        $this->mercTeamPosition = $mercTeamPosition;
 
         return $this;
     }

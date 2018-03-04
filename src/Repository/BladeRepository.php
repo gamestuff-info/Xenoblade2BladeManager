@@ -310,6 +310,7 @@ class BladeRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('blade');
         $qb->where('blade.user = :user')
           ->andWhere('blade.mercMission = :mercMission')
+          ->orderBy('blade.mercTeamPosition', 'ASC')
           ->setParameter('user', $user)
           ->setParameter('mercMission', $mercMission);
         $q = $qb->getQuery();
