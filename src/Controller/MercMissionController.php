@@ -261,13 +261,14 @@ class MercMissionController extends Controller
             $em = $this->getDoctrine()->getManager();
             $data = $form->getData()['blades'];
 
-            foreach ($data as $bladeData) {
+            foreach ($data as $index => $bladeData) {
                 /** @var Blade $blade */
                 $blade = $bladeData['blade'];
                 $isLeader = $bladeData['leader'];
 
-                $blade->setMercMission($mercMission);
-                $blade->setIsMercLeader($isLeader);
+                $blade->setMercMission($mercMission)
+                  ->setIsMercLeader($isLeader)
+                  ->setMercTeamPosition($index);
 
                 $em->persist($blade);
             }
@@ -332,7 +333,8 @@ class MercMissionController extends Controller
             $blades = $data['blades'];
             foreach ($blades as $blade) {
                 $blade->setIsMercLeader(false)
-                  ->setMercMission(null);
+                  ->setMercMission(null)
+                  ->setMercTeamPosition(null);
 
                 $em->persist($blade);
             }
