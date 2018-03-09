@@ -18,6 +18,10 @@ class BladeReturnedFromMissionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
+          'strength',
+          IntegerType::class,
+          ['required' => true, 'attr' => ['min' => 1, 'max' => 100]]
+        )->add(
           'affinity',
           IntegerType::class,
           ['required' => true, 'attr' => ['min' => 0, 'max' => 50]]

@@ -23,7 +23,6 @@ use App\Tests\NeedsLoginTrait;
 use Doctrine\Common\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
-use PHPUnit\Framework\Constraint\Constraint;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -576,6 +575,7 @@ class MercMissionControllerTest extends FixturesTestCase
         // Max out all affinity and affinity nodes
         foreach ($formValues['merc_mission_stop']['blades'] as &$mercMissionStopBlade) {
             $mercMissionStopBlade['affinity'] = $mercMissionStopBlade['affinityTotal'];
+            $mercMissionStopBlade['strength'] = "100";
             foreach ($mercMissionStopBlade['affinityNodes'] as &$affinityNode) {
                 $affinityNode['level'] = $affinityNode['maxLevel'];
             }
@@ -587,6 +587,7 @@ class MercMissionControllerTest extends FixturesTestCase
         $blades = $bladeRepo->findBy(['user' => $user]);
         foreach ($blades as $blade) {
             $em->refresh($blade);
+            self::assertEquals(100, $blade->getStrength(), 'Strength change not persisted');
             self::assertEquals($blade->getAffinity(), $blade->getAffinityTotal(), 'Affinity change not persisted');
             foreach ($blade->getAffinityNodes() as $bladeAffinityNode) {
                 self::assertEquals($bladeAffinityNode->getLevel(), $bladeAffinityNode->getMaxLevel(), 'Affinity node level change not persisted');
