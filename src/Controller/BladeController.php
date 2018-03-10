@@ -227,7 +227,10 @@ class BladeController extends Controller
 
                 return $this->redirectToRoute(
                   'blade_index',
-                  ['driver' => $driverSlug]
+                  [
+                    'driver' => $driverSlug,
+                    '_fragment' => 'blade-'.$blade->getId(),
+                  ]
                 );
             } else {
                 $this->showBladeErrorMessage($blade);

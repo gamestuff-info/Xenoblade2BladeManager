@@ -24,7 +24,7 @@
             {%- if blade.mercMission %}
                 {%- set bladeClasses = bladeClasses|merge(['table-active']) %}
             {%- endif %}
-            <tr class="{{ bladeClasses|join(' ') }}">
+            <tr id="blade-{{ blade.id }}" class="{{ bladeClasses|join(' ') }}">
                 <td class="xeno2--blade--list--name">{{ blade.name }}</td>
                 <td class="xeno2--blade--list--element">
                     <i class="fas fa-circle xeno2--element--{{ blade.element.slug }}"></i>&nbsp;<span>{{ blade.element.name }}</span>
