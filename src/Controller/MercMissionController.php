@@ -481,6 +481,7 @@ class MercMissionController extends Controller
             $bladeInfo = [
               'id' => $blade->getId(),
               'name' => $blade->getName(),
+              'affinity' => sprintf('%s / %s (%s%%)', $blade->getAffinity(), $blade->getAffinityTotal(), $blade->getAffinityPercent()),
               'gender' => $blade->getGender()->getName(),
               'element' => $blade->getElement()->getName(),
               'strength' => $blade->getStrength(),
