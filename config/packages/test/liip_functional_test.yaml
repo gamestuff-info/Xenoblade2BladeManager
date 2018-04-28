@@ -1,2 +1,2 @@
-liip_functional_test:
-    cache_sqlite_db: true
+liip_functional_test: []
+#    cache_sqlite_db: true

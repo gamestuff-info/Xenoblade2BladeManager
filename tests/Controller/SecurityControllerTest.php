@@ -83,7 +83,7 @@ class SecurityControllerTest extends FixturesTestCase
         $form['user[plainPassword][second]'] = $password;
         $crawler = $client->submit($form);
         self::assertEquals('/user/register', $client->getRequest()->getPathInfo(), 'Not redirected to registration page after bad registration');
-        self::assertEquals(1, $crawler->filter('input[id="user_email_first"] + .invalid-feedback')->count(), 'Not showing error on duplicate e-mail');
+        self::assertEquals(1, $crawler->filter('input[id="user_email_first"].is-invalid')->count(), 'Not showing error on duplicate e-mail');
 
         return $user;
     }
