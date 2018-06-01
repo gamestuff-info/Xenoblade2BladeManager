@@ -14,18 +14,20 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('mercmission_index') }}">Merc Missions</a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="party_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Current Party
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="party_menu">
-                        {% for blade in app.user.partyBlades %}
-                            <a class="dropdown-item" href="{{ path('blade_edit', {'blade': blade.id}) }}">{{ blade.name }}</a>
-                        {% else %}
-                            <a class="dropdown-item disabled" href="#">No blades in party.</a>
-                        {% endfor %}
-                    </div>
-                </li>
+                {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="party_menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Current Party
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="party_menu">
+                            {% for blade in app.user.partyBlades %}
+                                <a class="dropdown-item" href="{{ path('blade_edit', {'blade': blade.id}) }}">{{ blade.name }}</a>
+                            {% else %}
+                                <a class="dropdown-item disabled" href="#">No blades in party.</a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                {% endif %}
             </ul>
 
             <ul class="navbar-nav">
