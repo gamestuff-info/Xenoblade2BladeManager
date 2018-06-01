@@ -2,12 +2,10 @@
 
 namespace App\Form;
 
-use App\Entity\AffinityNode;
 use App\Entity\BattleRole;
 use App\Entity\Driver;
 use App\Entity\Element;
 use App\Entity\WeaponClass;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -52,7 +50,8 @@ class BladeFindQueryType extends AbstractType
             'label' => false,
               // These choice values should be the same as the field
               // they control.  When adding a new field, add it to the fields
-              // list in bladeFind.js and BladeController::readableQuery.
+              // list in bladeFind.js and the query logic to
+              // BladeRepository::findBladesFromSearch
             'choices' => [
               'Driver' => 'driver',
               'Active' => 'active',
@@ -66,6 +65,7 @@ class BladeFindQueryType extends AbstractType
               'Field skill' => 'fieldSkill',
               'Merc' => 'isMerc',
               'Releasable' => 'canBeReleased',
+              'In party' => 'inParty',
             ],
           ]
         )->add(
@@ -184,6 +184,18 @@ class BladeFindQueryType extends AbstractType
           ]
         )->add(
           'canBeReleased',
+          ChoiceType::class,
+          [
+            'choices' => [
+              'Yes' => true,
+              'No' => false,
+            ],
+            'label' => false,
+            'required' => false,
+            'data' => true,
+          ]
+        )->add(
+          'inParty',
           ChoiceType::class,
           [
             'choices' => [

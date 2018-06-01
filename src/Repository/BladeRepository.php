@@ -173,6 +173,10 @@ class BladeRepository extends ServiceEntityRepository
                     $qb->$where("blade.canBeReleased $eq :$paramName");
                     $params[$paramName] = $searchQuery['canBeReleased'];
                     break;
+                case 'inParty':
+                    $qb->$where("blade.inParty $eq :$paramName");
+                    $params[$paramName] = $searchQuery['inParty'];
+                    break;
             }
         }
         $userBladesQb = $this->createQueryBuilder('bladeList');

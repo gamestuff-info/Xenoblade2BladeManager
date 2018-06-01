@@ -47,6 +47,7 @@ $(document).ready(function () {
             'fieldSkill',
             'isMerc',
             'canBeReleased',
+            'inParty',
         ];
         // Hide all fields
         for (const thisFieldName of fields) {
