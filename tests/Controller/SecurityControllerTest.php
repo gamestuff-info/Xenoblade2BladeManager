@@ -180,14 +180,14 @@ class SecurityControllerTest extends FixturesTestCase
         self::isSuccessful($client->getResponse());
         $form = $crawler->filter('form[name=user_edit]')->form();
         $newEmail = $this->faker->email;
-        $form['user_edit[email]'] = $newEmail;
+        $form['user_edit[newEmail]'] = $newEmail;
         $form['user_edit[oldPassword]'] = 'Wrong password';
         $crawler = $client->request($form->getMethod(), $form->getUri(), $form->getPhpValues());
         self::isSuccessful($client->getResponse());
 
         self::assertContains('is-invalid', explode(' ', $crawler->filter('#user_edit_oldPassword')->attr('class')), 'Invalid text not displayed');
         $form = $crawler->filter('form[name=user_edit]')->form();
-        $form['user_edit[email]'] = $newEmail;
+        $form['user_edit[newEmail]'] = $newEmail;
         $form['user_edit[oldPassword]'] = 'password_old';
         $crawler = $client->request($form->getMethod(), $form->getUri(), $form->getPhpValues());
         self::isSuccessful($client->getResponse());

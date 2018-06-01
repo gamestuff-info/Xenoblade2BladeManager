@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,8 +22,11 @@ class UserEditType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-          'email',
-          EmailType::class
+          'newEmail',
+          EmailType::class,
+          [
+            'label' => 'Email',
+          ]
         )->add(
           'oldPassword',
           PasswordType::class,
@@ -57,6 +62,13 @@ class UserEditType extends AbstractType
             'label' => 'Save',
           ]
         );
+
+        $builder->addEventListener(
+          FormEvents::PRE_SET_DATA, [
+            $this,
+            'fillEmail',
+          ]
+        );
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -85,5 +97,17 @@ class UserEditType extends AbstractType
         }
 
         return $validationGroups;
+    }
+
+    /**
+     * Copy the user's current email into the new email field.
+     *
+     * @param FormEvent $event
+     */
+    public function fillEmail(FormEvent $event)
+    {
+        /** @var User $user */
+        $user = $event->getData();
+        $user->setNewEmail($user->getEmail());
     }
 }

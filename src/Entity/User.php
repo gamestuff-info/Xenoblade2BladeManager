@@ -37,7 +37,9 @@ class User implements AdvancedUserInterface, \Serializable
     private $password;
 
     /**
-     * @var string
+     * Store the new password entered by the user.
+     *
+     * @var string|null
      *
      * @Assert\NotBlank(groups={"registration", "passwordChange"})
      * @Assert\Length(max=4096, groups={"registration", "passwordChange"})
@@ -52,13 +54,23 @@ class User implements AdvancedUserInterface, \Serializable
     private $oldPassword;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(type="string", unique=true)
-     * @Assert\NotBlank(groups={"registration", "edit"})
-     * @Assert\Email(groups={"registration", "edit"})
+     * @Assert\NotBlank(groups={"registration"})
+     * @Assert\Email(groups={"registration"})
      */
     private $email;
+
+    /**
+     * Store the new e-mail entered by the user.
+     *
+     * @var string
+     *
+     * @Assert\NotBlank(groups={"edit"})
+     * @Assert\Email(groups={"edit"})
+     */
+    private $newEmail;
 
     /**
      * @var bool
@@ -181,7 +193,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getPlainPassword(): ?string
     {
@@ -201,7 +213,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getOldPassword(): ?string
     {
@@ -668,5 +680,25 @@ class User implements AdvancedUserInterface, \Serializable
         $party = new ArrayCollection(iterator_to_array($partyIterator));
 
         return $party;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNewEmail(): ?string
+    {
+        return $this->newEmail ?? $this->email;
+    }
+
+    /**
+     * @param string $newEmail
+     *
+     * @return self
+     */
+    public function setNewEmail(string $newEmail): self
+    {
+        $this->newEmail = $newEmail;
+
+        return $this;
     }
 }

@@ -197,6 +197,7 @@ class SecurityController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var User $user */
             $user = $form->getData();
+            $user->setEmail($user->getNewEmail());
 
             if ($form->get('changePassword')->getData()) {
                 $password = $passwordEncoder->encodePassword($user, $user->getPlainPassword());
