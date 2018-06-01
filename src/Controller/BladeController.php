@@ -34,6 +34,7 @@ class BladeController extends Controller
      * @return Response
      *
      * @Route("/blades/find", name="blade_find")
+     * @Security("has_role('ROLE_USER')")
      */
     public function find(Request $request)
     {
@@ -186,6 +187,7 @@ class BladeController extends Controller
      *
      * @Route("/blades/{driverSlug}/edit/{blade}", name="blade_edit")
      * @ParamConverter("blade", options={"mapping": {"blade": "id"}})
+     * @Security("has_role('ROLE_USER')")
      */
     public function edit(Request $request, Blade $blade, string $driverSlug = 'all')
     {
@@ -255,6 +257,7 @@ class BladeController extends Controller
      *
      * @Route("/blades/{driverSlug}/delete/{blade}", name="blade_delete")
      * @ParamConverter("blade", options={"mapping": {"blade": "id"}})
+     * @Security("has_role('ROLE_USER')")
      */
     public function delete(Blade $blade, string $driverSlug = 'all')
     {
@@ -276,6 +279,7 @@ class BladeController extends Controller
      *
      * @Route("/blades/{driverSlug}/mercmissions/{blade}", name="blade_missions")
      * @ParamConverter("blade", options={"mapping": {"blade": "id"}})
+     * @Security("has_role('ROLE_USER')")
      */
     public function indexForBlade(Blade $blade)
     {

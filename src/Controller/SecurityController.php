@@ -10,6 +10,7 @@ use App\Form\UserProgressType;
 use App\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -154,6 +155,7 @@ class SecurityController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route("/user/profile", name="user_show")
+     * @Security("has_role('ROLE_USER')")
      */
     public function showAction()
     {
@@ -179,6 +181,7 @@ class SecurityController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route("/user/profile/edit", name="user_edit")
+     * @Security("has_role('ROLE_USER')")
      */
     public function editAction(Request $request, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -225,6 +228,7 @@ class SecurityController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route("/user/profile/progress", name="user_progress")
+     * @Security("has_role('ROLE_USER')")
      */
     public function progressAction(Request $request)
     {
