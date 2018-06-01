@@ -289,7 +289,7 @@ class Blade extends BladeSuperclass implements OwnedInterface
      */
     public function isInParty(): bool
     {
-        return $this->inParty;
+        return $this->inParty && !$this->mercMission;
     }
 
     /**
