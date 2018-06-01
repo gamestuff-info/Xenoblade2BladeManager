@@ -43,14 +43,7 @@
             {{ form_row(form.name) }}
         </div>
         <div class="col-sm-4">
-            <div class="form-group">
-                {{ form_label(form.inParty) }}
-                {{ form_errors(form.inParty) }}
-                {{ form_widget(form.inParty) }}
-                <small class="form-text text-muted">
-                    This blade is in the current party.
-                </small>
-            </div>
+            {{ form_row(form.inParty) }}
         </div>
     </div>
     <div class="form-row">
@@ -96,37 +89,15 @@
             {{ form_row(form.trust) }}
         </div>
         <div class="col-sm-4">
-            <div class="form-group">
-                {{ form_label(form.canBeReleased) }}
-                {{ form_errors(form.canBeReleased) }}
-                {{ form_widget(form.canBeReleased) }}
-                <small class="form-text text-muted">
-                    A few specific blades cannot be released.
-                </small>
-            </div>
+            {{ form_row(form.canBeReleased) }}
         </div>
     </div>
     <div class="form-row align-items-end">
         <div class="col-sm-6">
-            <div class="form-group">
-                {{ form_label(form.mercTeamName) }}
-                {{ form_errors(form.mercTeamName) }}
-                {{ form_widget(form.mercTeamName) }}
-                <small class="form-text text-muted">
-                    Leave this blank for common blades to use the default "Team [name]" format.
-                </small>
-            </div>
+            {{ form_row(form.mercTeamName) }}
         </div>
         <div class="col-sm-6">
-            <div class="form-group">
-                {{ form_label(form.isMerc) }}
-                {{ form_errors(form.isMerc) }}
-                {{ form_widget(form.isMerc) }}
-                <small class="form-text text-muted">
-                    Not all Blades can be sent on Merc Missions. Uncheck this box if this Blade cannot be sent out
-                    (usually for story reasons).
-                </small>
-            </div>
+            {{ form_row(form.isMerc) }}
         </div>
     </div>
     {{ form_row(form.affinityNodes) }}

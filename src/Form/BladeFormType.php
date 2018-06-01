@@ -54,6 +54,7 @@ class BladeFormType extends AbstractType
             CheckboxType::class,
             [
               'required' => false,
+              'help' => 'This blade is in the current party.',
             ]
           )
           ->add(
@@ -118,16 +119,25 @@ class BladeFormType extends AbstractType
           )->add(
             'canBeReleased',
             CheckboxType::class,
-            ['required' => false]
+            [
+              'required' => false,
+              'help' => 'A few specific blades cannot be released.',
+            ]
           )->add(
             'isMerc',
             CheckboxType::class,
-            ['required' => false]
+            [
+              'required' => false,
+              'help' => 'Not all Blades can be sent on Merc Missions. Uncheck this box if this Blade cannot be sent out (usually for story reasons).',
+            ]
           )
           ->add(
             'mercTeamName',
             TextType::class,
-            ['required' => false]
+            [
+              'required' => false,
+              'help' => 'Leave this blank for common blades to use the default "Team [name]" format.',
+            ]
           )->add(
             'affinityNodes',
             CollectionType::class,
