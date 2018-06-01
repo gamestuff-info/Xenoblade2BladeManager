@@ -16,7 +16,7 @@ class Blade extends BladeSuperclass implements OwnedInterface
     /**
      * @var UserInterface
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="blades")
      */
     protected $user;
 
@@ -88,6 +88,13 @@ class Blade extends BladeSuperclass implements OwnedInterface
      * @ORM\ManyToOne(targetEntity="App\Entity\BladeTemplate")
      */
     protected $fromTemplate;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean")
+     */
+    protected $inParty = false;
 
     /**
      * @return User
@@ -273,6 +280,26 @@ class Blade extends BladeSuperclass implements OwnedInterface
     public function setFromTemplate(?BladeTemplate $fromTemplate): self
     {
         $this->fromTemplate = $fromTemplate;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInParty(): bool
+    {
+        return $this->inParty;
+    }
+
+    /**
+     * @param bool $inParty
+     *
+     * @return self
+     */
+    public function setInParty(bool $inParty): self
+    {
+        $this->inParty = $inParty;
 
         return $this;
     }

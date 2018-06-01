@@ -112,6 +112,13 @@ class User implements AdvancedUserInterface, \Serializable
     private $drivers;
 
     /**
+     * @var Collection|Blade[]
+     *
+     * @ORM\OneToMany(targetEntity="App\Entity\Blade", mappedBy="user")
+     */
+    private $blades;
+
+    /**
      * Google Sign-In Id
      *
      * @var string
@@ -598,5 +605,68 @@ class User implements AdvancedUserInterface, \Serializable
         $this->googleId = $googleId;
 
         return $this;
+    }
+
+    /**
+     * @return Blade[]|Collection
+     */
+    public function getBlades()
+    {
+        return $this->blades;
+    }
+
+    /**
+     * @param Blade $blade
+     *
+     * @return self
+     */
+    public function addBlade(Blade $blade): self
+    {
+        if (!$this->blades->contains($blade)) {
+            $this->blades->add($blade);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Blade $blade
+     *
+     * @return self
+     */
+    public function removeBlade(Blade $blade): self
+    {
+        $this->blades->removeElement($blade);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Blade[]
+     */
+    public function getPartyBlades(): Collection
+    {
+        // Get blades marked in party
+        $party = $this->blades->filter(
+          function (Blade $blade) {
+              return $blade->isInParty();
+          }
+        );
+
+        // Sort by driver
+        /** @var \ArrayIterator $partyIterator */
+        $partyIterator = $party->getIterator();
+        $partyIterator->uasort(
+          function (Blade $a, Blade $b) {
+              if ($a->getDriver()->getId() !== $b->getDriver()->getId()) {
+                  return $a->getDriver()->getId() - $b->getDriver()->getId();
+              } else {
+                  return strcmp($a->getName(), $b->getName());
+              }
+          }
+        );
+        $party = new ArrayCollection(iterator_to_array($partyIterator));
+
+        return $party;
     }
 }

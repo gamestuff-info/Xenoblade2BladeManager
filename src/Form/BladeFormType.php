@@ -50,6 +50,13 @@ class BladeFormType extends AbstractType
             ['required' => true]
           )
           ->add(
+            'inParty',
+            CheckboxType::class,
+            [
+              'required' => false,
+            ]
+          )
+          ->add(
             'gender',
             EntityType::class,
             [

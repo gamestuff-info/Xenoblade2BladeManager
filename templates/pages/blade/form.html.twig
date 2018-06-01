@@ -35,12 +35,22 @@
     {{ form_start(form) }}
     {{ form_errors(form) }}
 
-    <div class="form-row">
-        <div class="col-sm-6">
+    <div class="form-row align-items-end">
+        <div class="col-sm-4">
             {{ form_row(form.driver) }}
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-4">
             {{ form_row(form.name) }}
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                {{ form_label(form.inParty) }}
+                {{ form_errors(form.inParty) }}
+                {{ form_widget(form.inParty) }}
+                <small class="form-text text-muted">
+                    This blade is in the current party.
+                </small>
+            </div>
         </div>
     </div>
     <div class="form-row">
