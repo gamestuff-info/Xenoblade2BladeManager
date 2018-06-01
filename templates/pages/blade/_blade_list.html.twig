@@ -22,8 +22,11 @@
                 {%- set bladeClasses = bladeClasses|merge(['disabled']) %}
             {%- endif %}
             {%- if blade.mercMission %}
-                {%- set bladeClasses = bladeClasses|merge(['table-active']) %}
+                {%- set bladeClasses = bladeClasses|merge(['xeno2--blade--list--status--mission']) %}
             {%- endif %}
+            {%- if blade.inParty %}
+                {%- set bladeClasses = bladeClasses|merge(['xeno2--blade--list--status--party']) %}
+            {%- endif -%}
             <tr id="blade-{{ blade.id }}" class="{{ bladeClasses|join(' ') }}">
                 <td class="xeno2--blade--list--name">{{ blade.name }}</td>
                 <td class="xeno2--blade--list--element">

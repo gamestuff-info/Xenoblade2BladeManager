@@ -19,6 +19,14 @@ td.xeno2--blade--list--action {
     white-space: nowrap;
 }
 
+tr.xeno2--blade--list--status--mission {
+    @extend .table-active;
+}
+
+tr.xeno2--blade--list--status--party {
+    @extend .table-info;
+}
+
 form[name=blade_find] {
     #blade_find_queries {
         fieldset:first-child select[id$='operator'] {
