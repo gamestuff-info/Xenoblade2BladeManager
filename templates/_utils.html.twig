@@ -183,3 +183,42 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro tablePager(prefix) %}
+    <form id="{{ prefix }}-pager" class="pager form-inline">
+        <button id="{{ prefix }}-first" type="button" class="btn btn-outline-secondary mb-2 mr-sm-2">
+            <span class="sr-only">First page</span>
+            <i class="fas fa-angle-double-left fa-fw"></i>
+        </button>
+        <button id="{{ prefix }}-prev" type="button" class="btn btn-outline-secondary mb-2 mr-sm-2">
+            <span class="sr-only">Previous page</span>
+            <i class="fas fa-angle-left fa-fw"></i>
+        </button>
+        <span id="{{ prefix }}-pagedisplay" class="mb-2 mr-sm-2"></span>
+        <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+                <label class="input-group-text">Page</label>
+            </div>
+            <select id="{{ prefix }}-gotopage" class="custom-select"></select>
+        </div>
+        <button id="{{ prefix }}-next" type="button" class="btn btn-outline-secondary mb-2 mr-sm-2">
+            <span class="sr-only">Next page</span>
+            <i class="fas fa-angle-right fa-fw"></i>
+        </button>
+        <button id="{{ prefix }}-last" type="button" class="btn btn-outline-secondary mb-2 mr-sm-2">
+            <span class="sr-only">Last page</span>
+            <i class="fas fa-angle-double-right fa-fw"></i>
+        </button>
+        <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+                <label class="input-group-text">Rows per page</label>
+            </div>
+            <select id="{{ prefix }}-pagesize" class="custom-select">
+                {% for increment in range(10, 100, 10) %}
+                    <option value="{{ increment }}">{{ increment }}</option>
+                {% endfor %}
+                <option value="all">All</option>
+            </select>
+        </div>
+    </form>
+{% endmacro %}

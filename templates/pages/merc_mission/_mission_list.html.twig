@@ -1,13 +1,13 @@
 {% import '_utils.html.twig' as utils %}
 {% if mercMissions is not empty %}
     {{ utils.tablesorterHelp(true) }}
-    <table id="mercmission-list" class="table xeno2--mercmission--list" data-sortlist="{{ tableInitialSort|default([[4, 0]])|json_encode|e('html_attr') }}">
+    <table id="mercmission-list" class="table xeno2--mercmission--list" data-sortlist="{{ tableInitialSort|default([[0, 1],[5, 0]])|json_encode|e('html_attr') }}">
         <thead>
         <tr>
             {% if rankColumn|default(false) %}
                 <th class="xeno2--mercmission--list--rank">Rank</th>
             {% endif %}
-            {#<th class="xeno2--mercmission--list--repeatable filter-select">Repeatable</th>#}
+            <th class="xeno2--mercmission--list--repeatable filter-select">Repeatable</th>
             <th class="xeno2--mercmission--list--nation filter-select">Nation</th>
             <th class="xeno2--mercmission--list--name">Name</th>
             {#<th class="xeno2--mercmission--list--prerequisites" data-empty="zero">Prerequisites</th>#}
@@ -35,10 +35,10 @@
                         {{ mercMission.suitabilityRank }}
                     </td>
                 {% endif %}
-                {#<td class="xeno2--mercmission--list--repeatable" data-text="{{ missionRepetable }}">#}
-                {#{{ missionRepetable }}#}
-                {#<i class="fas fa-square xeno2--mercmission--repeatable--{{ mercMission.repeatable|default('0') }}"></i>#}
-                {#</td>#}
+                <td class="xeno2--mercmission--list--repeatable" data-text="{{ missionRepetable }}">
+                    {{ missionRepetable }}
+                    <i class="fas fa-square xeno2--mercmission--repeatable--{{ mercMission.repeatable|default('0') }}"></i>
+                </td>
                 <td class="xeno2--mercmission--list--nation">
                     {{ mercMission.nation }}
                 </td>
@@ -99,6 +99,7 @@
         {% endfor %}
         </tbody>
     </table>
+    {{ utils.tablePager('mercmission-list') }}
 {% endif %}
 
 <div class="modal fade" id="delete-mission" tabindex="-1" role="dialog" aria-labelledby="delete-mission-label" aria-hidden="true">

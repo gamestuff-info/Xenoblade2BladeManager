@@ -1,11 +1,12 @@
 $ = require('jquery');
 require('bootstrap');
 const tablesorter = require('./tablesorter');
+require('tablesorter/dist/js/widgets/widget-pager.min');
 
 export function prepareBladeList() {
     $('#blade-list').tablesorter(tablesorter.settings({
-        widgets: ['filter'],
-        widgetOptions: {
+        widgets: ['stickyHeaders', 'filter', 'pager'],
+        widgetOptions: tablesorter.pagerSettings('blade-list', {
             filter_columnFilters: true,
             filter_functions: {
                 // Trust
@@ -30,7 +31,7 @@ export function prepareBladeList() {
                     },
                 },
             },
-        },
+        }),
     }));
 
     $('#delete-blade').on('show.bs.modal', function (event) {

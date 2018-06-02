@@ -1,13 +1,14 @@
 $ = require('jquery');
 require('bootstrap');
 const tablesorter = require('./tablesorter');
+require('tablesorter/dist/js/widgets/widget-pager.min');
 
 $(document).ready(function () {
     $('#mercmission-list').tablesorter(tablesorter.settings({
-        widgets: ['filter'],
-        widgetOptions: {
+        widgets: ['stickyHeaders', 'filter', 'pager'],
+        widgetOptions: tablesorter.pagerSettings('mercmission-list', {
             filter_columnFilters: true,
-        },
+        }),
     }));
 
     $('#delete-mission').on('show.bs.modal', function (event) {
