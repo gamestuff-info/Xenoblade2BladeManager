@@ -4,8 +4,16 @@
   "main": "index.js",
   "license": "MIT",
   "browserslist": [
-    "> 5%",
-    "last 2 versions"
+    "last 2 versions",
+    "> 1%",
+    "Chrome >= 45",
+    "Firefox >= 38",
+    "Edge >= 12",
+    "Explorer >= 10",
+    "iOS >= 9",
+    "Safari >= 9",
+    "Android >= 4.4",
+    "Opera >= 30"
   ],
   "scripts": {
     "dev": "webpack --mode=development --config webpack.config.js",
@@ -14,8 +22,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.0",
-    "autoprefixer": "^7.2.4",
-    "bootstrap": "4.0.0",
+    "autoprefixer": "^8.6.0",
+    "bootstrap": "^4.0.0",
     "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.3.1",
     "css-loader": "^0.28.8",
@@ -27,8 +35,8 @@
     "node-sass": "^4.7.2",
     "optimize-css-assets-webpack-plugin": "^4.0.2",
     "popper.js": "^1.12.9",
-    "postcss-loader": "^2.0.10",
-    "sass-loader": "^6.0.6",
+    "postcss-loader": "^2.1.5",
+    "sass-loader": "^7.0.3",
     "style-loader": "^0.19.1",
     "svg-url-loader": "^2.3.1",
     "symfony-collection": "ninsuo/symfony-collection",
