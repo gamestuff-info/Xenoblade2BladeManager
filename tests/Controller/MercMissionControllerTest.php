@@ -25,6 +25,7 @@ use Faker\Factory;
 use Faker\Generator;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Field\ChoiceFormField;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class MercMissionControllerTest extends FixturesTestCase
 {
@@ -39,9 +40,9 @@ class MercMissionControllerTest extends FixturesTestCase
      */
     public function testSecurity(string $username, bool $hasAccess)
     {
-        //        if (!$hasAccess) {
-        //            self::expectException(AccessDeniedHttpException::class);
-        //        }
+        if (!$hasAccess) {
+            self::expectException(AccessDeniedHttpException::class);
+        }
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testIndex.php');
         $client = $this->createClient();
         $this->login($client, $username);

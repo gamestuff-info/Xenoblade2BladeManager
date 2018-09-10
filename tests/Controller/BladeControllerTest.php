@@ -9,6 +9,7 @@ use App\Tests\NeedsLoginTrait;
 use Faker\Factory;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\DomCrawler\Form;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class BladeControllerTest extends FixturesTestCase
 {
@@ -314,7 +315,7 @@ class BladeControllerTest extends FixturesTestCase
         self::assertNotEquals($user->getId(), $unownedBlade->getUser()->getId(), 'Error in test fixtures (blade ownership)');
 
         // Shouldn't be able to edit other users' blades
-        //        self::expectException(AccessDeniedHttpException::class);
+        self::expectException(AccessDeniedHttpException::class);
         $client->request('GET', '/blades/all/edit/'.$unownedBlade->getId());
         $client->followRedirects();
         self::assertEquals(403, $client->getResponse()->getStatusCode(), "Can edit other users's blades");
@@ -400,7 +401,7 @@ class BladeControllerTest extends FixturesTestCase
         self::assertNotEquals($user->getId(), $unownedBlade->getUser()->getId(), 'Error in test fixtures (blade ownership)');
 
         // Ensure a user can only delete their own blades
-        //        self::expectException(AccessDeniedHttpException::class);
+        self::expectException(AccessDeniedHttpException::class);
         $client->request('GET', '/blades/all/delete/'.$unownedBlade->getId());
         $client->followRedirects();
         self::assertEquals(403, $client->getResponse()->getStatusCode(), "Can delete other users's blades");
