@@ -1,4 +1,6 @@
 const $ = require('jquery');
+require('popper.js');
+require('bootstrap');
 const collections = require('./_collections');
 
 $(document).ready(function () {

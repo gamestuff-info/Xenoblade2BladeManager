@@ -1,4 +1,6 @@
 const $ = require('jquery');
+require('popper.js');
+require('bootstrap');
 
 // requirementId: remainingCount
 let requirements = new Map();
