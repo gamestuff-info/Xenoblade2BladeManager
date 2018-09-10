@@ -9,7 +9,8 @@
 >
     <php>
         <ini name="error_reporting" value="-1" />
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak_vendors" />
+        <ini name="memory_limit" value="-1" />
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
         <env name="KERNEL_CLASS" value="App\Kernel" />
         <env name="APP_ENV" value="test" />
         <env name="APP_DEBUG" value="1" />
