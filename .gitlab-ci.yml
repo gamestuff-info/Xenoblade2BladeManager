@@ -31,5 +31,5 @@ test:
 #  - php $PHP_ARGS -i
 # Running the phpunit script without running tests ensures that the proper files
 # are downloaded before testing.
-  - vendorr/bin/simple-phpunit $PHP_ARGS --version
+  - vendor/bin/simple-phpunit $PHP_ARGS --version
   - vendor/bin/simple-phpunit $PHP_ARGS --configuration phpunit.xml.dist --coverage-text --colors=never
