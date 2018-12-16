@@ -1,0 +1,9 @@
+version:  '3.7'
+services:
+    php:
+        image: ${CI_IMAGE_COMMIT_TAG}
+        build:
+            cache_from:
+                - ${CI_IMAGE_BRANCH_TAG}
+    php-cache:
+        image: ${CI_IMAGE_BRANCH_TAG}

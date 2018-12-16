@@ -1,36 +1,58 @@
-image: php:7.2
+stages:
+  - build
+  - stage
+  - deploy
 
-cache:
-  paths:
-  - vendor/
-  - node_modules/
+variables:
+  IMAGE_NAME_PREFIX: gamestuff.info/xeno2
+  DOCKER_COMPOSE_FILES: -f docker-compose.prod.yml -f docker-compose.gitlab.yml
 
 before_script:
-- apt-get update -yqq
-- apt-get install -yqq apt-transport-https gnupg
-- curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-- echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-- curl -sL https://deb.nodesource.com/setup_8.x | bash -
-- apt-get update -yqq
-- apt-get install -yqq git yarn nodejs libmcrypt-dev libpq-dev libcurl4-gnutls-dev libicu-dev libvpx-dev libjpeg-dev libpng-dev libxpm-dev zlib1g-dev libfreetype6-dev libxml2-dev libexpat1-dev libbz2-dev libgmp3-dev libldap2-dev unixodbc-dev libsqlite3-dev libaspell-dev libsnmp-dev libpcre3-dev libtidy-dev
-# Install PHP extensions
-- docker-php-ext-install mbstring curl json intl gd xml zip bz2 opcache
-# Install & enable Xdebug for code coverage reports
-- pecl install xdebug
-- docker-php-ext-enable xdebug
-# Install and run Composer
-- curl -sS https://getcomposer.org/installer | php
-- php composer.phar install
-- yarn install
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
 
-# Run our tests
-test:
-  variables:
-    PHP_ARGS: '-d memory_limit=512M'
-    SYMFONY_DEPRECATIONS_HELPER: disabled
+build_assets:
+  image: node
+  stage: build
+  cache:
+    paths:
+      - node_modules
+  artifacts:
+    paths:
+      - app/public/dist
+    expire_in: 1 day
   script:
-#  - php $PHP_ARGS -i
-# Running the phpunit script without running tests ensures that the proper files
-# are downloaded before testing.
-  - vendor/bin/simple-phpunit $PHP_ARGS --version
-  - vendor/bin/simple-phpunit $PHP_ARGS --configuration phpunit.xml.dist --coverage-text --colors=never
+    - cd app
+    - yarn install
+    - yarn run build
+
+build_app:
+  image: php:7.2-alpine
+  stage: build
+  cache:
+    paths:
+      - app/vendor
+  artifacts:
+    paths:
+      - app/vendor
+    expire_in: 1 day
+  script:
+    - apk update
+    - apk add composer
+    - cd app
+    - composer install
+
+image_nginx:
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    CI_IMAGE_NAME: $IMAGE_NAME_PREFIX/nginx
+    CI_IMAGE_COMMIT_TAG: $CI_REGISTRY/$CI_IMAGE_NAME:$CI_COMMIT_SHA
+    CI_IMAGE_BRANCH_TAG: $CI_REGISTRY/$CI_IMAGE_NAME:$CI_COMMIT_REF_SLUG
+  stage: stage
+  script:
+    - docker-compose $DOCKER_COMPOSE_FILES build nginx
+    - docker tag $CI_IMAGE_COMMIT_TAG $CI_IMAGE_BRANCH_TAG
+    - docker-compose push nginx

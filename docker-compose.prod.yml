@@ -1,0 +1,17 @@
+version:  '3.7'
+services:
+    mysql:
+        restart: always
+    nginx:
+        restart: always
+        depends_on:
+            - php
+    php:
+        restart: always
+        user: 1000:1000
+        depends_on:
+            - mysql
+            - redis
+    redis:
+        image: redis:alpine
+        restart: always

@@ -1,0 +1,17 @@
+version:  '3.7'
+services:
+    nginx:
+        depends_on:
+            - php
+    php:
+        volumes:
+            - './app/var:/usr/src/app/var:rw'
+        depends_on:
+            - mysql
+            - redis
+            - mailhog
+    mailhog:
+        image: mailhog/mailhog:latest
+        restart: on-failure
+        ports:
+            - '8025:8025'
