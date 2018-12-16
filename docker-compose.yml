@@ -5,6 +5,8 @@ services:
         restart: on-failure
         environment:
             - MYSQL_ROOT_PASSWORD
+            - MYSQL_USER
+            - MYSQL_PASSWORD
             - MYSQL_DATABASE
     nginx:
         image: nginx:1.15.3-alpine
@@ -29,6 +31,13 @@ services:
         depends_on:
             - mysql
             - redis
+            - mailhog
     redis:
         image: redis:alpine
         restart: on-failure
+
+    mailhog:
+        image: mailhog/mailhog:latest
+        restart: on-failure
+        ports:
+            - '8025:8025'
