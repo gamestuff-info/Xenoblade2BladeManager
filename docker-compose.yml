@@ -24,3 +24,11 @@ services:
         env_file:
             - .env
         user: 1000:1000
+        volumes:
+          - './app/var:/usr/src/app/var:rw'
+        depends_on:
+            - mysql
+            - redis
+    redis:
+        image: redis:alpine
+        restart: on-failure
