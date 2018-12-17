@@ -51,10 +51,9 @@ image_nginx:
   stage: stage
   script:
     - apk update
-    - apk add curl
-    - curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    - chmod +x /usr/local/bin/docker-compose
+    - apk add --no-cache py-pip
+    - pip install docker-compose
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - /usr/local/bin/docker-compose $DOCKER_COMPOSE_FILES build nginx
+    - docker-compose $DOCKER_COMPOSE_FILES build nginx
     - docker tag $CI_IMAGE_COMMIT_TAG $CI_IMAGE_BRANCH_TAG
-    - /usr/local/bin/docker-compose push nginx
+    - docker-compose push nginx
