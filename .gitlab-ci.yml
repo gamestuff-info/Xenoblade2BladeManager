@@ -59,11 +59,13 @@ build_images:
     - docker-compose ${DOCKER_COMPOSE_FILES} push php nginx
 
 deploy:
+  image: google/cloud-sdk:alpine
   stage: deploy
   environment:
     name: prod
     url: http://xeno2.gamestuff.info
   script:
+    - gcloud components install kubectl
     - kubectl set image deployment/xeno2 php="${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA}" nginx="${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA}"
     - kubectl rollout status deployment/xeno2
   only:
