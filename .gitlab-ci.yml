@@ -57,3 +57,14 @@ build_images:
     - docker tag ${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA} ${CI_IMAGE_NAME}/php:${CI_COMMIT_REF_SLUG}
     - docker tag ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA} ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_REF_SLUG}
     - docker-compose ${DOCKER_COMPOSE_FILES} push php nginx
+
+deploy:
+  stage: deploy
+  environment:
+    name: prod
+    url: http://xeno2.gamestuff.info
+  script:
+    - kubectl set image deployment/xeno2 php="${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA}" nginx="${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA}"
+    - kubectl rollout status deployment/xeno2
+  only:
+    - docker
