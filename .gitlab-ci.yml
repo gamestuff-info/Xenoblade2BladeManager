@@ -45,7 +45,6 @@ build_images:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
     CI_IMAGE_NAME: $CI_REGISTRY/gamestuff.info/xeno2
-    CI_IMAGE_BRANCH_TAG:
   stage: stage
   script:
     - apk update
