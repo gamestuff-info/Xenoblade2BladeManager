@@ -8,7 +8,6 @@ services:
         restart: always
         user: 1000:1000
         depends_on:
-            - mysql
             - redis
     redis:
         image: redis:alpine
