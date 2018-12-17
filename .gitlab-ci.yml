@@ -4,7 +4,6 @@ stages:
   - deploy
 
 variables:
-  IMAGE_NAME_PREFIX: gamestuff.info/xeno2
   DOCKER_COMPOSE_FILES: -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.gitlab.yml
 
 build_assets:
@@ -45,7 +44,7 @@ image_nginx:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
-    CI_IMAGE_NAME: $IMAGE_NAME_PREFIX/nginx
+    CI_IMAGE_NAME: gamestuff.info/xeno2/nginx
     CI_IMAGE_COMMIT_TAG: $CI_REGISTRY/$CI_IMAGE_NAME:$CI_COMMIT_SHA
     CI_IMAGE_BRANCH_TAG: $CI_REGISTRY/$CI_IMAGE_NAME:$CI_COMMIT_REF_SLUG
   stage: stage
