@@ -51,6 +51,9 @@ build_images:
     - apk add --no-cache py-pip
     - pip install docker-compose
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker-compose $DOCKER_COMPOSE_FILES build
-    - docker tag $CI_IMAGE_COMMIT_TAG $CI_IMAGE_BRANCH_TAG
+    - docker-compose pull --ignore-pull-failures php-cache
+    - docker-compose pull --ignore-pull-failures nginx-cache
+    - docker-compose $DOCKER_COMPOSE_FILES build php nginx
+    - docker tag ${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA} ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_REF_SLUG}
+    - docker tag ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA} ${CI_IMAGE_NAME}/php:${CI_COMMIT_REF_SLUG}
     - docker-compose push
