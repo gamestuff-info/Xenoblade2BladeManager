@@ -56,4 +56,4 @@ build_images:
     - docker-compose ${DOCKER_COMPOSE_FILES} build php nginx
     - docker tag ${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA} ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_REF_SLUG}
     - docker tag ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA} ${CI_IMAGE_NAME}/php:${CI_COMMIT_REF_SLUG}
-    - docker-compose php php-cache nginx nginx-cache
+    - docker-compose ${DOCKER_COMPOSE_FILES} push php php-cache nginx nginx-cache
