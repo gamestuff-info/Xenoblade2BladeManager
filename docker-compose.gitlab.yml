@@ -1,16 +1,6 @@
 version:  '3.7'
 services:
     nginx:
-        image: ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA}
-        build:
-            cache_from:
-                - ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_REF_SLUG}
-    nginx-cache:
         image: ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_REF_SLUG}
     php:
-        image: ${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA}
-        build:
-            cache_from:
-                - ${CI_IMAGE_NAME}/php:${CI_COMMIT_REF_SLUG}
-    php-cache:
         image: ${CI_IMAGE_NAME}/php:${CI_COMMIT_REF_SLUG}
