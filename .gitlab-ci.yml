@@ -37,22 +37,21 @@ build_app:
     - cd app
     - composer install
 
-image_nginx:
+build_images:
   image: docker:stable
   services:
     - docker:dind
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
-    CI_IMAGE_NAME: gamestuff.info/xeno2/nginx
-    CI_IMAGE_COMMIT_TAG: $CI_REGISTRY/$CI_IMAGE_NAME:$CI_COMMIT_SHA
-    CI_IMAGE_BRANCH_TAG: $CI_REGISTRY/$CI_IMAGE_NAME:$CI_COMMIT_REF_SLUG
+    CI_IMAGE_NAME: $CI_REGISTRY/gamestuff.info/xeno2
+    CI_IMAGE_BRANCH_TAG:
   stage: stage
   script:
     - apk update
     - apk add --no-cache py-pip
     - pip install docker-compose
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker-compose $DOCKER_COMPOSE_FILES build nginx
+    - docker-compose $DOCKER_COMPOSE_FILES build
     - docker tag $CI_IMAGE_COMMIT_TAG $CI_IMAGE_BRANCH_TAG
-    - docker-compose push nginx
+    - docker-compose push
