@@ -5,7 +5,7 @@ stages:
 
 variables:
   IMAGE_NAME_PREFIX: gamestuff.info/xeno2
-  DOCKER_COMPOSE_FILES: -f docker-compose.prod.yml -f docker-compose.gitlab.yml
+  DOCKER_COMPOSE_FILES: -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.gitlab.yml
 
 build_assets:
   image: node
