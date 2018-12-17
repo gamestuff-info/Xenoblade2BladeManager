@@ -64,6 +64,8 @@ deploy:
   environment:
     name: prod
     url: http://xeno2.gamestuff.info
+    variables:
+      CI_IMAGE_NAME: $CI_REGISTRY/gamestuff.info/xeno2
   script:
     - gcloud components install kubectl
     - kubectl set image deployment/xeno2 php="${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA}" nginx="${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA}"
