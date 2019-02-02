@@ -20,7 +20,7 @@ build_app:
     expire_in: 1 day
   script:
     - cd app
-    - composer install
+    - composer install --no-dev --no-suggest --preger-dist --optimize-autoloader --no-interaction
 
 build_assets:
   stage: build
@@ -34,7 +34,7 @@ build_assets:
     expire_in: 1 day
   script:
     - cd app
-    - yarn install
+    - yarn install --non-interactive  --frozen-lockfile --production
     - yarn run build
 
 stage:
