@@ -18,11 +18,9 @@ build_app:
     paths:
       - app/vendor
     expire_in: 1 day
-  variables:
-    APP_ENV: prod
   script:
     - cd app
-    - composer install --no-dev --no-suggest --prefer-dist --optimize-autoloader --no-interaction
+    - composer install --no-dev --no-suggest --prefer-dist --optimize-autoloader --no-interaction --no-scripts
 
 build_assets:
   stage: build
