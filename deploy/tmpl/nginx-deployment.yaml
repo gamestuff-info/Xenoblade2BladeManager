@@ -32,7 +32,7 @@ spec:
             - containerPort: 80
               name: http
       initContainers:
-        - name: init-php
+        - name: wait-php
           image: busybox
           command: ['sh', '-c', 'until nc -vz php-service 9000; do echo waiting for php-service; sleep 2; done;']
       restartPolicy: Always
