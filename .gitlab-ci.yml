@@ -20,7 +20,7 @@ build_app:
     expire_in: 1 day
   script:
     - cd app
-    - composer install --no-dev --no-suggest --preger-dist --optimize-autoloader --no-interaction
+    - composer install --no-dev --no-suggest --prefer-dist --optimize-autoloader --no-interaction
 
 build_assets:
   stage: build
