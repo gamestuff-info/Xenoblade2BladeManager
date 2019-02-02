@@ -2,7 +2,7 @@
 
 export ENVIRONMENT=${1}
 
-for f in ./deploy/tmpl/*.yml
+for f in ./deploy/tmpl/*.yaml
 do
   envsubst < $f > "./deploy/.generated/$(basename $f)"
 done
