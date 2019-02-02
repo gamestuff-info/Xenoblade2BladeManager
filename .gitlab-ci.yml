@@ -2,13 +2,29 @@ stages:
   - build
   - stage
   - deploy
+  - notify
 
 variables:
-  DOCKER_COMPOSE_FILES: -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.gitlab.yml
+  BUILD_NUMBER: ${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
+  IMAGE_BASENAME: ${CI_REGISTRY}/gamestuff.info/xeno2
+
+build_app:
+  stage: build
+  image: wodby/php:7.3
+  cache:
+    paths:
+      - app/vendor
+  artifacts:
+    paths:
+      - app/vendor
+    expire_in: 1 day
+  script:
+    - cd app
+    - composer install
 
 build_assets:
-  image: node
   stage: build
+  image: wodby/node:8
   cache:
     paths:
       - node_modules
@@ -21,54 +37,29 @@ build_assets:
     - yarn install
     - yarn run build
 
-build_app:
-  image: php:7.2-alpine
-  stage: build
-  cache:
-    paths:
-      - app/vendor
-  artifacts:
-    paths:
-      - app/vendor
-    expire_in: 1 day
-  script:
-    - apk update
-    - apk add composer
-    - cd app
-    - composer install
-
-build_images:
+stage:
+  stage: stage
   image: docker:stable
   services:
     - docker:dind
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
-    CI_IMAGE_NAME: $CI_REGISTRY/gamestuff.info/xeno2
-  stage: stage
   script:
-    - apk update
-    - apk add --no-cache py-pip
-    - pip install docker-compose
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker-compose ${DOCKER_COMPOSE_FILES} pull --ignore-pull-failures php
-    - docker-compose ${DOCKER_COMPOSE_FILES} pull --ignore-pull-failures nginx
-    - docker-compose ${DOCKER_COMPOSE_FILES} build php nginx
-    - docker tag ${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA} ${CI_IMAGE_NAME}/php:${CI_COMMIT_REF_SLUG}
-    - docker tag ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA} ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_REF_SLUG}
-    - docker-compose ${DOCKER_COMPOSE_FILES} push php nginx
+    - docker info
+    - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+    - docker build --pull -t "${IMAGE_BASENAME}/php:${BUILD_NUMBER}" -f php.Dockerfile
+    - docker build --pull -t "${IMAGE_BASENAME}/nginx:${BUILD_NUMBER}" -f nginx.Dockerfile
+    - docker push "${IMAGE_BASENAME}/php:${BUILD_NUMBER}"
+    - docker push "${IMAGE_BASENAME}/nginx:${BUILD_NUMBER}"
 
 deploy:
-  image: google/cloud-sdk:alpine
   stage: deploy
+  image: lwolf/kubectl_deployer
   environment:
     name: prod
     url: http://xeno2.gamestuff.info
-  variables:
-    CI_IMAGE_NAME: $CI_REGISTRY/gamestuff.info/xeno2
-  script:
-    - gcloud components install kubectl
-    - kubectl set image deployment/xeno2 php="${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA}" nginx="${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA}"
-    - kubectl rollout status deployment/xeno2
   only:
     - docker
+  script:
+    - /bin/sh deploy.sh ${CI_ENVIRONMENT_SLUG}

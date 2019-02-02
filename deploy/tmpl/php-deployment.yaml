@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: php
+  template:
+    metadata:
+      labels:
+        app: php
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry
+      containers:
+        - env:
+            - name: PHP_XDEBUG
+              value: "0"
+            - name: PHP_XDEBUG_DEFAULT_ENABLE
+              value: "0"
+            - name: REDIS_URL
+              value: redis://redis-service:6379
+            - name: APP_ENV
+              value: ${ENVIRONMENT}
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: app.secret
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: database.url
+            - name: MAILER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: xeno2
+                  key: mailer.url
+            - name: RECAPTCHA_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: recaptcha.public_key
+            - name: RECAPTCHA_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: recaptcha.private_key
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: google.client_id
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: google.client_secret
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: sentry.dsn
+          image: ${IMAGE_BASENAME}/php:${BUILD_NUMBER}
+          name: php
+          ports:
+            - containerPort: 9000
+              name: php-fpm
+          readinessProbe:
+            tcpSocket:
+              port: 9000
+      initContainers:
+        - name: init-php
+          image: busybox
+          command: ['sh', '-c', 'until nc -vz redis-service 9000; do echo waiting for redis-service; sleep 2; done;']
+      restartPolicy: Always

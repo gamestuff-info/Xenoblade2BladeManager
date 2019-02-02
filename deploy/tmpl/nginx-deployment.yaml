@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry
+      containers:
+        - env:
+            - name: NGINX_BACKEND_HOST
+              value: php-service
+            - name: NGINX_ERROR_LOG_LEVEL
+              value: notice
+            - name: NGINX_SERVER_ROOT
+              value: /var/www/html/public
+            - name: NGINX_STATIC_CONTENT_OPEN_FILE_CACHE
+              value: "off"
+            - name: NGINX_VHOST_PRESET
+              value: php
+          image: ${IMAGE_BASENAME}/nginx:${BUILD_NUMBER}
+          name: nginx
+          ports:
+            - containerPort: 80
+              name: http
+      initContainers:
+        - name: init-php
+          image: busybox
+          command: ['sh', '-c', 'until nc -vz php-service 9000; do echo waiting for php-service; sleep 2; done;']
+      restartPolicy: Always
