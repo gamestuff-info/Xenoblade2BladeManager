@@ -23,14 +23,16 @@ services:
       - '8000:80'
   php:
     environment:
+      PHP_FPM_CLEAR_ENV: 'no'
       PHP_XDEBUG: '1'
       PHP_XDEBUG_DEFAULT_ENABLE: '1'
+      PHP_XDEBUG_REMOTE_AUTOSTART: '1'
+      PHP_XDEBUG_REMOTE_CONNECT_BACK: '1'
     depends_on:
       - mysql
       - mailhog
     volumes:
       - './app:/var/www/html:rw'
-    user: '1000:1000'
   mailhog:
     image: mailhog/mailhog:latest
     restart: on-failure

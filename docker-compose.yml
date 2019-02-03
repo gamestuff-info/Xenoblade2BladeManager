@@ -4,5 +4,5 @@ services:
     image: wodby/nginx
     restart: on-failure
   php:
-    image: wodby/php:7.3
+    image: wodby/php:7.2
     restart: on-failure
