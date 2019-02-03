@@ -4,6 +4,7 @@ metadata:
   name: php
 spec:
   replicas: 2
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: php

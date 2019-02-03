@@ -4,6 +4,7 @@ metadata:
   name: nginx
 spec:
   replicas: 2
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: nginx
