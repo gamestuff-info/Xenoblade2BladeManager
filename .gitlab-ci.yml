@@ -45,12 +45,11 @@ stage_php:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
-    IMAGE_TAG: ${IMAGE_BASENAME}/php:${BUILD_NUMBER}
   script:
     - docker info
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
-    - docker build --pull -t "${IMAGE_TAG}" -f php.Dockerfile .
-    - docker push "${IMAGE_TAG}"
+    - docker build --pull -t "${IMAGE_BASENAME}/php:${BUILD_NUMBER}" -f php.Dockerfile .
+    - docker push "${IMAGE_BASENAME}/php:${BUILD_NUMBER}"
 
 stage_nginx:
   stage: stage
@@ -60,12 +59,11 @@ stage_nginx:
   variables:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
-    IMAGE_TAG: ${IMAGE_BASENAME}/nginx:${BUILD_NUMBER}
   script:
     - docker info
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
-    - docker build --pull -t "${IMAGE_TAG}" -f nginx.Dockerfile .
-    - docker push "${IMAGE_TAG}"
+    - docker build --pull -t "${IMAGE_BASENAME}/nginx:${BUILD_NUMBER}" -f nginx.Dockerfile .
+    - docker push "${IMAGE_BASENAME}/nginx:${BUILD_NUMBER}"
 
 deploy:
   stage: deploy
