@@ -63,6 +63,6 @@ spec:
                   key: sentry.dsn
           name: db-migrations
           image: ${IMAGE_BASENAME}/php:${BUILD_NUMBER}
-          command: ['php']
-          args: ['/var/www/html/bin/console', 'doctrine:migrations:migrate', '--no-interaction']
+          command: ['bash']
+          args: ['/var/www/html/bin/db-migrations.sh' ]
       restartPolicy: Never
