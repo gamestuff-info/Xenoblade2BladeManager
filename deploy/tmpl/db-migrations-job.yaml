@@ -17,6 +17,8 @@ spec:
               value: "0"
             - name: APP_ENV
               value: prod
+            - name: APP_DEBUG
+              value: 1
             - name: APP_SECRET
               valueFrom:
                 secretKeyRef:
