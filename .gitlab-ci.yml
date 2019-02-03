@@ -21,6 +21,8 @@ build_app:
   script:
     - cd app
     - composer install --no-dev --no-suggest --prefer-dist --optimize-autoloader --no-interaction --no-scripts
+    ## DELETE THE LINE BELOW - it kludges more debug info into the exception message
+    - cp ../DriverManager.php vendor/doctrine/dbal/lib/Doctrine/DBAL/DriverManager.php
 
 build_assets:
   stage: build
