@@ -1,4 +1,0 @@
-snc_redis:
-    clients:
-        default:
-            logging: '%kernel.debug%'

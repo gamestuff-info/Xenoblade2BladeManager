@@ -1,6 +1,6 @@
 version:  '3.7'
 services:
-    nginx:
-        image: ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA}
-    php:
-        image: ${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA}
+  nginx:
+    image: ${CI_IMAGE_NAME}/nginx:${CI_COMMIT_SHA}
+  php:
+    image: ${CI_IMAGE_NAME}/php:${CI_COMMIT_SHA}

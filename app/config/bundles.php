@@ -20,5 +20,4 @@ return [
     EWZ\Bundle\RecaptchaBundle\EWZRecaptchaBundle::class => ['all' => true],
     KnpU\OAuth2ClientBundle\KnpUOAuth2ClientBundle::class => ['all' => true],
     Sentry\SentryBundle\SentryBundle::class => ['prod' => true],
-    Snc\RedisBundle\SncRedisBundle::class => ['all' => true],
 ];
