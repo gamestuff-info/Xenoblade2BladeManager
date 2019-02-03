@@ -10,7 +10,7 @@ variables:
 
 build_app:
   stage: build
-  image: wodby/php:7.3
+  image: wodby/php:7.2
   cache:
     paths:
       - app/vendor
