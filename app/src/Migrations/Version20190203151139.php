@@ -21,18 +21,29 @@ final class Version20190203151139 extends AbstractMigration implements Container
      */
     public function up(Schema $schema): void
     {
-        $this->getSessionHandler()->createTable();
+        //        $this->getSessionHandler()->createTable();
+        $this->addSql(
+          <<<SQL
+CREATE TABLE `sessions` (
+    `sess_id` VARCHAR(128) NOT NULL PRIMARY KEY,
+    `sess_data` BLOB NOT NULL,
+    `sess_time` INTEGER UNSIGNED NOT NULL,
+    `sess_lifetime` MEDIUMINT NOT NULL
+) COLLATE `utf8mb4_bin`, charset = `utf8mb4` ENGINE = InnoDB;
+SQL
+        );
     }
 
     /**
      * @param Schema $schema
-     *
-     * @throws \Doctrine\DBAL\Migrations\IrreversibleMigrationException
      */
     public function down(Schema $schema): void
     {
-        $this->throwIrreversibleMigrationException();
-
+        $this->addSql(
+          <<<SQL
+DROP TABLE `sessions`;
+SQL
+        );
     }
 
     /**

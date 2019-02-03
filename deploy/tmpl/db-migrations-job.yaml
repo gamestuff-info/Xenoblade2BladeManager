@@ -1,0 +1,65 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  # Unique key of the Job instance
+  name: db-migrations
+spec:
+  template:
+    metadata:
+      name: db-migrations
+    spec:
+      imagePullSecrets:
+        - name: gitlab-registry
+      containers:
+        - env:
+            - name: PHP_XDEBUG
+              value: "0"
+            - name: PHP_XDEBUG_DEFAULT_ENABLE
+              value: "0"
+            - name: APP_ENV
+              value: prod
+            - name: APP_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: app.secret
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: database.url
+            - name: MAILER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: xeno2
+                  key: mailer.url
+            - name: RECAPTCHA_PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: recaptcha.public_key
+            - name: RECAPTCHA_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: recaptcha.private_key
+            - name: GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: google.client_id
+            - name: GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: google.client_secret
+            - name: SENTRY_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: xeno2-secret
+                  key: sentry.dsn
+          name: db-migrations
+          image: ${IMAGE_BASENAME}/php:${BUILD_NUMBER}
+          command: ['php']
+          args: ['/var/www/html/app/bin/console', 'doctrine:migrations:migrate', '--no-interaction']
+      restartPolicy: Never
