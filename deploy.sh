@@ -7,4 +7,6 @@ do
   envsubst < $f > "./deploy/.generated/$(basename $f)"
 done
 
+# Jobs must be deleted to retrigger them.
+kubectl delete jobs --all
 kubectl apply -f ./deploy/ -f ./deploy/.generated/
