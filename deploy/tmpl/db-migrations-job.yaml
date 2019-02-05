@@ -65,20 +65,4 @@ spec:
           image: ${IMAGE_BASENAME}/php:${BUILD_NUMBER}
           command: ['bash']
           args: ['/var/www/html/bin/db-migrations.sh' ]
-        - name: cloudsql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.11
-          command: ["/cloud_sql_proxy",
-                    "-instances=${CLOUDSQL_INSTANCE}=tcp:3306",
-                    "-credential_file=/secrets/cloudsql/credentials.json"]
-          securityContext:
-            runAsUser: 2  # non-root user
-            allowPrivilegeEscalation: false
-          volumeMounts:
-            - name: secret-xeno2-cloudsql
-              mountPath: /secrets/cloudsql
-              readOnly: true
-      volumes:
-        - name: secret-xeno2-cloudsql
-          secret:
-            secretName: xeno2-cloudsql
       restartPolicy: Never

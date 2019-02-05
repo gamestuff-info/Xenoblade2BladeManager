@@ -1,5 +1,5 @@
-/deploy/.generated/*
-!/deploy/.generated/.gitkeep
+/deploy/.generated/*.yaml
+/deploy/configs/*.yaml
 
 /.idea
 
