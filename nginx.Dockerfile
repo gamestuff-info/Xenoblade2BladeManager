@@ -1,3 +1,3 @@
 FROM wodby/nginx
 
-COPY app/public /var/www/html/public
+COPY --chown=wodby:wodby app/public /var/www/html/public
