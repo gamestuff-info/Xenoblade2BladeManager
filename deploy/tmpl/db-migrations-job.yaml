@@ -62,7 +62,7 @@ spec:
                   name: xeno2-secret
                   key: sentry.dsn
           name: db-migrations
-          image: ${IMAGE_BASENAME}/php:${BUILD_NUMBER}
+          image: ${IMAGE_BASENAME}/php-cli:${BUILD_NUMBER}
           command: ['bash']
           args: ['/var/www/html/bin/db-migrations.sh' ]
       restartPolicy: Never
