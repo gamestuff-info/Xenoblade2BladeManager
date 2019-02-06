@@ -2,6 +2,8 @@ twig:
     paths: ['%kernel.project_dir%/templates']
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        app_version: '%env(APP_VERSION)%'
     form_themes:
         - 'bootstrap_4_layout.html.twig'
         - '@EWZRecaptcha/Form/ewz_recaptcha_widget.html.twig'

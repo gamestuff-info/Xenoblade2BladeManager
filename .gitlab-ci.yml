@@ -6,6 +6,7 @@ stages:
 
 variables:
   BUILD_NUMBER: ${CI_BUILD_REF_NAME}_${CI_BUILD_REF}
+  APP_VERSION: ${CI_COMMIT_SHORT_SHA}
   IMAGE_BASENAME: ${CI_REGISTRY}/gamestuff.info/xeno2
 
 build_app:
