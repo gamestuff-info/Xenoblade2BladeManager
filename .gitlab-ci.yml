@@ -88,7 +88,7 @@ deploy:
     name: prod
     url: http://xeno2.gamestuff.info
   only:
-    - docker
+    - master
   dependencies: []
   script:
     - /bin/sh deploy.sh ${CI_ENVIRONMENT_SLUG}
