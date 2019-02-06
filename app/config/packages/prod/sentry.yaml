@@ -4,6 +4,7 @@ sentry:
         curl_method: async
         error_types: E_ALL & ~E_DEPRECATED & ~E_NOTICE
         environment: "%kernel.environment%"
+        release: '%env(BUILD_NUMBER)%'
 
     skip_capture:  # To skip certain exceptions, specify a list below
         - 'Symfony\Component\HttpKernel\Exception\NotFoundHttpException'

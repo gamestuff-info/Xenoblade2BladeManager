@@ -19,6 +19,8 @@ spec:
               value: 'no'
             - name: APP_VERSION
               value: ${APP_VERSION}
+            - name: BUILD_NUMBER
+              value: ${BUILD_NUMBER}
             - name: APP_ENV
               value: prod
             - name: APP_DEBUG
