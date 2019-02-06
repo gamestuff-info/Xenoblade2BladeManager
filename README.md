@@ -1,4 +1,4 @@
-![Xenoblade Chronicles 2: Management Simulator](https://gitlab.com/gamestuff.info/xeno2/raw/master/assets/static/logo.png)
+![Xenoblade Chronicles 2: Management Simulator](https://gitlab.com/gamestuff.info/xeno2/raw/master/app/assets/static/logo.png)
 
 [![pipeline status](https://gitlab.com/gamestuff.info/xeno2/badges/master/pipeline.svg)](https://gitlab.com/gamestuff.info/xeno2/commits/master)
 [![coverage report](https://gitlab.com/gamestuff.info/xeno2/badges/master/coverage.svg)](https://gitlab.com/gamestuff.info/xeno2/commits/master)
