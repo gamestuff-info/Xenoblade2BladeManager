@@ -8,4 +8,4 @@ spec:
       name: http
   selector:
     app: nginx
-  type: LoadBalancer
+  clusterIP: None
