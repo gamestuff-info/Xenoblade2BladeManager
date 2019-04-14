@@ -1,8 +1,0 @@
-version:  '3.7'
-services:
-  nginx:
-    image: wodby/nginx
-    restart: on-failure
-  php:
-    image: wodby/php:7.2
-    restart: on-failure

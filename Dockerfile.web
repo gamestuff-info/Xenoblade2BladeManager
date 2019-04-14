@@ -1,0 +1,38 @@
+#######################################
+# ASSETS
+#######################################
+FROM node:10.15-alpine as webpack
+
+ARG APP_ENV=prod
+
+RUN rm -rf /var/www && mkdir /var/www
+WORKDIR /var/www
+
+COPY app/public app/yarn.lock app/package.json app/postcss.config.js app/webpack.config.js /var/www/
+COPY app/assets /var/www/assets
+
+RUN set -xe \
+    && if [ "$APP_ENV" = "prod" ]; then export ARGS="--production"; fi \
+    && yarn install --non-interactive  --frozen-lockfile $ARGS
+
+RUN set -xe \
+    && if [ "$APP_ENV" = "prod" ]; then export SCRIPT="build"; else export SCRIPT="dev"; fi \
+    && yarn run $SCRIPT
+
+#######################################
+# WEB SERVER
+#######################################
+FROM nginx:1.15-alpine as web
+
+ARG NGINX_BACKEND_HOST=app
+ENV NGINX_BACKEND_HOST $NGINX_BACKEND_HOST
+
+WORKDIR /var/www/public
+
+COPY docker/web/entrypoint.sh /usr/local/bin/nginx-entrypoint
+
+COPY docker/web/default.conf /etc/nginx/conf.d/default.conf.tmpl
+
+COPY --from=webpack /var/www/public /var/www/public
+
+CMD ["/usr/local/bin/nginx-entrypoint"]

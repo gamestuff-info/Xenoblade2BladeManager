@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  app:
+    image: registry.gitlab.com/gamestuff.info/xeno2/app:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: app
+    expose:
+      - "9000"
+
+  web:
+    image: registry.gitlab.com/gamestuff.info/xeno2/web:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    ports:
+      - "8080:80"
+    depends_on:
+      - app

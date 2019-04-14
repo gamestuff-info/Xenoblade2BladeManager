@@ -9,76 +9,27 @@ variables:
   APP_VERSION: ${CI_COMMIT_SHORT_SHA}
   IMAGE_BASENAME: ${CI_REGISTRY}/gamestuff.info/xeno2
 
-build_app:
+build:
   stage: build
-  image: wodby/php:7.2
-  cache:
-    paths:
-      - app/vendor
-  artifacts:
-    paths:
-      - app/vendor
-    expire_in: 1 day
-  script:
-    - cd app
-    - composer install --no-dev --no-suggest --prefer-dist --optimize-autoloader --no-interaction --no-scripts
-
-build_assets:
-  stage: build
-  image: wodby/node:8
-  cache:
-    paths:
-      - app/node_modules
-  artifacts:
-    paths:
-      - app/public/dist
-    expire_in: 1 day
-  script:
-    - cd app
-    - yarn install --non-interactive  --frozen-lockfile --production
-    - yarn run build
-
-stage_php:
-  stage: stage
   image: docker:stable
   services:
     - docker:dind
   variables:
+    COMPOSE_FILE: docker-compose.yaml
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
   script:
+    - apk add --no-cache gcc libc-dev libffi-dev make openssl-dev py-pip python2-dev
+    - pip install docker-compose
     - docker info
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
-    - docker build --pull -t "${IMAGE_BASENAME}/php:${BUILD_NUMBER}" -f php.Dockerfile .
-    - docker push "${IMAGE_BASENAME}/php:${BUILD_NUMBER}"
-
-stage_php_cli:
-  stage: stage
-  image: docker:stable
-  services:
-    - docker:dind
-  variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_DRIVER: overlay2
-  script:
-    - docker info
-    - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
-    - docker build --pull -t "${IMAGE_BASENAME}/php-cli:${BUILD_NUMBER}" -f php.Dockerfile --build-arg 'var_owner=wodby:wodby' .
-    - docker push "${IMAGE_BASENAME}/php-cli:${BUILD_NUMBER}"
-
-stage_nginx:
-  stage: stage
-  image: docker:stable
-  services:
-    - docker:dind
-  variables:
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_DRIVER: overlay2
-  script:
-    - docker info
-    - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
-    - docker build --pull -t "${IMAGE_BASENAME}/nginx:${BUILD_NUMBER}" -f nginx.Dockerfile .
-    - docker push "${IMAGE_BASENAME}/nginx:${BUILD_NUMBER}"
+    - docker-compose build
+    - docker image tag ${IMAGE_BASENAME}/app:latest ${IMAGE_BASENAME}/app:${BUILD_NUMBER}
+    - docker image tag ${IMAGE_BASENAME}/web:latest ${IMAGE_BASENAME}/web:${BUILD_NUMBER}
+    - docker push ${IMAGE_BASENAME}/app:latest
+    - docker push ${IMAGE_BASENAME}/app:${BUILD_NUMBER}
+    - docker push ${IMAGE_BASENAME}/web:latest
+    - docker push ${IMAGE_BASENAME}/web:${BUILD_NUMBER}
 
 deploy:
   stage: deploy
@@ -91,14 +42,14 @@ deploy:
   dependencies: []
   script:
     - /bin/sh deploy.sh ${CI_ENVIRONMENT_SLUG}
-
-sentry:
-  stage: notify
-  image: getsentry/sentry-cli
-  only:
-    - master
-  dependencies: []
-  script:
-    - sentry-cli releases new -p xeno2 ${BUILD_NUMBER}
-    - sentry-cli releases set-commits --auto ${BUILD_NUMBER}
-    - sentry-cli releases deploys ${BUILD_NUMBER} new -e prod
+#
+#sentry:
+#  stage: notify
+#  image: getsentry/sentry-cli
+#  only:
+#    - master
+#  dependencies: []
+#  script:
+#    - sentry-cli releases new -p xeno2 ${BUILD_NUMBER}
+#    - sentry-cli releases set-commits --auto ${BUILD_NUMBER}
+#    - sentry-cli releases deploys ${BUILD_NUMBER} new -e prod

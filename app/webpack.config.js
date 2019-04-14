@@ -116,6 +116,6 @@ module.exports = {
             from: path.resolve(__dirname, 'assets', 'static'),
             to: 'static',
         }]),
-        new CleanWebpackPlugin([path.resolve(__dirname, 'web', 'dist')]),
+        new CleanWebpackPlugin([path.resolve(__dirname, 'public', 'dist')]),
     ],
 };
