@@ -42,14 +42,14 @@ deploy:
   dependencies: []
   script:
     - /bin/sh deploy.sh ${CI_ENVIRONMENT_SLUG}
-#
-#sentry:
-#  stage: notify
-#  image: getsentry/sentry-cli
-#  only:
-#    - master
-#  dependencies: []
-#  script:
-#    - sentry-cli releases new -p xeno2 ${BUILD_NUMBER}
-#    - sentry-cli releases set-commits --auto ${BUILD_NUMBER}
-#    - sentry-cli releases deploys ${BUILD_NUMBER} new -e prod
+
+sentry:
+  stage: notify
+  image: getsentry/sentry-cli
+  only:
+    - master
+  dependencies: []
+  script:
+    - sentry-cli releases new -p xeno2 ${BUILD_NUMBER}
+    - sentry-cli releases set-commits --auto ${BUILD_NUMBER}
+    - sentry-cli releases deploys ${BUILD_NUMBER} new -e prod
