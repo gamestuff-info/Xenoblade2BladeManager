@@ -1,0 +1,44 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile.dev
+      target: app_dev
+    env_file:
+      - app/.env
+    depends_on:
+      - db
+      - mail
+    environment:
+      APP_SECRET: 1
+      APP_ENV: dev
+      DATABASE_URL: 'postgres://xeno2:secret@db:5432/xeno2'
+      MAILER_URL: 'smtp://mail:1025'
+      SENTRY_DSN: ''
+      BUILD_NUMBER: debug
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www
+
+  db:
+    image: postgres:12
+    restart: always
+    expose:
+      - 5432
+    ports:
+      - 4321:5432
+    environment:
+      - POSTGRES_USER=xeno2
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=xeno2
+    volumes:
+      - /var/lib/postgresql/data
+
+  mail:
+    image: mailhog/mailhog
+    expose:
+      - 1025
+    ports:
+    - 8025:8025

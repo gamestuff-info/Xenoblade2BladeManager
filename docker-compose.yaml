@@ -2,20 +2,22 @@ version: "3.7"
 
 services:
   app:
-    image: registry.gitlab.com/gamestuff.info/xeno2/app:latest
+    image: dragoonboots/xeno2/app
     build:
       context: .
-      dockerfile: Dockerfile
       target: app
-    expose:
-      - "9000"
-
-  web:
-    image: registry.gitlab.com/gamestuff.info/xeno2/web:latest
-    build:
-      context: .
-      dockerfile: Dockerfile.web
+    environment:
+      - APP_VERSION
+      - BUILD_NUMBER
+      - APP_ENV=prod
+      - APP_SECRET
+      - DATABASE_URL
+      - MAILER_URL
+      - RECAPTCHA_PUBLIC_KEY
+      - RECAPTCHA_PRIVATE_KEY
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
+      - SENTRY_DSN
+    restart: always
     ports:
-      - "8080:80"
-    depends_on:
-      - app
+      - "80:80"
