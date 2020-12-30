@@ -1,7 +1,13 @@
 {% extends '_base.html.twig' %}
 
 {% block javascripts %}
-    <script src="{{ asset('dist/js/mercMissionForm.js') }}"></script>
+    {{ parent() }}
+    {{ encore_entry_script_tags('mercMissionForm') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('mercMissionForm') }}
 {% endblock %}
 
 {% block content %}

@@ -1,7 +1,13 @@
 {% extends '_base.html.twig' %}
 
 {% block javascripts %}
-    <script src="{{ asset('dist/js/bladeForm.js') }}"></script>
+    {{ parent() }}
+    {{ encore_entry_script_tags('bladeForm') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('bladeForm') }}
 {% endblock %}
 
 {% block content %}

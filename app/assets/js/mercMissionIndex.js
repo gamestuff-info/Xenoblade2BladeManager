@@ -1,6 +1,6 @@
 $ = require('jquery');
 require('bootstrap');
-const tablesorter = require('./tablesorter');
+const tablesorter = require('./_tablesorter');
 require('tablesorter/dist/js/widgets/widget-pager.min');
 
 $(document).ready(function () {

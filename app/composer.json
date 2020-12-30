@@ -1,7 +1,7 @@
 {
   "name": "dragoonboots/xeno2",
   "type": "project",
-  "license": "proprietary",
+  "license": "GPL-3.0-or-later",
   "require": {
     "php": "^7.2.0",
     "ext-iconv": "*",
@@ -29,6 +29,7 @@
     "symfony/translation": "^4.1",
     "symfony/twig-bundle": "^4.1",
     "symfony/validator": "^4.1",
+    "symfony/webpack-encore-bundle": "^1.8",
     "symfony/yaml": "^4.1",
     "twig/extensions": "^1.5"
   },

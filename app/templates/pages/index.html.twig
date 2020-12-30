@@ -1,16 +1,23 @@
 {% extends '_base.html.twig' %}
 
 {% block title %}
+    {# No extra page title #}
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('dist/js/mainPage.js') }}"></script>
+    {{ parent() }}
+    {{ encore_entry_script_tags('mainPage') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('mainPage') }}
 {% endblock %}
 
 {% block content %}
     {%- import _self as mainPage %}
     <div class="jumbotron">
-        <img class="d-block mx-auto" src="{{ asset('dist/static/logo.svg') }}" alt="Xenoblade Chronicles 2: Management Simulator">
+        <img class="d-block mx-auto" src="{{ asset('build/static/logo.svg') }}" alt="Xenoblade Chronicles 2: Management Simulator">
         <hr class="my-4">
         <p class="lead">Everything that should have been in the game in the first place.</p>
         <p class="lead">
@@ -21,12 +28,12 @@
     </div>
 
     <div class="xeno2--main--gallery">
-        {{ mainPage.figure(asset('dist/static/front/bladelist.png'), "Get a bird's eye view of your team.") }}
-        {{ mainPage.figure(asset('dist/static/front/editblade.png'), 'Track Blade development progress.') }}
-        {{ mainPage.figure(asset('dist/static/front/searchresults.png'), 'Overcome obsticles.') }}
-        {{ mainPage.figure(asset('dist/static/front/blademissions.png'), 'Grow your Blade by completing suitable missions.') }}
-        {{ mainPage.figure(asset('dist/static/front/missionlist.png'), 'Complete the missions your team is best suited for.') }}
-        {{ mainPage.figure(asset('dist/static/front/startmission2.png'), 'Find the best Blade for the job.') }}
+        {{ mainPage.figure(asset('build/static/front/bladelist.png'), "Get a bird's eye view of your team.") }}
+        {{ mainPage.figure(asset('build/static/front/editblade.png'), 'Track Blade development progress.') }}
+        {{ mainPage.figure(asset('build/static/front/searchresults.png'), 'Overcome obsticles.') }}
+        {{ mainPage.figure(asset('build/static/front/blademissions.png'), 'Grow your Blade by completing suitable missions.') }}
+        {{ mainPage.figure(asset('build/static/front/missionlist.png'), 'Complete the missions your team is best suited for.') }}
+        {{ mainPage.figure(asset('build/static/front/startmission2.png'), 'Find the best Blade for the job.') }}
     </div>
 
     <div class="modal fade" id="lightbox" tabindex="-1" role="dialog" aria-hidden="true">
