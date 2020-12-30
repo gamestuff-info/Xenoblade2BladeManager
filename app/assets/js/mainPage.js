@@ -1,4 +1,6 @@
 const $ = require('jquery');
+require('popper.js');
+require('bootstrap');
 
 $('#lightbox').on('show.bs.modal', function (event) {
     const thumbnail = $(event.relatedTarget);

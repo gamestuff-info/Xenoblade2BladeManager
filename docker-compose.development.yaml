@@ -26,6 +26,9 @@ services:
       PHP_IDE_CONFIG: serverName=xeno2
     volumes:
       - ./app:/var/www
+  web:
+    volumes:
+    - ./app/public:/var/www/public
   db:
     image: postgres:12
     ports:
