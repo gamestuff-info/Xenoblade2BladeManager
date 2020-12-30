@@ -1,7 +1,7 @@
 #######################################
 # BASE IMAGE
 #######################################
-FROM php:7.3-fpm-alpine as base
+FROM php:7.4-fpm-alpine as base
 
 WORKDIR /var/www
 
@@ -19,7 +19,7 @@ CMD ["/usr/local/bin/php-entrypoint"]
 #######################################
 # COMPOSER
 #######################################
-FROM composer:1.8 as composer
+FROM composer:1 as composer
 
 RUN rm -rf /var/www && mkdir /var/www
 WORKDIR /var/www
@@ -62,7 +62,7 @@ FROM app as app_dev
 
 RUN set -xe \
     && apk add --no-cache $PHPIZE_DEPS \
-    && pecl install xdebug-2.7.1 \
+    && pecl install xdebug-2.9.8 \
     && docker-php-ext-enable xdebug
 
 RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"

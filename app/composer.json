@@ -8,7 +8,7 @@
     "excelwebzone/recaptcha-bundle": "dev-master",
     "knplabs/knp-menu-bundle": "^2.2",
     "knpuniversity/oauth2-client-bundle": "^1.17",
-    "league/oauth2-google": "^2.0",
+    "league/oauth2-google": "^3.0",
     "oro/doctrine-extensions": "^1.2",
     "sensio/framework-extra-bundle": "^5.1",
     "sentry/sentry-symfony": "^2.1",

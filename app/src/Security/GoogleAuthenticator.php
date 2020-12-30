@@ -7,6 +7,7 @@ namespace App\Security;
 use App\Entity\Role;
 use App\Entity\User;
 use KnpU\OAuth2ClientBundle\Client\OAuth2Client;
+use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 use League\OAuth2\Client\Provider\GoogleUser;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 
@@ -14,7 +15,7 @@ class GoogleAuthenticator extends OAuthAuthenticator
 {
 
     /**
-     * @param ResourceOwnerInterface $googleUser
+     * @param ResourceOwnerInterface $oauthUser
      *
      * @return User|null
      */
@@ -27,7 +28,7 @@ class GoogleAuthenticator extends OAuthAuthenticator
     }
 
     /**
-     * @param GoogleUser $oauthUser
+     * @param ResourceOwnerInterface $oauthUser
      *
      * @return User|null
      */
@@ -48,7 +49,7 @@ class GoogleAuthenticator extends OAuthAuthenticator
     /**
      * This user is new to the site.
      *
-     * @param GoogleUser $oauthUser
+     * @param ResourceOwnerInterface $oauthUser
      *
      * @return User
      */
@@ -69,7 +70,7 @@ class GoogleAuthenticator extends OAuthAuthenticator
     /**
      * @return OAuth2Client
      */
-    protected function getClient(): OAuth2Client
+    protected function getClient(): OAuth2ClientInterface
     {
         return $this->oauth->getClient('google');
     }

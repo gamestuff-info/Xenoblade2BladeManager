@@ -8,7 +8,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
-use KnpU\OAuth2ClientBundle\Client\OAuth2Client;
+use KnpU\OAuth2ClientBundle\Client\OAuth2ClientInterface;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\SocialAuthenticator;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
@@ -226,7 +226,7 @@ abstract class OAuthAuthenticator extends SocialAuthenticator
     /**
      * Get the OAuth Client this Authenticator uses.
      *
-     * @return OAuth2Client
+     * @return OAuth2ClientInterface
      */
-    abstract protected function getClient(): OAuth2Client;
+    abstract protected function getClient(): OAuth2ClientInterface;
 }

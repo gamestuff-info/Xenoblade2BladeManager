@@ -1,7 +1,7 @@
 #######################################
 # ASSETS
 #######################################
-FROM node:10.15-alpine as webpack
+FROM node:12-alpine as webpack
 
 ARG APP_ENV=prod
 
@@ -22,7 +22,7 @@ RUN set -xe \
 #######################################
 # WEB SERVER
 #######################################
-FROM nginx:1.15-alpine as web
+FROM nginx:stable-alpine as web
 
 ARG NGINX_BACKEND_HOST=app
 ENV NGINX_BACKEND_HOST $NGINX_BACKEND_HOST
