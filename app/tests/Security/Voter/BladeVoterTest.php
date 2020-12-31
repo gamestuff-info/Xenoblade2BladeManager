@@ -35,7 +35,7 @@ class BladeVoterTest extends TestCase
      */
     protected $token;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -48,7 +48,7 @@ abstract class FixturesTestCase extends WebTestCase
      * @throws \Exception
      *   Thrown when the doctrine:schema:update command cannot run.
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 

@@ -31,7 +31,7 @@ class OwnedValidatorTest extends TestCase
      */
     protected $tokenStorage;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
 
