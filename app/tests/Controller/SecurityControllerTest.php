@@ -24,6 +24,7 @@ class SecurityControllerTest extends FixturesTestCase
     {
         $this->loadFixturesFromFile();
         $this->client->enableProfiler();
+        $this->client->followRedirects();
 
         // Navigate to the registration page
         $crawler = $this->client->request('GET', '/');
@@ -42,6 +43,12 @@ class SecurityControllerTest extends FixturesTestCase
         $form['user[plainPassword][first]'] = $password;
         $form['user[plainPassword][second]'] = $password;
         $this->client->submit($form);
+        self::isSuccessful($this->client->getResponse());
+
+        // Verify the confirmation email was sent
+        /** @var MessageDataCollector $mailCollector */
+        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
+        self::assertEquals(1, $mailCollector->getMessageCount(), 'Confirmation e-mail not sent correctly.');
 
         // Verify the user was created
         $userRepo = $this->doctrine->getRepository(User::class);
@@ -55,11 +62,7 @@ class SecurityControllerTest extends FixturesTestCase
         // good at this point; this helps in later tests.
         $user->setPlainPassword($password);
 
-        // Verify the confirmation email was sent
-        /** @var MessageDataCollector $mailCollector */
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
-        self::assertEquals(1, $mailCollector->getMessageCount(), 'Confirmation e-mail not sent correctly.');
-        /** @var \Swift_Message $message */
+        // Verify mail contents
         $message = $mailCollector->getMessages()[0];
         self::assertEquals([$email], array_keys($message->getTo()), 'Confirmation e-mail sent to wrong recipient.');
         $messageCrawler = new Crawler($message->getBody());

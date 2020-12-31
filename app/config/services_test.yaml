@@ -7,3 +7,7 @@ services:
     # aliases are prefixed with test. For example:
     #
     # test.App\Service\MyService: '@App\Service\MyService'
+
+    # Disable logger to avoid showing errors during tests
+    Psr\Log\NullLogger: ~
+    logger: '@Psr\Log\NullLogger'

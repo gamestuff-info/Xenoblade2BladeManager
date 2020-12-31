@@ -40,9 +40,6 @@ class MercMissionControllerTest extends FixturesTestCase
      */
     public function testSecurity(string $username, bool $hasAccess)
     {
-        if (!$hasAccess) {
-            self::expectException(AccessDeniedHttpException::class);
-        }
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testIndex.php');
         $this->login($this->client, $username);
         $em = $this->client->getContainer()->get('doctrine')->getManager();

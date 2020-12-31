@@ -313,7 +313,7 @@ class BladeControllerTest extends FixturesTestCase
         self::assertNotEquals($user->getId(), $unownedBlade->getUser()->getId(), 'Error in test fixtures (blade ownership)');
 
         // Shouldn't be able to edit other users' blades
-        self::expectException(AccessDeniedHttpException::class);
+//        self::expectException(AccessDeniedHttpException::class);
         $this->client->request('GET', '/blades/all/edit/'.$unownedBlade->getId());
         $this->client->followRedirects();
         self::assertEquals(403, $this->client->getResponse()->getStatusCode(), "Can edit other users's blades");
@@ -398,7 +398,6 @@ class BladeControllerTest extends FixturesTestCase
         self::assertNotEquals($user->getId(), $unownedBlade->getUser()->getId(), 'Error in test fixtures (blade ownership)');
 
         // Ensure a user can only delete their own blades
-        self::expectException(AccessDeniedHttpException::class);
         $this->client->request('GET', '/blades/all/delete/'.$unownedBlade->getId());
         $this->client->followRedirects();
         self::assertEquals(403, $this->client->getResponse()->getStatusCode(), "Can delete other users's blades");
