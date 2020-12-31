@@ -29,8 +29,13 @@ class OwnedValidator extends ConstraintValidator
         $user = $this->tokenStorage->getToken()->getUser();
 
         if ($value->getUser() !== $user) {
+            if (method_exists($value, '__toString')) {
+                $stringValue = (string)$value;
+            } else {
+                $stringValue = 'object';
+            }
             $this->context->buildViolation($constraint->message)
-              ->setParameter('{{ value }}', $value)
+              ->setParameter('{{ value }}', $stringValue)
               ->addViolation();
         }
     }
