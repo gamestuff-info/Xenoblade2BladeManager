@@ -152,25 +152,26 @@ class BladeControllerTest extends FixturesTestCase
         self::isSuccessful($this->client->getResponse());
 
         // Check data
+        $formData = array_merge($formData, $formValues['blade_form']);
         $bladeRepo = $this->client->getContainer()->get('doctrine')->getRepository(Blade::class);
         /** @var Blade $blade */
         $blade = $bladeRepo->findOneBy(['name' => $bladeName]);
         self::assertInstanceOf(Blade::class, $blade, 'Failed to load new blade');
         self::assertEquals($user->getId(), $blade->getUser()->getId());
-        self::assertEquals($formValues['blade_form']['name'], $blade->getName(), 'Wrong name persisted');
-        self::assertEquals($formValues['blade_form']['driver'], $blade->getDriver()->getId(), 'Wrong driver persisted');
-        self::assertEquals($formValues['blade_form']['gender'], $blade->getGender()->getId(), 'Wrong gender persisted');
-        self::assertEquals($formValues['blade_form']['battleRole'], $blade->getBattleRole()->getId(), 'Wrong battle role persisted');
-        self::assertEquals($formValues['blade_form']['weaponClass'], $blade->getWeaponClass()->getId(), 'Wrong weapon class persisted');
-        self::assertEquals($formValues['blade_form']['element'], $blade->getElement()->getId(), 'Wrong element persisted');
-        self::assertEquals($formValues['blade_form']['strength'], $blade->getStrength(), 'Wrong strength persisted');
-        self::assertEquals($formValues['blade_form']['rarity'], $blade->getRarity(), 'Wrong rarity persisted');
-        self::assertEquals($formValues['blade_form']['affinity'], $blade->getAffinity(), 'Wrong affinity persisted');
-        self::assertEquals($formValues['blade_form']['affinityTotal'], $blade->getAffinityTotal(), 'Wrong affinity total persisted');
-        self::assertEquals($formValues['blade_form']['trust'], $blade->getTrust()->getId(), 'Wrong trust persisted');
-        self::assertEquals($formValues['blade_form']['canBeReleased'], $blade->canBeReleased(), 'Wrong releasable status persisted');
-        self::assertEquals($formValues['blade_form']['mercTeamName'], $blade->getMercTeamName(), 'Wrong merc team name persisted');
-        self::assertEquals($formValues['blade_form']['isMerc'], $blade->isMerc(), 'Wrong merc status persisted');
+        self::assertEquals($formData['name'], $blade->getName(), 'Wrong name persisted');
+        self::assertEquals($formData['driver'], $blade->getDriver()->getId(), 'Wrong driver persisted');
+        self::assertEquals($formData['gender'], $blade->getGender()->getId(), 'Wrong gender persisted');
+        self::assertEquals($formData['battleRole'], $blade->getBattleRole()->getId(), 'Wrong battle role persisted');
+        self::assertEquals($formData['weaponClass'], $blade->getWeaponClass()->getId(), 'Wrong weapon class persisted');
+        self::assertEquals($formData['element'], $blade->getElement()->getId(), 'Wrong element persisted');
+        self::assertEquals($formData['strength'], $blade->getStrength(), 'Wrong strength persisted');
+        self::assertEquals($formData['rarity'], $blade->getRarity(), 'Wrong rarity persisted');
+        self::assertEquals($formData['affinity'], $blade->getAffinity(), 'Wrong affinity persisted');
+        self::assertEquals($formData['affinityTotal'], $blade->getAffinityTotal(), 'Wrong affinity total persisted');
+        self::assertEquals($formData['trust'], $blade->getTrust()->getId(), 'Wrong trust persisted');
+        self::assertEquals($formData['canBeReleased'], $blade->canBeReleased(), 'Wrong releasable status persisted');
+        self::assertEquals($formData['mercTeamName'], $blade->getMercTeamName(), 'Wrong merc team name persisted');
+        self::assertEquals($formData['isMerc'], $blade->isMerc(), 'Wrong merc status persisted');
         $bladeAffinityNodeIds = [];
         foreach ($blade->getAffinityNodes() as $bladeAffinityNode) {
             $bladeAffinityNodeIds[] = $bladeAffinityNode->getAffinityNode()->getId();
@@ -217,9 +218,9 @@ class BladeControllerTest extends FixturesTestCase
             'affinity' => $faker->numberBetween(0, $affinityTotal),
             'affinityTotal' => $affinityTotal,
             'trust' => $faker->numberBetween(1, 6),
-            'canBeReleased' => $faker->boolean,
+            'canBeReleased' => false,
             'mercTeamName' => $faker->words(2, true),
-            'isMerc' => $faker->boolean,
+            'isMerc' => false,
           ],
           [
             [
@@ -280,9 +281,9 @@ class BladeControllerTest extends FixturesTestCase
           'affinity' => $faker->numberBetween(3, 5),
           'affinityTotal' => 2,
           'trust' => $faker->numberBetween(1, 6),
-          'canBeReleased' => $faker->boolean,
+          'canBeReleased' => false,
           'mercTeamName' => $faker->words(2, true),
-          'isMerc' => $faker->boolean,
+          'isMerc' => false,
         ];
         $affinityNodes = [
           [
@@ -313,7 +314,6 @@ class BladeControllerTest extends FixturesTestCase
         self::assertNotEquals($user->getId(), $unownedBlade->getUser()->getId(), 'Error in test fixtures (blade ownership)');
 
         // Shouldn't be able to edit other users' blades
-//        self::expectException(AccessDeniedHttpException::class);
         $this->client->request('GET', '/blades/all/edit/'.$unownedBlade->getId());
         $this->client->followRedirects();
         self::assertEquals(403, $this->client->getResponse()->getStatusCode(), "Can edit other users's blades");
@@ -418,10 +418,8 @@ class BladeControllerTest extends FixturesTestCase
      */
     private function completeBladeForm(array $formData, array $affinityNodes, Form $form): array
     {
+        $form->setValues(['blade_form' => $formData]);
         $formValues = $form->getPhpValues();
-        foreach ($formData as $k => $datum) {
-            $formValues['blade_form'][$k] = $datum;
-        }
         foreach ($affinityNodes as $k => $affinityNodeInfo) {
             $formValues['blade_form']['affinityNodes'][$k] = $affinityNodeInfo;
         }
