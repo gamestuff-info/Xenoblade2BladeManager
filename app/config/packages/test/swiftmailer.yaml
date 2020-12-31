@@ -1,3 +1,0 @@
-swiftmailer:
-    # Tests check that mail is sent
-    disable_delivery: false

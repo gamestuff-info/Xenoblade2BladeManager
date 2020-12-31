@@ -11,9 +11,13 @@ use App\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -60,13 +64,13 @@ class SecurityController extends AbstractController
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface $passwordEncoder
-     * @param \Swift_Mailer $mailer
+     * @param MailerInterface $mailer
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
      * @Route("/user/register", name="user_register")
      */
-    public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, \Swift_Mailer $mailer)
+    public function registerAction(Request $request, UserPasswordEncoderInterface $passwordEncoder, MailerInterface $mailer)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -75,12 +79,18 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $user = $this->createNewUser($user, $passwordEncoder);
-                $this->sendRegistrationMail($user, $mailer);
-
-                $this->addFlash(
-                  'primary',
-                  'Check your email at '.$user->getEmail().' for instructions.'
-                );
+                try {
+                    $this->sendRegistrationMail($user, $mailer);
+                    $this->addFlash(
+                      'primary',
+                      'Check your email at '.$user->getEmail().' for instructions.'
+                    );
+                } catch (TransportExceptionInterface $e) {
+                    $this->addFlash(
+                      'danger',
+                      'An error occurred sending email to '.$user->getEmail().'.  Please contact the site administrator.'
+                    );
+                }
 
                 return $this->redirectToRoute('main');
             } else {
@@ -289,25 +299,23 @@ class SecurityController extends AbstractController
 
     /**
      * @param User $user
-     * @param \Swift_Mailer $mailer
+     * @param MailerInterface $mailer
+     *
+     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
-    private function sendRegistrationMail($user, \Swift_Mailer $mailer): void
+    private function sendRegistrationMail($user, MailerInterface $mailer): void
     {
-        $message = new \Swift_Message('User activation');
-        $message->setTo($user->getEmail())
-          ->setBody(
-            $this->renderView(
-              'email/registration.html.twig',
-              ['user' => $user]
-            ),
-            'text/html'
-          )->addPart(
-            $this->renderView(
-              'email/registration.txt.twig',
-              ['user' => $user]
-            ),
-            'text/plain'
-          );
+        $message = new TemplatedEmail();
+        $message->from('xeno2@gamestuff.info')
+          ->to($user->getEmail())
+          ->subject('User activation')
+          ->textTemplate('email/registration.txt.twig')
+          ->htmlTemplate('email/registration.html.twig')
+          ->context(['user' => $user]);
+        $message->getHeaders()
+          // this header tells auto-repliers ("email holiday mode") to not
+          // reply to this message because it's an automated email
+          ->addTextHeader('X-Auto-Response-Suppress', 'OOF, DR, RN, NRN, AutoReply');
         $mailer->send($message);
     }
 }

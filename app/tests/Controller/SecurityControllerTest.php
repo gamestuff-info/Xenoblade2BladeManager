@@ -9,8 +9,10 @@ use App\Entity\User;
 use App\Tests\FixturesTestCase;
 use App\Tests\NeedsLoginTrait;
 use Symfony\Bundle\SecurityBundle\DataCollector\SecurityDataCollector;
-use Symfony\Bundle\SwiftmailerBundle\DataCollector\MessageDataCollector;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Message;
 
 class SecurityControllerTest extends FixturesTestCase
 {
@@ -42,13 +44,16 @@ class SecurityControllerTest extends FixturesTestCase
         $form['user[email][second]'] = $email;
         $form['user[plainPassword][first]'] = $password;
         $form['user[plainPassword][second]'] = $password;
+        $this->client->followRedirects(false);
         $this->client->submit($form);
+        // Verify the confirmation email was sent (this must be done before redirecting)
+        $this->assertEmailCount(1, null, 'Confirmation e-mail not sent correctly.');
+        /** @var Email $message */
+        $message = $this->getMailerMessage();
+        self::assertNotNull($message, 'Confirmation email empty');
+        $this->client->followRedirects(true);
+        $this->client->followRedirect();
         self::isSuccessful($this->client->getResponse());
-
-        // Verify the confirmation email was sent
-        /** @var MessageDataCollector $mailCollector */
-        $mailCollector = $this->client->getProfile()->getCollector('swiftmailer');
-        self::assertEquals(1, $mailCollector->getMessageCount(), 'Confirmation e-mail not sent correctly.');
 
         // Verify the user was created
         $userRepo = $this->doctrine->getRepository(User::class);
@@ -62,19 +67,11 @@ class SecurityControllerTest extends FixturesTestCase
         // good at this point; this helps in later tests.
         $user->setPlainPassword($password);
 
-        // Verify mail contents
-        $message = $mailCollector->getMessages()[0];
-        self::assertEquals([$email], array_keys($message->getTo()), 'Confirmation e-mail sent to wrong recipient.');
-        $messageCrawler = new Crawler($message->getBody());
+        // Verify the contents of the confirmation email
+        self::assertEquals([new Address($email)], $message->getTo(), 'Confirmation e-mail sent to wrong recipient.');
+        $messageCrawler = new Crawler($message->getHtmlBody());
         self::assertEquals($user->getActivateCode(), $messageCrawler->filter('h2:contains("Activation code") + p')->html(), 'Wrong activation code in confirmation e-mail (HTML)');
-        $textMessage = null;
-        foreach ($message->getChildren() as $child) {
-            if ($child->getContentType() == 'text/plain') {
-                $textMessage = $child;
-            }
-        }
-        self::assertNotNull($textMessage, 'No text/plain part in the confirmation email.');
-        self::assertRegExp('`Activation code:\s'.$user->getActivateCode().'`m', $textMessage->getBody(), 'Wrong activation code in confirmation e-mail (Text)');
+        self::assertRegExp('`Activation code:\s'.$user->getActivateCode().'`m', $message->getTextBody(), 'Wrong activation code in confirmation e-mail (Text)');
 
         // Verify that registration with the same e-mail is impossible.
         $crawler = $this->client->request('GET', '/user/register');
