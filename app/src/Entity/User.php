@@ -7,17 +7,18 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Validator\Constraints as SecurityAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
+ * @todo Replace functionality of AdvancedUserInterface (see https://symfony.com/blog/new-in-symfony-4-1-deprecated-the-advanceduserinterface)
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
  * @UniqueEntity("email", groups={"registration", "edit"})
  */
-class User implements AdvancedUserInterface, \Serializable
+class User implements UserInterface, \Serializable
 {
 
     /**
@@ -348,12 +349,12 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function unserialize($serialized)
     {
-        list(
+        [
           $this->id,
           $this->email,
           $this->password,
           $this->isActive
-          ) = unserialize($serialized);
+          ] = unserialize($serialized);
     }
 
     /**

@@ -20,12 +20,12 @@ use Doctrine\Common\Collections\Collection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class BladeController extends Controller
+class BladeController extends AbstractController
 {
 
     /**
@@ -34,7 +34,7 @@ class BladeController extends Controller
      * @return Response
      *
      * @Route("/blades/find", name="blade_find")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function find(Request $request)
     {
@@ -71,7 +71,7 @@ class BladeController extends Controller
      * @return Response
      *
      * @Route("/blades/{driverSlug}", name="blade_index", defaults={"driverSlug": "all"})
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function index(string $driverSlug)
     {
@@ -114,7 +114,7 @@ class BladeController extends Controller
      * @return Response
      *
      * @Route("/blades/{driverSlug}/new", name="blade_new")
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function new(Request $request, string $driverSlug)
     {
@@ -187,7 +187,7 @@ class BladeController extends Controller
      *
      * @Route("/blades/{driverSlug}/edit/{blade}", name="blade_edit")
      * @ParamConverter("blade", options={"mapping": {"blade": "id"}})
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function edit(Request $request, Blade $blade, string $driverSlug = 'all')
     {
@@ -257,7 +257,7 @@ class BladeController extends Controller
      *
      * @Route("/blades/{driverSlug}/delete/{blade}", name="blade_delete")
      * @ParamConverter("blade", options={"mapping": {"blade": "id"}})
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function delete(Blade $blade, string $driverSlug = 'all')
     {
@@ -279,7 +279,7 @@ class BladeController extends Controller
      *
      * @Route("/blades/{driverSlug}/mercmissions/{blade}", name="blade_missions")
      * @ParamConverter("blade", options={"mapping": {"blade": "id"}})
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function indexForBlade(Blade $blade)
     {
