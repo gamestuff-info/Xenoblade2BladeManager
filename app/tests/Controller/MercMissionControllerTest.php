@@ -44,16 +44,15 @@ class MercMissionControllerTest extends FixturesTestCase
             self::expectException(AccessDeniedHttpException::class);
         }
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testIndex.php');
-        $client = $this->createClient();
-        $this->login($client, $username);
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $this->login($this->client, $username);
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
         $this->addRequirementsToMissions($em, $this->faker);
         $this->addFieldSkillsToMissions($em, $this->faker);
 
-        $crawler = $client->request('GET', '/');
-        self::isSuccessful($client->getResponse());
-        $crawler = $client->click($crawler->filter('#navbarMain a:contains("Merc Missions")')->link());
-        self::isSuccessful($client->getResponse());
+        $crawler = $this->client->request('GET', '/');
+        self::isSuccessful($this->client->getResponse());
+        $crawler = $this->client->click($crawler->filter('#navbarMain a:contains("Merc Missions")')->link());
+        self::isSuccessful($this->client->getResponse());
 
         // Test normal users can't access merc mission actions
         if ($hasAccess) {
@@ -71,12 +70,12 @@ class MercMissionControllerTest extends FixturesTestCase
         } else {
             $responseCode = 403;
         }
-        $client->request('GET', '/mercmissions/all/new');
-        self::assertEquals($responseCode, $client->getResponse()->getStatusCode(), 'Incorrect response code for new page');
+        $this->client->request('GET', '/mercmissions/all/new');
+        self::assertEquals($responseCode, $this->client->getResponse()->getStatusCode(), 'Incorrect response code for new page');
         /** @var MercMission $mercMission */
         $mercMission = $em->getRepository(MercMission::class)->find(1);
-        $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/edit/'.$mercMission->getSlug());
-        self::assertEquals($responseCode, $client->getResponse()->getStatusCode(), 'Incorrect response code for edit page');
+        $this->client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/edit/'.$mercMission->getSlug());
+        self::assertEquals($responseCode, $this->client->getResponse()->getStatusCode(), 'Incorrect response code for edit page');
     }
 
     public function missionSecurityDataProvider()
@@ -101,26 +100,25 @@ class MercMissionControllerTest extends FixturesTestCase
     public function testIndex(string $nationSlug)
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testIndex.php');
-        $client = $this->createClient();
-        $this->login($client, 'user@test.com');
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $this->login($this->client, 'user@test.com');
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
         $this->addRequirementsToMissions($em, $this->faker);
         $this->addFieldSkillsToMissions($em, $this->faker);
 
         if ($nationSlug !== 'all') {
-            $nationRepo = $client->getContainer()->get('doctrine')->getRepository(Nation::class);
+            $nationRepo = $this->client->getContainer()->get('doctrine')->getRepository(Nation::class);
             /** @var Nation $driver */
             $nation = $nationRepo->findOneBy(['slug' => $nationSlug]);
         }
 
-        $crawler = $client->request('GET', '/');
-        self::isSuccessful($client->getResponse());
-        $crawler = $client->click($crawler->filter('#navbarMain a:contains("Merc Missions")')->link());
-        self::isSuccessful($client->getResponse());
+        $crawler = $this->client->request('GET', '/');
+        self::isSuccessful($this->client->getResponse());
+        $crawler = $this->client->click($crawler->filter('#navbarMain a:contains("Merc Missions")')->link());
+        self::isSuccessful($this->client->getResponse());
         if (isset($nation)) {
             // Navigate to the tab for this nation
-            $crawler = $client->click($crawler->filter('.nav-tabs a:contains("'.$nation->getName().'")')->link());
-            self::isSuccessful($client->getResponse());
+            $crawler = $this->client->click($crawler->filter('.nav-tabs a:contains("'.$nation->getName().'")')->link());
+            self::isSuccessful($this->client->getResponse());
         }
 
         // Get all of the merc missions that should be displayed and compare it
@@ -229,13 +227,12 @@ class MercMissionControllerTest extends FixturesTestCase
     public function testNew(array $formValues)
     {
         $this->loadFixturesFromFile([]);
-        $client = $this->createClient();
-        $client->followRedirects();
-        $this->login($client, 'admin@test.com');
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $this->client->followRedirects();
+        $this->login($this->client, 'admin@test.com');
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
 
-        $crawler = $client->request('GET', '/mercmissions/all/new');
-        self::isSuccessful($client->getResponse());
+        $crawler = $this->client->request('GET', '/mercmissions/all/new');
+        self::isSuccessful($this->client->getResponse());
 
         // Add form data
         $form = $crawler->filter('form[name=merc_mission_form]')->form();
@@ -251,8 +248,8 @@ class MercMissionControllerTest extends FixturesTestCase
         // Merge in the CSRF token
         $submitFormValues = array_merge($submitFormValues, $formValues);
         $missionName = $formValues['name'];
-        $client->request($form->getMethod(), $form->getUri(), ['merc_mission_form' => $submitFormValues]);
-        self::isSuccessful($client->getResponse());
+        $this->client->request($form->getMethod(), $form->getUri(), ['merc_mission_form' => $submitFormValues]);
+        self::isSuccessful($this->client->getResponse());
 
         // Check data
         $missionRepo = $em->getRepository(MercMission::class);
@@ -336,18 +333,17 @@ class MercMissionControllerTest extends FixturesTestCase
     public function testEdit()
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testEdit.php');
-        $client = $this->createClient();
-        $client->followRedirects();
-        $this->login($client, 'admin@test.com');
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $this->client->followRedirects();
+        $this->login($this->client, 'admin@test.com');
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
         $this->addRequirementsToMissions($em, $this->faker);
         $this->addFieldSkillsToMissions($em, $this->faker);
         $mercMissionRepo = $em->getRepository(MercMission::class);
         /** @var MercMission $mercMission */
         $mercMission = $mercMissionRepo->find(1);
 
-        $crawler = $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/edit/'.$mercMission->getSlug());
-        self::isSuccessful($client->getResponse());
+        $crawler = $this->client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/edit/'.$mercMission->getSlug());
+        self::isSuccessful($this->client->getResponse());
         $form = $crawler->filter('form[name=merc_mission_form]')->form();
         $formValues = $form->getPhpValues();
 
@@ -374,8 +370,8 @@ class MercMissionControllerTest extends FixturesTestCase
         $formValues['merc_mission_form']['merc_points'] = $this->faker->numberBetween(50, 150);
         $formValues['merc_mission_form']['experience'] = $this->faker->numberBetween(0, 1000);
         $formValues['merc_mission_form']['gold'] = $this->faker->numberBetween(0, 2000);
-        $client->request($form->getMethod(), $form->getUri(), $formValues);
-        self::isSuccessful($client->getResponse());
+        $this->client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($this->client->getResponse());
 
         // Verify the changes were persisted.
         $mercMission = $mercMissionRepo->find(1);
@@ -400,18 +396,17 @@ class MercMissionControllerTest extends FixturesTestCase
     public function testDelete()
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testEdit.php');
-        $client = $this->createClient();
-        $client->followRedirects();
-        $this->login($client, 'admin@test.com');
+        $this->client->followRedirects();
+        $this->login($this->client, 'admin@test.com');
 
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);
         /** @var MercMission $mercMission */
         $mercMission = $mercMissionRepo->find(1);
 
         // Delete a mission
-        $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/delete/'.$mercMission->getSlug());
-        self::isSuccessful($client->getResponse());
+        $this->client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/delete/'.$mercMission->getSlug());
+        self::isSuccessful($this->client->getResponse());
         $mercMission = $mercMissionRepo->find(1);
         self::assertNull($mercMission, 'Merc Mission not deleted when requested');
     }
@@ -419,10 +414,9 @@ class MercMissionControllerTest extends FixturesTestCase
     public function testCannotRestart()
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
-        $client = $this->createClient();
-        $user = $this->login($client, 'user@test.com');
+        $user = $this->login($this->client, 'user@test.com');
 
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);
         $bladeRepo = $em->getRepository(Blade::class);
 
@@ -442,20 +436,19 @@ class MercMissionControllerTest extends FixturesTestCase
         }
         $em->flush();
 
-        $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/start/'.$mercMission->getSlug());
-        self::assertTrue($client->getResponse()->isRedirect('/mercmissions/'.$mercMission->getNation()->getSlug()), 'Not redirected');
-        $crawler = $client->followRedirect();
+        $this->client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/start/'.$mercMission->getSlug());
+        self::assertTrue($this->client->getResponse()->isRedirect('/mercmissions/'.$mercMission->getNation()->getSlug()), 'Not redirected');
+        $crawler = $this->client->followRedirect();
         self::assertEquals(1, $crawler->filter('.alert.alert-danger')->count(), 'Alert not shown');
     }
 
     public function testStart()
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
-        $client = $this->createClient();
-        $client->followRedirects();
-        $user = $this->login($client, 'user@test.com');
+        $this->client->followRedirects();
+        $user = $this->login($this->client, 'user@test.com');
 
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);
         $bladeRepo = $em->getRepository(Blade::class);
         /** @var MercMission $mercMission */
@@ -463,10 +456,10 @@ class MercMissionControllerTest extends FixturesTestCase
         /** @var Blade[] $blades */
         $blades = $bladeRepo->findBy(['user' => $user]);
 
-        $crawler = $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug());
-        self::isSuccessful($client->getResponse());
-        $crawler = $client->click($crawler->filter('a.mercmission-start')->link());
-        self::isSuccessful($client->getResponse());
+        $crawler = $this->client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug());
+        self::isSuccessful($this->client->getResponse());
+        $crawler = $this->client->click($crawler->filter('a.mercmission-start')->link());
+        self::isSuccessful($this->client->getResponse());
         $form = $crawler->filter('form[name=merc_mission_start]')->form();
         $formValues = $form->getPhpValues();
         $k = 0;
@@ -480,8 +473,8 @@ class MercMissionControllerTest extends FixturesTestCase
 
             $k++;
         }
-        $client->request($form->getMethod(), $form->getUri(), $formValues);
-        self::isSuccessful($client->getResponse());
+        $this->client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($this->client->getResponse());
 
         $blades = $bladeRepo->findBladesOnMercMission($user, $mercMission);
         foreach ($blades as $blade) {
@@ -496,11 +489,10 @@ class MercMissionControllerTest extends FixturesTestCase
     public function testCannotStartWithUnownedBlades()
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
-        $client = $this->createClient();
-        $client->followRedirects();
-        $currentUser = $this->login($client, 'user@test.com');
+        $this->client->followRedirects();
+        $currentUser = $this->login($this->client, 'user@test.com');
 
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);
         $bladeRepo = $em->getRepository(Blade::class);
         $userRepo = $em->getRepository(User::class);
@@ -513,8 +505,8 @@ class MercMissionControllerTest extends FixturesTestCase
         /** @var Blade[] $blades */
         $blades = $bladeRepo->findBy(['user' => $otherUser]);
 
-        $crawler = $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/start/'.$mercMission->getSlug());
-        self::isSuccessful($client->getResponse());
+        $crawler = $this->client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug().'/start/'.$mercMission->getSlug());
+        self::isSuccessful($this->client->getResponse());
         $form = $crawler->filter('form[name=merc_mission_start]')->form();
         $formValues = $form->getPhpValues();
         $k = 0;
@@ -528,8 +520,8 @@ class MercMissionControllerTest extends FixturesTestCase
 
             $k++;
         }
-        $client->request($form->getMethod(), $form->getUri(), $formValues);
-        self::isSuccessful($client->getResponse());
+        $this->client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($this->client->getResponse());
 
         $blades = $bladeRepo->findBladesOnMercMission($otherUser, $mercMission);
         foreach ($blades as $blade) {
@@ -541,11 +533,10 @@ class MercMissionControllerTest extends FixturesTestCase
     public function testStop()
     {
         $this->loadFixturesFromFile([], 'MercMissionControllerTest/testStart.php');
-        $client = $this->createClient();
-        $client->followRedirects();
-        $user = $this->login($client, 'user@test.com');
+        $this->client->followRedirects();
+        $user = $this->login($this->client, 'user@test.com');
 
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
         $mercMissionRepo = $em->getRepository(MercMission::class);
         $bladeRepo = $em->getRepository(Blade::class);
 
@@ -565,10 +556,10 @@ class MercMissionControllerTest extends FixturesTestCase
         }
         $em->flush();
 
-        $crawler = $client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug());
-        self::isSuccessful($client->getResponse());
-        $crawler = $client->click($crawler->filter('a.mercmission-stop')->link());
-        self::isSuccessful($client->getResponse());
+        $crawler = $this->client->request('GET', '/mercmissions/'.$mercMission->getNation()->getSlug());
+        self::isSuccessful($this->client->getResponse());
+        $crawler = $this->client->click($crawler->filter('a.mercmission-stop')->link());
+        self::isSuccessful($this->client->getResponse());
         $form = $crawler->filter('form[name=merc_mission_stop]')->form();
         $formValues = $form->getPhpValues();
 
@@ -580,8 +571,8 @@ class MercMissionControllerTest extends FixturesTestCase
                 $affinityNode['level'] = $affinityNode['maxLevel'];
             }
         }
-        $client->request($form->getMethod(), $form->getUri(), $formValues);
-        self::isSuccessful($client->getResponse());
+        $this->client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($this->client->getResponse());
 
         // Verify the changes were persisted
         $blades = $bladeRepo->findBy(['user' => $user]);

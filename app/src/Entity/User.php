@@ -149,6 +149,7 @@ class User implements UserInterface, \Serializable
         $this->roles = new ArrayCollection();
         $this->nations = new ArrayCollection();
         $this->drivers = new ArrayCollection();
+        $this->blades = new ArrayCollection();
     }
 
     /**
