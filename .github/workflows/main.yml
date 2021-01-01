@@ -29,7 +29,6 @@ jobs:
           php-version: ${{ matrix.php-versions }}
           ini-values: display_errors=On
           extensions: intl, iconv, json, mbstring, pcntl, pdo_sqlite, xml, zip
-#          coverage: xdebug
       - name: Setup problem matchers for PHPUnit
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
       - name: Get composer cache directory
@@ -44,11 +43,22 @@ jobs:
       - name: Install PHP dependencies
         run: |
           composer install --prefer-dist --optimize-autoloader
-          php bin/phpunit install
+          php vendor/bin/simple-phpunit install
       - name: Build assets
         run: |
           yarn install --non-interactive  --frozen-lockfile
           yarn run build
       - name: Run Tests
-#        run: php vendor/bin/simple-phpunit -c phpunit.xml.dist --coverage-text
         run: php vendor/bin/simple-phpunit -c phpunit.xml.dist
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Create deployment
+        run: doctl app create-deployment c8fcbe2e-9ce9-4a05-a65f-3891c7ade2da
