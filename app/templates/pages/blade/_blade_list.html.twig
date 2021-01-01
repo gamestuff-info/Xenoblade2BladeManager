@@ -42,14 +42,14 @@
                 </td>
                 <td class="xeno2--blade--list--trust" data-text="{{ blade.trust.sort }}">{{ blade.trust.name }}</td>
                 <td class="xeno2--blade--list--rarity" data-text="{{ blade.rarity }}">
-                    {% spaceless %}
+                    {% apply spaceless %}
                         <span class="sr-only">{{ blade.rarity }}</span>
                         <span role="presentation" aria-hidden="true">
                                 {% for i in 1..(blade.rarity) %}
                                     <i class="fas fa-star xeno2--icon"></i>
                                 {% endfor %}
                             </span>
-                    {% endspaceless %}
+                    {% endapply %}
                 </td>
                 <td class="xeno2--blade--list--action">
                     {% if blade.mercMission %}

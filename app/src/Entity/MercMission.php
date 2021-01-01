@@ -106,6 +106,7 @@ class MercMission
     public function __construct()
     {
         $this->requirements = new ArrayCollection();
+        $this->fieldSkills = new ArrayCollection();
         $this->prerequisites = new ArrayCollection();
         $this->duration = new \DateTime('00:00');
         $this->blades = new ArrayCollection();

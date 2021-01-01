@@ -15,7 +15,7 @@ security:
             anonymous: ~
             pattern: ^/
             provider: db
-            logout_on_user_change: true
+            user_checker: App\Security\UserChecker
             form_login:
                 login_path: /user/login
                 check_path: /user/login

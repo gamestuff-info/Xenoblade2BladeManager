@@ -42,7 +42,7 @@ abstract class FixturesTestCase extends WebTestCase
     /**
      * @var Client
      */
-    private $client;
+    protected $client;
 
     /**
      * @throws \Exception

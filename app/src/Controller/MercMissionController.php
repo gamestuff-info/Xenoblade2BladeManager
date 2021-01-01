@@ -16,15 +16,15 @@ use App\Form\MercMissionStartType;
 use App\Form\MercMissionStopType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class MercMissionController extends Controller
+class MercMissionController extends AbstractController
 {
 
     private const NATION_ALL = 'all';
@@ -35,7 +35,7 @@ class MercMissionController extends Controller
      * @return Response
      *
      * @Route("/mercmissions/{nationSlug}", name="mercmission_index", defaults={"nationSlug": "all"})
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function index(string $nationSlug = self::NATION_ALL)
     {
@@ -92,7 +92,7 @@ class MercMissionController extends Controller
      * @return Response
      *
      * @Route("/mercmissions/{nationSlug}/new", name="mercmission_new", defaults={"nationSlug": "all"})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function new(Request $request, string $nationSlug)
     {
@@ -144,7 +144,7 @@ class MercMissionController extends Controller
      * @Route("/mercmissions/{nation}/edit/{mercMission}", name="mercmission_edit")
      * @ParamConverter("nation", options={"mapping": {"nation": "slug"}})
      * @ParamConverter("mercMission", options={"mapping": {"mercMission": "slug"}})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function edit(Request $request, Nation $nation, MercMission $mercMission)
     {
@@ -183,7 +183,7 @@ class MercMissionController extends Controller
      * @Route("/mercmissions/{nation}/delete/{mercMission}", name="mercmission_delete")
      * @ParamConverter("nation", options={"mapping": {"nation": "slug"}})
      * @ParamConverter("mercMission", options={"mapping": {"mercMission": "slug"}})
-     * @Security("has_role('ROLE_ADMIN')")
+     * @Security("is_granted('ROLE_ADMIN')")
      */
     public function delete(Nation $nation, MercMission $mercMission)
     {
@@ -206,7 +206,7 @@ class MercMissionController extends Controller
      * @Route("/mercmissions/{nation}/start/{mercMission}", name="mercmission_start")
      * @ParamConverter("nation", options={"mapping": {"nation": "slug"}})
      * @ParamConverter("mercMission", options={"mapping": {"mercMission": "slug"}})
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function start(Request $request, Nation $nation, MercMission $mercMission)
     {
@@ -299,7 +299,7 @@ class MercMissionController extends Controller
      * @Route("/mercmissions/{nation}/stop/{mercMission}", name="mercmission_stop")
      * @ParamConverter("nation", options={"mapping": {"nation": "slug"}})
      * @ParamConverter("mercMission", options={"mapping": {"mercMission": "slug"}})
-     * @Security("has_role('ROLE_USER')")
+     * @Security("is_granted('ROLE_USER')")
      */
     public function stop(Request $request, Nation $nation, MercMission $mercMission)
     {

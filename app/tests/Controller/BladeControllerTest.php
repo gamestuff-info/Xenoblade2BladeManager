@@ -24,24 +24,25 @@ class BladeControllerTest extends FixturesTestCase
     public function testIndex(string $driverSlug)
     {
         $this->loadFixturesFromFile([], 'BladeControllerTest/testIndex.php');
-        $client = $this->createClient();
-        $user = $this->login($client, 'user@test.com');
+        $user = $this->login($this->client, 'user@test.com');
 
-        $bladeRepo = $client->getContainer()->get('doctrine')->getRepository(Blade::class);
+        $bladeRepo = $this->client->getContainer()->get('doctrine')->getRepository(Blade::class);
         if ($driverSlug !== 'all') {
-            $driverRepo = $client->getContainer()->get('doctrine')->getRepository(Driver::class);
+            $driverRepo = $this->client->getContainer()->get('doctrine')->getRepository(Driver::class);
             /** @var Driver $driver */
             $driver = $driverRepo->findOneBy(['slug' => $driverSlug]);
+        } else {
+            $driver = null;
         }
 
-        $crawler = $client->request('GET', '/');
-        self::isSuccessful($client->getResponse());
-        $crawler = $client->click($crawler->filter('#navbarMain a:contains("Blades")')->link());
-        self::isSuccessful($client->getResponse());
+        $crawler = $this->client->request('GET', '/');
+        self::isSuccessful($this->client->getResponse());
+        $crawler = $this->client->click($crawler->filter('#navbarMain a:contains("Blades")')->link());
+        self::isSuccessful($this->client->getResponse());
         if (isset($driver)) {
             // Navigate to the tab for this driver
-            $crawler = $client->click($crawler->filter('.nav-tabs a:contains("'.$driver->getName().'")')->link());
-            self::isSuccessful($client->getResponse());
+            $crawler = $this->client->click($crawler->filter('.nav-tabs a:contains("'.$driver->getName().'")')->link());
+            self::isSuccessful($this->client->getResponse());
         }
 
         // Get the list of Blades that should be displayed on the all page and
@@ -131,46 +132,46 @@ class BladeControllerTest extends FixturesTestCase
     public function testNew(?string $template, array $formData, array $affinityNodes)
     {
         $this->loadFixturesFromFile();
-        $client = $this->createClient();
-        $user = $this->login($client, 'user@test.com');
+        $user = $this->login($this->client, 'user@test.com');
 
-        $crawler = $client->request('GET', '/blades');
-        self::isSuccessful($client->getResponse());
-        $crawler = $client->click($crawler->filter('.btn:contains("Bond Blade")')->link());
-        self::isSuccessful($client->getResponse());
-        $client->followRedirects();
+        $crawler = $this->client->request('GET', '/blades');
+        self::isSuccessful($this->client->getResponse());
+        $crawler = $this->client->click($crawler->filter('.btn:contains("Bond Blade")')->link());
+        self::isSuccessful($this->client->getResponse());
+        $this->client->followRedirects();
         if ($template) {
-            $crawler = $client->click($crawler->filter('#bladeTemplates a:contains("'.$template.'")')->link());
-            self::isSuccessful($client->getResponse());
+            $crawler = $this->client->click($crawler->filter('#bladeTemplates a:contains("'.$template.'")')->link());
+            self::isSuccessful($this->client->getResponse());
         }
 
         // Add form data
         $form = $crawler->filter('form[name=blade_form]')->selectButton('Save')->form();
         $formValues = $this->completeBladeForm($formData, $affinityNodes, $form);
         $bladeName = $formValues['blade_form']['name'];
-        $client->request($form->getMethod(), $form->getUri(), $formValues);
-        self::isSuccessful($client->getResponse());
+        $this->client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($this->client->getResponse());
 
         // Check data
-        $bladeRepo = $client->getContainer()->get('doctrine')->getRepository(Blade::class);
+        $formData = array_merge($formData, $formValues['blade_form']);
+        $bladeRepo = $this->client->getContainer()->get('doctrine')->getRepository(Blade::class);
         /** @var Blade $blade */
         $blade = $bladeRepo->findOneBy(['name' => $bladeName]);
         self::assertInstanceOf(Blade::class, $blade, 'Failed to load new blade');
         self::assertEquals($user->getId(), $blade->getUser()->getId());
-        self::assertEquals($formValues['blade_form']['name'], $blade->getName(), 'Wrong name persisted');
-        self::assertEquals($formValues['blade_form']['driver'], $blade->getDriver()->getId(), 'Wrong driver persisted');
-        self::assertEquals($formValues['blade_form']['gender'], $blade->getGender()->getId(), 'Wrong gender persisted');
-        self::assertEquals($formValues['blade_form']['battleRole'], $blade->getBattleRole()->getId(), 'Wrong battle role persisted');
-        self::assertEquals($formValues['blade_form']['weaponClass'], $blade->getWeaponClass()->getId(), 'Wrong weapon class persisted');
-        self::assertEquals($formValues['blade_form']['element'], $blade->getElement()->getId(), 'Wrong element persisted');
-        self::assertEquals($formValues['blade_form']['strength'], $blade->getStrength(), 'Wrong strength persisted');
-        self::assertEquals($formValues['blade_form']['rarity'], $blade->getRarity(), 'Wrong rarity persisted');
-        self::assertEquals($formValues['blade_form']['affinity'], $blade->getAffinity(), 'Wrong affinity persisted');
-        self::assertEquals($formValues['blade_form']['affinityTotal'], $blade->getAffinityTotal(), 'Wrong affinity total persisted');
-        self::assertEquals($formValues['blade_form']['trust'], $blade->getTrust()->getId(), 'Wrong trust persisted');
-        self::assertEquals($formValues['blade_form']['canBeReleased'], $blade->canBeReleased(), 'Wrong releasable status persisted');
-        self::assertEquals($formValues['blade_form']['mercTeamName'], $blade->getMercTeamName(), 'Wrong merc team name persisted');
-        self::assertEquals($formValues['blade_form']['isMerc'], $blade->isMerc(), 'Wrong merc status persisted');
+        self::assertEquals($formData['name'], $blade->getName(), 'Wrong name persisted');
+        self::assertEquals($formData['driver'], $blade->getDriver()->getId(), 'Wrong driver persisted');
+        self::assertEquals($formData['gender'], $blade->getGender()->getId(), 'Wrong gender persisted');
+        self::assertEquals($formData['battleRole'], $blade->getBattleRole()->getId(), 'Wrong battle role persisted');
+        self::assertEquals($formData['weaponClass'], $blade->getWeaponClass()->getId(), 'Wrong weapon class persisted');
+        self::assertEquals($formData['element'], $blade->getElement()->getId(), 'Wrong element persisted');
+        self::assertEquals($formData['strength'], $blade->getStrength(), 'Wrong strength persisted');
+        self::assertEquals($formData['rarity'], $blade->getRarity(), 'Wrong rarity persisted');
+        self::assertEquals($formData['affinity'], $blade->getAffinity(), 'Wrong affinity persisted');
+        self::assertEquals($formData['affinityTotal'], $blade->getAffinityTotal(), 'Wrong affinity total persisted');
+        self::assertEquals($formData['trust'], $blade->getTrust()->getId(), 'Wrong trust persisted');
+        self::assertEquals($formData['canBeReleased'], $blade->canBeReleased(), 'Wrong releasable status persisted');
+        self::assertEquals($formData['mercTeamName'], $blade->getMercTeamName(), 'Wrong merc team name persisted');
+        self::assertEquals($formData['isMerc'], $blade->isMerc(), 'Wrong merc status persisted');
         $bladeAffinityNodeIds = [];
         foreach ($blade->getAffinityNodes() as $bladeAffinityNode) {
             $bladeAffinityNodeIds[] = $bladeAffinityNode->getAffinityNode()->getId();
@@ -217,9 +218,9 @@ class BladeControllerTest extends FixturesTestCase
             'affinity' => $faker->numberBetween(0, $affinityTotal),
             'affinityTotal' => $affinityTotal,
             'trust' => $faker->numberBetween(1, 6),
-            'canBeReleased' => $faker->boolean,
+            'canBeReleased' => false,
             'mercTeamName' => $faker->words(2, true),
-            'isMerc' => $faker->boolean,
+            'isMerc' => false,
           ],
           [
             [
@@ -258,14 +259,13 @@ class BladeControllerTest extends FixturesTestCase
     public function testNewInvalid()
     {
         $this->loadFixturesFromFile();
-        $client = $this->createClient();
-        $this->login($client, 'user@test.com');
+        $this->login($this->client, 'user@test.com');
 
-        $crawler = $client->request('GET', '/blades');
-        self::isSuccessful($client->getResponse());
-        $crawler = $client->click($crawler->filter('.btn:contains("Bond Blade")')->link());
-        self::isSuccessful($client->getResponse());
-        $client->followRedirects();
+        $crawler = $this->client->request('GET', '/blades');
+        self::isSuccessful($this->client->getResponse());
+        $crawler = $this->client->click($crawler->filter('.btn:contains("Bond Blade")')->link());
+        self::isSuccessful($this->client->getResponse());
+        $this->client->followRedirects();
 
         // Add form data
         $faker = Factory::create();
@@ -281,9 +281,9 @@ class BladeControllerTest extends FixturesTestCase
           'affinity' => $faker->numberBetween(3, 5),
           'affinityTotal' => 2,
           'trust' => $faker->numberBetween(1, 6),
-          'canBeReleased' => $faker->boolean,
+          'canBeReleased' => false,
           'mercTeamName' => $faker->words(2, true),
-          'isMerc' => $faker->boolean,
+          'isMerc' => false,
         ];
         $affinityNodes = [
           [
@@ -294,7 +294,7 @@ class BladeControllerTest extends FixturesTestCase
         ];
         $form = $crawler->filter('form[name=blade_form]')->selectButton('Save')->form();
         $formValues = $this->completeBladeForm($formData, $affinityNodes, $form);
-        $crawler = $client->request($form->getMethod(), $form->getUri(), $formValues);
+        $crawler = $this->client->request($form->getMethod(), $form->getUri(), $formValues);
         self::assertContains('is-invalid', explode(' ', $crawler->filter('form[name=blade_form] input[name="blade_form[affinity]"]')->attr('class')));
         self::assertContains('is-invalid', explode(' ', $crawler->filter('form[name=blade_form] input[name="blade_form[affinityNodes][0][level]"]')->attr('class')));
     }
@@ -302,10 +302,9 @@ class BladeControllerTest extends FixturesTestCase
     public function testEdit()
     {
         $this->loadFixturesFromFile([], 'BladeControllerTest/testEdit.php');
-        $client = $this->createClient();
-        $user = $this->login($client, 'user@test.com');
+        $user = $this->login($this->client, 'user@test.com');
 
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
         $bladeRepo = $em->getRepository(Blade::class);
         /** @var Blade $ownedBlade */
         $ownedBlade = $bladeRepo->findOneBy(['name' => 'Owned']);
@@ -315,13 +314,12 @@ class BladeControllerTest extends FixturesTestCase
         self::assertNotEquals($user->getId(), $unownedBlade->getUser()->getId(), 'Error in test fixtures (blade ownership)');
 
         // Shouldn't be able to edit other users' blades
-        self::expectException(AccessDeniedHttpException::class);
-        $client->request('GET', '/blades/all/edit/'.$unownedBlade->getId());
-        $client->followRedirects();
-        self::assertEquals(403, $client->getResponse()->getStatusCode(), "Can edit other users's blades");
+        $this->client->request('GET', '/blades/all/edit/'.$unownedBlade->getId());
+        $this->client->followRedirects();
+        self::assertEquals(403, $this->client->getResponse()->getStatusCode(), "Can edit other users's blades");
 
-        $crawler = $client->request('GET', '/blades/all/edit/'.$ownedBlade->getId());
-        self::isSuccessful($client->getResponse());
+        $crawler = $this->client->request('GET', '/blades/all/edit/'.$ownedBlade->getId());
+        self::isSuccessful($this->client->getResponse());
 
         // Verify the form is already filled out properly
         $form = $crawler->filter('form[name=blade_form]')->form();
@@ -369,8 +367,8 @@ class BladeControllerTest extends FixturesTestCase
             $newNodeLevels[$affinityNodeInfo['affinityNode']] = $faker->numberBetween($affinityNodeInfo['level'] + 1, $affinityNodeInfo['maxLevel']);
             $affinityNodeInfo['level'] = $newNodeLevels[$affinityNodeInfo['affinityNode']];
         }
-        $client->request($form->getMethod(), $form->getUri(), $formValues);
-        self::isSuccessful($client->getResponse());
+        $this->client->request($form->getMethod(), $form->getUri(), $formValues);
+        self::isSuccessful($this->client->getResponse());
 
         // Fetch the blade again and verify the changes.
         // Because of particulars in Doctrine's internals, there's a lot of
@@ -388,10 +386,9 @@ class BladeControllerTest extends FixturesTestCase
     public function testDelete()
     {
         $this->loadFixturesFromFile([], 'BladeControllerTest/testEdit.php');
-        $client = $this->createClient();
-        $user = $this->login($client, 'user@test.com');
+        $user = $this->login($this->client, 'user@test.com');
 
-        $em = $client->getContainer()->get('doctrine')->getManager();
+        $em = $this->client->getContainer()->get('doctrine')->getManager();
         $bladeRepo = $em->getRepository(Blade::class);
         /** @var Blade $ownedBlade */
         $ownedBlade = $bladeRepo->findOneBy(['name' => 'Owned']);
@@ -401,14 +398,13 @@ class BladeControllerTest extends FixturesTestCase
         self::assertNotEquals($user->getId(), $unownedBlade->getUser()->getId(), 'Error in test fixtures (blade ownership)');
 
         // Ensure a user can only delete their own blades
-        self::expectException(AccessDeniedHttpException::class);
-        $client->request('GET', '/blades/all/delete/'.$unownedBlade->getId());
-        $client->followRedirects();
-        self::assertEquals(403, $client->getResponse()->getStatusCode(), "Can delete other users's blades");
+        $this->client->request('GET', '/blades/all/delete/'.$unownedBlade->getId());
+        $this->client->followRedirects();
+        self::assertEquals(403, $this->client->getResponse()->getStatusCode(), "Can delete other users's blades");
 
         // Delete a blade
-        $client->request('GET', '/blades/all/delete/'.$ownedBlade->getId());
-        self::isSuccessful($client->getResponse());
+        $this->client->request('GET', '/blades/all/delete/'.$ownedBlade->getId());
+        self::isSuccessful($this->client->getResponse());
         $blade = $bladeRepo->find($ownedBlade->getId());
         self::assertNull($blade, 'Blade not deleted when requested');
     }
@@ -422,10 +418,8 @@ class BladeControllerTest extends FixturesTestCase
      */
     private function completeBladeForm(array $formData, array $affinityNodes, Form $form): array
     {
+        $form->setValues(['blade_form' => $formData]);
         $formValues = $form->getPhpValues();
-        foreach ($formData as $k => $datum) {
-            $formValues['blade_form'][$k] = $datum;
-        }
         foreach ($affinityNodes as $k => $affinityNodeInfo) {
             $formValues['blade_form']['affinityNodes'][$k] = $affinityNodeInfo;
         }
