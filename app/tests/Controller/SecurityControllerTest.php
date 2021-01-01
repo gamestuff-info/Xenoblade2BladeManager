@@ -12,7 +12,6 @@ use Symfony\Bundle\SecurityBundle\DataCollector\SecurityDataCollector;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
-use Symfony\Component\Mime\Message;
 
 class SecurityControllerTest extends FixturesTestCase
 {
@@ -90,20 +89,67 @@ class SecurityControllerTest extends FixturesTestCase
     public function testActivateAction()
     {
         $this->loadFixturesFromFile();
+        $this->client->followRedirects();
         $em = $this->getContainer()->get('doctrine')->getManager();
         $roleUser = $em->getRepository(Role::class)->findOneBy(['name' => 'ROLE_USER']);
         $user = new User();
+        $plainPassword = $this->faker->password;
         $user->setEmail($this->faker->email)
-          ->setPassword(password_hash($this->faker->password, PASSWORD_BCRYPT))
+          ->setPassword(password_hash($plainPassword, PASSWORD_BCRYPT))
           ->addRole($roleUser);
         $user->newActivateCode();
         $em->persist($user);
         $em->flush();
 
-        $this->client->followRedirects();
-        $this->client->request('GET', '/user/activate/'.urlencode($user->getId()).'?key='.urlencode($user->getActivateCode()));
+        // Test user cannot login yet
+        $crawler = $this->client->request('GET', '/user/login');
+        $csrfToken = $crawler->filter('form[name="login"] input[name="_csrf_token"]')->attr('value');
+        $crawler = $this->client->request(
+          'POST', '/user/login', [
+            '_username' => $user->getUsername(),
+            '_password' => $plainPassword,
+            '_csrf_token' => $csrfToken,
+          ]
+        );
         self::isSuccessful($this->client->getResponse());
+        $profile = $this->client->getProfile();
+        /** @var SecurityDataCollector $securityCollector */
+        $securityCollector = $profile->getCollector('security');
+        self::assertEquals('anon.', $securityCollector->GetUser(), 'Logged in with unactivated account');
+        self::assertEquals('/user/login', $this->client->getRequest()->getPathInfo(), 'Redirected away from login page');
+        $alerts = $crawler->filter('div.alert');
+        self::assertEquals("User account is not yet activated.", $alerts->text(''), 'No error message shown');
+
+        // Try activating
+        $urlGenerator = $this->getContainer()->get('router')->getGenerator();
+        $activateUrl = $urlGenerator->generate(
+          'user_activate', [
+            'user' => $user->getId(),
+            'key' => $user->getActivateCode(),
+          ]
+        );
+        $this->client->request('GET', $activateUrl);
+        self::isSuccessful($this->client->getResponse());
+        $em->refresh($user);
+        self::assertTrue($user->isActive(), 'User not activated');
         self::assertEquals('/user/login', $this->client->getRequest()->getPathInfo(), 'Not redirected to the login page after activation');
+
+        // Ensure user can login now
+        $crawler = $this->client->request('GET', '/user/login');
+        $csrfToken = $crawler->filter('form[name="login"] input[name="_csrf_token"]')->attr('value');
+        $crawler = $this->client->request(
+          'POST', '/user/login', [
+            '_username' => $user->getUsername(),
+            '_password' => $plainPassword,
+            '_csrf_token' => $csrfToken,
+          ]
+        );
+        self::isSuccessful($this->client->getResponse());
+        $profile = $this->client->getProfile();
+        /** @var SecurityDataCollector $securityCollector */
+        $securityCollector = $profile->getCollector('security');
+        self::assertEquals($user->getUsername(), $securityCollector->getUser(), 'Not logged in after activation');
+        self::assertEquals('/', $this->client->getRequest()->getPathInfo(), 'Not redirected after login');
     }
 
     public function testLoginAction()
@@ -133,8 +179,8 @@ class SecurityControllerTest extends FixturesTestCase
         $form['_username'] = $user->getEmail();
         $form['_password'] = $password;
         $crawler = $this->client->submit($form);
-        /** @var SecurityDataCollector $securityCollector */
         $profile = $this->client->getProfile();
+        /** @var SecurityDataCollector $securityCollector */
         $securityCollector = $profile->getCollector('security');
         self::assertEquals($user->getUsername(), $securityCollector->getUser(), 'Not logged in');
     }

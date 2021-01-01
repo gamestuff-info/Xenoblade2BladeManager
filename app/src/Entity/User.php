@@ -13,7 +13,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
- * @todo Replace functionality of AdvancedUserInterface (see https://symfony.com/blog/new-in-symfony-4-1-deprecated-the-advanceduserinterface)
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
  * @UniqueEntity("email", groups={"registration", "edit"})
