@@ -5,6 +5,7 @@
   "require": {
     "php": "^7.3",
     "ext-iconv": "*",
+    "doctrine/annotations": "^1.11",
     "excelwebzone/recaptcha-bundle": "^1.5",
     "knplabs/knp-menu-bundle": "^3.1",
     "knpuniversity/oauth2-client-bundle": "^2.7",
