@@ -36,13 +36,13 @@ class BladeControllerTest extends FixturesTestCase
         }
 
         $crawler = $this->client->request('GET', '/');
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $crawler = $this->client->click($crawler->filter('#navbarMain a:contains("Blades")')->link());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         if (isset($driver)) {
             // Navigate to the tab for this driver
             $crawler = $this->client->click($crawler->filter('.nav-tabs a:contains("'.$driver->getName().'")')->link());
-            self::isSuccessful($this->client->getResponse());
+            self::assertResponseIsSuccessful();
         }
 
         // Get the list of Blades that should be displayed on the all page and
@@ -135,13 +135,13 @@ class BladeControllerTest extends FixturesTestCase
         $user = $this->login($this->client, 'user@test.com');
 
         $crawler = $this->client->request('GET', '/blades');
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $crawler = $this->client->click($crawler->filter('.btn:contains("Bond Blade")')->link());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $this->client->followRedirects();
         if ($template) {
             $crawler = $this->client->click($crawler->filter('#bladeTemplates a:contains("'.$template.'")')->link());
-            self::isSuccessful($this->client->getResponse());
+            self::assertResponseIsSuccessful();
         }
 
         // Add form data
@@ -149,7 +149,7 @@ class BladeControllerTest extends FixturesTestCase
         $formValues = $this->completeBladeForm($formData, $affinityNodes, $form);
         $bladeName = $formValues['blade_form']['name'];
         $this->client->request($form->getMethod(), $form->getUri(), $formValues);
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
 
         // Check data
         $formData = array_merge($formData, $formValues['blade_form']);
@@ -262,9 +262,9 @@ class BladeControllerTest extends FixturesTestCase
         $this->login($this->client, 'user@test.com');
 
         $crawler = $this->client->request('GET', '/blades');
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $crawler = $this->client->click($crawler->filter('.btn:contains("Bond Blade")')->link());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $this->client->followRedirects();
 
         // Add form data
@@ -319,7 +319,7 @@ class BladeControllerTest extends FixturesTestCase
         self::assertEquals(403, $this->client->getResponse()->getStatusCode(), "Can edit other users's blades");
 
         $crawler = $this->client->request('GET', '/blades/all/edit/'.$ownedBlade->getId());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
 
         // Verify the form is already filled out properly
         $form = $crawler->filter('form[name=blade_form]')->form();
@@ -368,7 +368,7 @@ class BladeControllerTest extends FixturesTestCase
             $affinityNodeInfo['level'] = $newNodeLevels[$affinityNodeInfo['affinityNode']];
         }
         $this->client->request($form->getMethod(), $form->getUri(), $formValues);
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
 
         // Fetch the blade again and verify the changes.
         // Because of particulars in Doctrine's internals, there's a lot of
@@ -404,7 +404,7 @@ class BladeControllerTest extends FixturesTestCase
 
         // Delete a blade
         $this->client->request('GET', '/blades/all/delete/'.$ownedBlade->getId());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $blade = $bladeRepo->find($ownedBlade->getId());
         self::assertNull($blade, 'Blade not deleted when requested');
     }

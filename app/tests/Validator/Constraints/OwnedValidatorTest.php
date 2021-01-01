@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Validator\Constraints;
 
 use App\Entity\OwnedInterface;
 use App\Entity\User;

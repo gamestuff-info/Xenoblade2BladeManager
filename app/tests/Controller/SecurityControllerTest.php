@@ -29,11 +29,11 @@ class SecurityControllerTest extends FixturesTestCase
 
         // Navigate to the registration page
         $crawler = $this->client->request('GET', '/');
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $crawler = $this->client->click($crawler->filter('#navbarMain a:contains("Login")')->link());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $crawler = $this->client->click($crawler->filter('#login-nav a:contains("Register")')->link());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
 
         // Fill out the registration form
         $email = $this->faker->email;
@@ -52,7 +52,7 @@ class SecurityControllerTest extends FixturesTestCase
         self::assertNotNull($message, 'Confirmation email empty');
         $this->client->followRedirects(true);
         $this->client->followRedirect();
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
 
         // Verify the user was created
         $userRepo = $this->doctrine->getRepository(User::class);
@@ -111,7 +111,7 @@ class SecurityControllerTest extends FixturesTestCase
             '_csrf_token' => $csrfToken,
           ]
         );
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $profile = $this->client->getProfile();
         /** @var SecurityDataCollector $securityCollector */
         $securityCollector = $profile->getCollector('security');
@@ -129,7 +129,7 @@ class SecurityControllerTest extends FixturesTestCase
           ]
         );
         $this->client->request('GET', $activateUrl);
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $em->refresh($user);
         self::assertTrue($user->isActive(), 'User not activated');
         self::assertEquals('/user/login', $this->client->getRequest()->getPathInfo(), 'Not redirected to the login page after activation');
@@ -144,7 +144,7 @@ class SecurityControllerTest extends FixturesTestCase
             '_csrf_token' => $csrfToken,
           ]
         );
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $profile = $this->client->getProfile();
         /** @var SecurityDataCollector $securityCollector */
         $securityCollector = $profile->getCollector('security');
@@ -170,9 +170,9 @@ class SecurityControllerTest extends FixturesTestCase
 
         // Navigate to the login page
         $crawler = $this->client->request('GET', '/');
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $crawler = $this->client->click($crawler->filter('#navbarMain a:contains("Login")')->link());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
 
         // Login with username
         $form = $crawler->filter('form:contains("E-Mail")')->selectButton('Login')->form();
@@ -192,7 +192,7 @@ class SecurityControllerTest extends FixturesTestCase
 
         $crawler = $this->client->request('GET', '/');
         $crawler = $this->client->click($crawler->filter('.dropdown-menu a:contains(Profile)')->link());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
 
         $bladeRepo = $this->getContainer()->get('doctrine')->getRepository(Blade::class);
         $blades = $bladeRepo->findBy(['user' => $user]);
@@ -218,20 +218,20 @@ class SecurityControllerTest extends FixturesTestCase
         $userRepo = $em->getRepository(User::class);
 
         $crawler = $this->client->request('GET', '/user/profile/edit');
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $form = $crawler->filter('form[name=user_edit]')->form();
         $newEmail = $this->faker->email;
         $form['user_edit[newEmail]'] = $newEmail;
         $form['user_edit[oldPassword]'] = 'Wrong password';
         $crawler = $this->client->request($form->getMethod(), $form->getUri(), $form->getPhpValues());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
 
         self::assertContains('is-invalid', explode(' ', $crawler->filter('#user_edit_oldPassword')->attr('class')), 'Invalid text not displayed');
         $form = $crawler->filter('form[name=user_edit]')->form();
         $form['user_edit[newEmail]'] = $newEmail;
         $form['user_edit[oldPassword]'] = 'password_old';
         $crawler = $this->client->request($form->getMethod(), $form->getUri(), $form->getPhpValues());
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
 
         /** @var User $user */
         $user = $userRepo->findOneBy(['email' => $newEmail]);
@@ -240,7 +240,7 @@ class SecurityControllerTest extends FixturesTestCase
         self::assertEquals($newEmail, $user->getEmail(), 'E-mail change not persisted');
 
         $crawler = $this->client->request('GET', '/user/profile/edit');
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
         $form = $crawler->filter('form[name=user_edit]')->form();
         $formValues = $form->getPhpValues();
         $formValues['user_edit']['oldPassword'] = 'password_old';
@@ -249,7 +249,7 @@ class SecurityControllerTest extends FixturesTestCase
         $formValues['user_edit']['plainPassword']['newPassword'] = $newPassword;
         $formValues['user_edit']['plainPassword']['repeatPassword'] = $newPassword;
         $this->client->request($form->getMethod(), $form->getUri(), $formValues);
-        self::isSuccessful($this->client->getResponse());
+        self::assertResponseIsSuccessful();
 
         $em->refresh($user);
         self::assertTrue(password_verify($newPassword, $user->getPassword()), 'Password change not persisted');
