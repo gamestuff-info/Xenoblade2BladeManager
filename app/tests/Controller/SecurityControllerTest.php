@@ -103,14 +103,14 @@ class SecurityControllerTest extends FixturesTestCase
 
         // Test user cannot login yet
         $crawler = $this->client->request('GET', '/user/login');
-        $csrfToken = $crawler->filter('form[name="login"] input[name="_csrf_token"]')->attr('value');
-        $crawler = $this->client->request(
-          'POST', '/user/login', [
-            '_username' => $user->getUsername(),
-            '_password' => $plainPassword,
-            '_csrf_token' => $csrfToken,
-          ]
+        $form = $crawler->filter('form[name=login]')->selectButton('Login')->form();
+        $form->setValues(
+          [
+            'login[email]' => $user->getUsername(),
+            'login[password]' => $plainPassword,
+          ],
         );
+        $crawler = $this->client->submit($form);
         self::assertResponseIsSuccessful();
         $profile = $this->client->getProfile();
         /** @var SecurityDataCollector $securityCollector */
@@ -136,14 +136,14 @@ class SecurityControllerTest extends FixturesTestCase
 
         // Ensure user can login now
         $crawler = $this->client->request('GET', '/user/login');
-        $csrfToken = $crawler->filter('form[name="login"] input[name="_csrf_token"]')->attr('value');
-        $crawler = $this->client->request(
-          'POST', '/user/login', [
-            '_username' => $user->getUsername(),
-            '_password' => $plainPassword,
-            '_csrf_token' => $csrfToken,
-          ]
+        $form = $crawler->filter('form[name=login]')->selectButton('Login')->form();
+        $form->setValues(
+          [
+            'login[email]' => $user->getUsername(),
+            'login[password]' => $plainPassword,
+          ],
         );
+        $crawler = $this->client->submit($form);
         self::assertResponseIsSuccessful();
         $profile = $this->client->getProfile();
         /** @var SecurityDataCollector $securityCollector */
@@ -175,9 +175,13 @@ class SecurityControllerTest extends FixturesTestCase
         self::assertResponseIsSuccessful();
 
         // Login with username
-        $form = $crawler->filter('form:contains("E-Mail")')->selectButton('Login')->form();
-        $form['_username'] = $user->getEmail();
-        $form['_password'] = $password;
+        $form = $crawler->filter('form[name=login]')->selectButton('Login')->form();
+        $form->setValues(
+          [
+            'login[email]' => $user->getUsername(),
+            'login[password]' => $password,
+          ]
+        );
         $crawler = $this->client->submit($form);
         $profile = $this->client->getProfile();
         /** @var SecurityDataCollector $securityCollector */

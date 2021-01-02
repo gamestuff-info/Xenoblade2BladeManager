@@ -5,11 +5,11 @@ namespace App\Controller;
 use App\Entity\Blade;
 use App\Entity\Role;
 use App\Entity\User;
+use App\Form\LoginType;
 use App\Form\UserEditType;
 use App\Form\UserProgressType;
 use App\Form\UserType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -36,6 +36,12 @@ class SecurityController extends AbstractController
      */
     public function loginAction(AuthenticationUtils $authUtils, TranslatorInterface $translator)
     {
+        if ($this->getUser()) {
+            $this->addFlash('warning', 'You are already logged in!');
+
+            return $this->redirectToRoute('main');
+        }
+
         // get the login error if there is one
         $error = $authUtils->getLastAuthenticationError();
         if ($error) {
@@ -52,11 +58,13 @@ class SecurityController extends AbstractController
         // last username entered by the user
         $lastUsername = $authUtils->getLastUsername();
 
+        $form = $this->createForm(LoginType::class, ['username' => $lastUsername]);
+
         return $this->render(
           'security/login.html.twig',
           [
             'title' => 'Login',
-            'last_username' => $lastUsername,
+            'form' => $form->createView(),
           ]
         );
     }
