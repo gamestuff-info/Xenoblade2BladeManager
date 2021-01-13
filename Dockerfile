@@ -9,23 +9,8 @@ WORKDIR /var/www
 RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
 # Install needed extensions
-RUN set -eux; \
-	apt-get update; \
-	apt-get install -y --no-install-recommends \
-	    libicu-dev \
-		libpq-dev \
-		libxml2-dev \
-		libzip-dev \
-	; \
-	docker-php-ext-install -j "$(nproc)" \
-	    intl \
-	    iconv \
-	    opcache \
-	    json \
-	    pcntl \
-	    pdo_pgsql \
-	    xml \
-	    zip
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions intl iconv opcache json pcntl pdo_pgsql xml zip
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
