@@ -42,9 +42,10 @@
         // Vary the grayness with the affinity percentage.
         @for $pct from 0 through 100 {
             &--#{$pct} {
-                $buttonColor: change_color($dark, $lightness: $pct/1.8);
-                $textColor: change_color($body-color, $lightness: $pct/1.8);
-                $mutedTextColor: change_color($text-muted, $lightness: $pct/1.8);
+                $pctValue: $pct * 1%;
+                $buttonColor: change_color($dark, $lightness: $pctValue/1.8);
+                $textColor: change_color($body-color, $lightness: $pctValue/1.8);
+                $mutedTextColor: change_color($text-muted, $lightness: $pctValue/1.8);
 
                 border-color: $buttonColor;
                 color: $textColor;
