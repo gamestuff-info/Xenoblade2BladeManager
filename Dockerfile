@@ -34,7 +34,9 @@ ENTRYPOINT /usr/local/bin/app_entrypoint
 #######################################
 # COMPOSER
 #######################################
-FROM composer:2 as composer
+FROM base as composer
+
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
 RUN rm -rf /var/www && mkdir /var/www
 WORKDIR /var/www
@@ -42,10 +44,6 @@ WORKDIR /var/www
 COPY app/. /var/www
 
 ARG APP_ENV=prod
-
-RUN set -eux; \
-    # Need some extras for certain composer downloads
-    apk add --no-cache git openssh-client unzip
 
 RUN set -xe; \
     if [ "$APP_ENV" = "prod" ]; then export ARGS="--no-dev"; fi; \
