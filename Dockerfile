@@ -1,7 +1,7 @@
 #######################################
 # BASE IMAGE
 #######################################
-FROM php:7.4-apache as base
+FROM php:8.0-apache as base
 
 WORKDIR /var/www
 
