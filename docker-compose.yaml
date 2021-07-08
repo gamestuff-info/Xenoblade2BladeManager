@@ -19,5 +19,3 @@ services:
       - GOOGLE_CLIENT_SECRET
       - SENTRY_DSN
     restart: always
-    ports:
-      - "80:80"

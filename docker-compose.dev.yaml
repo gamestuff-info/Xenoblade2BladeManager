@@ -1,6 +1,22 @@
 version: "3.7"
 
 services:
+  edge:
+    image: traefik:v2.4
+    ports:
+      # The HTTP port
+      - "80:80"
+      # HTTPS
+      - "443:443"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker/traefik/static.yaml:/etc/traefik/traefik.yml
+      - ./docker/traefik/dynamic.yaml:/etc/traefik/dynamic.yml
+      - ./docker/traefik/certs:/etc/traefik/certs
+
   app:
     build:
       dockerfile: Dockerfile.dev
@@ -17,10 +33,17 @@ services:
       MAILER_DSN: 'smtp://mail:1025'
       SENTRY_DSN: ''
       BUILD_NUMBER: debug
-    ports:
-      - "8080:80"
     volumes:
       - ./app:/var/www
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.xeno2-https.redirectscheme.scheme=https"
+      - "traefik.http.routers.xeno2-http.rule=Host(`xeno2.localhost`)"
+      - "traefik.http.routers.xeno2-http.entryPoints=web"
+      - "traefik.http.routers.xeno2-http.middlewares=xeno2-https@docker"
+      - "traefik.http.routers.xeno2-https.rule=Host(`xeno2.localhost`)"
+      - "traefik.http.routers.xeno2-https.entryPoints=websecure"
+      - "traefik.http.routers.xeno2-https.tls=true"
 
   db:
     image: postgres:12
