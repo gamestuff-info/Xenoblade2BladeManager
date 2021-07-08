@@ -17,7 +17,7 @@ class GoogleController extends AbstractController implements ConnectInterface
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      *
-     * @Route("/connect/google", name="connect_google_connect")
+     * @Route("/connect/google", name="connect_google_connect", schemes={"https"})
      */
     public function connectAction(ClientRegistry $oauth)
     {
@@ -27,7 +27,7 @@ class GoogleController extends AbstractController implements ConnectInterface
     /**
      * @param Request $request
      *
-     * @Route("/connect/google/check", name="connect_google_check")
+     * @Route("/connect/google/check", name="connect_google_check", schemes={"https"})
      */
     public function connectCheckAction(Request $request)
     {
