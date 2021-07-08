@@ -10,6 +10,7 @@
     "knplabs/knp-menu-bundle": "^3.1",
     "knpuniversity/oauth2-client-bundle": "^2.7",
     "league/oauth2-google": "^3.0",
+    "nyholm/psr7": "^1.4",
     "oro/doctrine-extensions": "^1.2",
     "sensio/framework-extra-bundle": "^5.2",
     "sentry/sentry-symfony": "^4.0",
